@@ -16,7 +16,9 @@
     "prepare": "node -e \"if(require('fs').existsSync('.git')){process.exit(1)}\" || is-ci || husky install",
     "site:preview": "npm run build && cp -r dist _site",
     "test": "echo \"no test specified,work in process\"",
-    "test:coverage": "echo \"no test:coverage specified,work in process\""
+    "test:coverage": "echo \"no test:coverage specified,work in process\"",
+    "lint-changelog": "concurrently \"npm run lint\" \"npm run changelog\"",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 -n changelog-option.js"
   },
   "dependencies": {
     "axios": "^1.4.0",
@@ -49,6 +51,9 @@
     "@vue/compiler-sfc": "^3.3.4",
     "@vue/eslint-config-typescript": "^11.0.3",
     "commitizen": "^4.3.0",
+    "concurrently": "^8.2.0",
+    "conventional-changelog-angular": "^6.0.0",
+    "conventional-changelog-cli": "^3.0.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.44.0",
     "eslint-config-airbnb-base": "^15.0.0",
