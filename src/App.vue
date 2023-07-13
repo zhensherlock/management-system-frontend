@@ -1,9 +1,12 @@
 <template>
-  <router-view :class="[mode]" />
+  <t-config-provider :global-config="tDesignGlobalConfig">
+    <router-view v-if="isRouterAlive" :class="[mode]" />
+  </t-config-provider>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, nextTick, provide, ref } from 'vue';
 
+import { useLocale } from '@/hooks/locale';
 import { useSettingStore } from '@/store';
 
 const store = useSettingStore();
@@ -11,6 +14,16 @@ const store = useSettingStore();
 const mode = computed(() => {
   return store.displayMode;
 });
+
+const { tDesignGlobalConfig } = useLocale();
+const isRouterAlive = ref(true);
+const reload = () => {
+  isRouterAlive.value = false;
+  nextTick(() => {
+    isRouterAlive.value = true;
+  });
+};
+provide('reload', reload);
 </script>
 <style lang="less" scoped>
 #nprogress .bar {

@@ -33,14 +33,19 @@
               <t-icon name="help-circle" />
             </t-button>
           </t-tooltip>
+          <t-dropdown trigger="click" :options="localeList" :on-click="(e) => handleChangeLocale(e.value)">
+            <t-button theme="default" shape="square" variant="text">
+              <t-icon name="translate-1" />
+            </t-button>
+          </t-dropdown>
           <t-dropdown :min-column-width="120" trigger="click">
             <template #dropdown>
               <t-dropdown-menu>
                 <t-dropdown-item class="operations-dropdown-container-item" @click="handleNav('/user/index')">
-                  <t-icon name="user-circle"></t-icon>个人中心
+                  <t-icon name="user-circle"></t-icon>{{ $t('layout.header.user') }}
                 </t-dropdown-item>
                 <t-dropdown-item class="operations-dropdown-container-item" @click="handleLogout">
-                  <t-icon name="poweroff"></t-icon>退出登录
+                  <t-icon name="poweroff"></t-icon>{{ $t('layout.header.logout') }}
                 </t-dropdown-item>
               </t-dropdown-menu>
             </template>
@@ -70,6 +75,7 @@ import { useRouter } from 'vue-router';
 
 import LogoFull from '@/assets/assets-logo-full.svg?component';
 import { prefix } from '@/config/global';
+import { useLocale } from '@/hooks/locale';
 import { getActive } from '@/router';
 import { useSettingStore, useUserStore } from '@/store';
 import type { MenuRoute } from '@/types/interface';
@@ -117,6 +123,14 @@ const toggleSettingPanel = () => {
   settingStore.updateConfig({
     showSettingPanel: true,
   });
+};
+
+const { changeLocale, localeList } = useLocale();
+const handleChangeLocale = (value: any) => {
+  changeLocale(value);
+  // if (typeof reload === 'function') {
+  //   reload();
+  // }
 };
 
 const active = computed(() => getActive());
