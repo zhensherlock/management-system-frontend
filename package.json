@@ -56,7 +56,7 @@
     "conventional-changelog-angular": "^6.0.0",
     "conventional-changelog-cli": "^3.0.0",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.44.0",
+    "eslint": "^8.45.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
@@ -78,7 +78,7 @@
     "vite": "^4.4.4",
     "vite-plugin-mock": "^3.0.0",
     "vite-svg-loader": "^4.0.0",
-    "vue-tsc": "^1.8.4"
+    "vue-tsc": "^1.8.5"
   },
   "config": {
     "commitizen": {
