@@ -120,16 +120,20 @@
     }
   }
 
-  .verification-code {
+  .captcha-form-item {
     display: flex;
     align-items: center;
+
+    .t-image__wrapper {
+      margin-left: var(--td-comp-margin-l);
+      border-radius: var(--td-radius-default);
+      cursor: pointer;
+    }
 
     :deep(.t-form__controls) {
       width: 100%;
 
       img {
-        flex-shrink: 0;
-        margin-left: var(--td-comp-margin-l);
         width: 120px;
         height: 40px;
         display: block;

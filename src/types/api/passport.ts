@@ -4,8 +4,11 @@ export interface LoginResult {
 }
 
 export interface LoginData {
-  username: string;
+  account: string;
   password: string;
+  captcha: string;
+  captchaId: string;
+  checked: boolean;
 }
 
 export interface CaptchaResult {

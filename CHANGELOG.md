@@ -1,4 +1,4 @@
-# 0.8.0 (2023-07-27)
+# 0.8.0 (2023-11-01)
 
 
 ### ✨ Features | 新功能
@@ -12,6 +12,7 @@
 
 ### 🎫 Chores | 其他更新
 
+* update dependencies ([5020593](https://github.com/zhensherlock/management-system-frontend/commit/5020593d58a1c0c2e128f41b68451dd4c7130536))
 * update dependencies ([ffb4002](https://github.com/zhensherlock/management-system-frontend/commit/ffb40028da2d6b7eb4e208d04adcd47b6d2032ad))
 * update dependencies ([da830ee](https://github.com/zhensherlock/management-system-frontend/commit/da830ee3cc18c86591483a0e2b034b2ae2691175))
 * update dependencies ([8ccc55f](https://github.com/zhensherlock/management-system-frontend/commit/8ccc55fa59a020bd5bdeff601894f316b96efe51))

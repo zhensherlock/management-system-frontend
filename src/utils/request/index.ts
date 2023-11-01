@@ -114,13 +114,13 @@ const transform: AxiosTransform = {
   requestInterceptors: (config, options) => {
     // 请求之前处理config
     const userStore = useUserStore();
-    const { token } = userStore;
+    const { loginInfo } = userStore;
 
-    if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
+    if (loginInfo && (config as Recordable)?.requestOptions?.withToken !== false) {
       // jwt token
       (config as Recordable).headers.Authorization = options.authenticationScheme
-        ? `${options.authenticationScheme} ${token}`
-        : token;
+        ? `${options.authenticationScheme} ${loginInfo.accessToken}`
+        : loginInfo.accessToken;
     }
     return config;
   },
@@ -157,7 +157,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
       <CreateAxiosOptions>{
         // https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#authentication_schemes
         // 例如: authenticationScheme: 'Bearer'
-        authenticationScheme: '',
+        authenticationScheme: 'Bearer',
         // 超时
         timeout: 10 * 1000,
         // 携带Cookie

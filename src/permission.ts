@@ -18,7 +18,7 @@ router.beforeEach(async (to, from, next) => {
 
   const userStore = useUserStore();
 
-  if (userStore.token) {
+  if (!userStore.loginInfo) {
     if (to.path === '/login') {
       next();
       return;
@@ -49,7 +49,7 @@ router.beforeEach(async (to, from, next) => {
         next(`/`);
       }
     } catch (error) {
-      MessagePlugin.error(error.message);
+      // MessagePlugin.error(error.message);
       next({
         path: '/login',
         query: { redirect: encodeURIComponent(to.fullPath) },
