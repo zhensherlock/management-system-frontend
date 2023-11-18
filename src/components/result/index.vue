@@ -14,6 +14,7 @@ import { computed } from 'vue';
 import Result403Icon from '@/assets/assets-result-403.svg?component';
 import Result404Icon from '@/assets/assets-result-404.svg?component';
 import Result500Icon from '@/assets/assets-result-500.svg?component';
+import ResultEmptyIcon from '@/assets/assets-result-empty.svg?component';
 import ResultIeIcon from '@/assets/assets-result-ie.svg?component';
 import ResultMaintenanceIcon from '@/assets/assets-result-maintenance.svg?component';
 import ResultWifiIcon from '@/assets/assets-result-wifi.svg?component';
@@ -33,6 +34,8 @@ const dynamicComponent = computed(() => {
       return Result404Icon;
     case '500':
       return Result500Icon;
+    case 'empty':
+      return ResultEmptyIcon;
     case 'ie':
       return ResultIeIcon;
     case 'wifi':
@@ -80,13 +83,14 @@ const dynamicComponent = computed(() => {
   &-bg-img {
     width: 200px;
     color: var(--td-brand-color);
+    text-align: center;
   }
 
   &-title {
+    font: var(--td-font-title-large);
     font-style: normal;
     margin-top: var(--td-comp-margin-l);
     color: var(--td-text-color-primary);
-    font: var(--td-font-title-large);
   }
 
   &-tip {

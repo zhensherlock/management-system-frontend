@@ -13,6 +13,9 @@ import listTree from './list-tree';
 import login from './login';
 import result from './result';
 import user from './user';
+import record from './lang.zh_cn.record';
+import company from './lang.zh_cn.company';
+import form from './lang.zh_cn.form';
 
 export default {
   dashboardBase,
@@ -28,6 +31,9 @@ export default {
   formBase,
   formStep,
   user,
+  record,
   login,
   result,
+  company,
+  form,
 };

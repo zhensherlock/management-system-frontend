@@ -35,50 +35,50 @@
 
       <div class="check-container remember-pwd">
         <t-checkbox>{{ $t('pages.login.remember') }}</t-checkbox>
-        <span class="tip">{{ $t('pages.login.forget') }}</span>
+<!--        <span class="tip">{{ $t('pages.login.forget') }}</span>-->
       </div>
     </template>
 
     <!-- 扫码登录 -->
-    <template v-else-if="type == 'qrcode'">
-      <div class="tip-container">
-        <span class="tip">{{ $t('pages.login.wechatLogin') }}</span>
-        <span class="refresh">{{ $t('pages.login.refresh') }} <t-icon name="refresh" /> </span>
-      </div>
-      <qrcode-vue value="" :size="160" level="H" />
-    </template>
+<!--    <template v-else-if="type == 'qrcode'">-->
+<!--      <div class="tip-container">-->
+<!--        <span class="tip">{{ $t('pages.login.wechatLogin') }}</span>-->
+<!--        <span class="refresh">{{ $t('pages.login.refresh') }} <t-icon name="refresh" /> </span>-->
+<!--      </div>-->
+<!--      <qrcode-vue value="" :size="160" level="H" />-->
+<!--    </template>-->
 
     <!-- 手机号登录 -->
-    <template v-else>
-      <t-form-item name="phone">
-        <t-input v-model="formData.phone" size="large" :placeholder="$t('pages.login.input.phone')">
-          <template #prefix-icon>
-            <t-icon name="mobile" />
-          </template>
-        </t-input>
-      </t-form-item>
+<!--    <template v-else>-->
+<!--      <t-form-item name="phone">-->
+<!--        <t-input v-model="formData.phone" size="large" :placeholder="$t('pages.login.input.phone')">-->
+<!--          <template #prefix-icon>-->
+<!--            <t-icon name="mobile" />-->
+<!--          </template>-->
+<!--        </t-input>-->
+<!--      </t-form-item>-->
 
-      <t-form-item class="verification-code" name="verifyCode">
-        <t-input v-model="formData.verifyCode" size="large" :placeholder="$t('pages.login.input.verification')" />
-        <t-button size="large" variant="outline" :disabled="countDown > 0" @click="sendCode">
-          {{ countDown == 0 ? $t('pages.login.sendVerification') : `${countDown}秒后可重发` }}
-        </t-button>
-      </t-form-item>
-    </template>
+<!--      <t-form-item class="verification-code" name="verifyCode">-->
+<!--        <t-input v-model="formData.verifyCode" size="large" :placeholder="$t('pages.login.input.verification')" />-->
+<!--        <t-button size="large" variant="outline" :disabled="countDown > 0" @click="sendCode">-->
+<!--          {{ countDown == 0 ? $t('pages.login.sendVerification') : `${countDown}秒后可重发` }}-->
+<!--        </t-button>-->
+<!--      </t-form-item>-->
+<!--    </template>-->
 
     <t-form-item v-if="type !== 'qrcode'" class="btn-container">
       <t-button block size="large" type="submit"> {{ $t('pages.login.signIn') }} </t-button>
     </t-form-item>
 
-    <div class="switch-container">
-      <span v-if="type !== 'password'" class="tip" @click="switchType('password')">{{
-        $t('pages.login.accountLogin')
-      }}</span>
-      <span v-if="type !== 'qrcode'" class="tip" @click="switchType('qrcode')">{{
-        $t('pages.login.wechatLogin')
-      }}</span>
-      <span v-if="type !== 'phone'" class="tip" @click="switchType('phone')">{{ $t('pages.login.phoneLogin') }}</span>
-    </div>
+<!--    <div class="switch-container">-->
+<!--      <span v-if="type !== 'password'" class="tip" @click="switchType('password')">{{-->
+<!--        $t('pages.login.accountLogin')-->
+<!--      }}</span>-->
+<!--      <span v-if="type !== 'qrcode'" class="tip" @click="switchType('qrcode')">{{-->
+<!--        $t('pages.login.wechatLogin')-->
+<!--      }}</span>-->
+<!--      <span v-if="type !== 'phone'" class="tip" @click="switchType('phone')">{{ $t('pages.login.phoneLogin') }}</span>-->
+<!--    </div>-->
   </t-form>
 </template>
 

@@ -1,0 +1,70 @@
+.record-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .filter-card {
+    border-radius: var(--td-radius-default);
+
+    .filter-body {
+      display: flex;
+      align-items: center;
+
+      .filter-body-label {
+        width: 76px;
+        font-size: var(--td-font-size-link-medium);
+        color: var(--td-gray-color-8);
+      }
+
+      .filter-body-content {
+        display: flex;
+      }
+    }
+  }
+
+  .data-card {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--td-radius-default);
+
+    .t-card__body {
+      flex: 1;
+      overflow: hidden;
+      padding: var(--td-comp-paddingTB) var(--td-comp-paddingLR) 0;
+
+      .t-table thead td, .t-table th {
+        color: var(--td-text-color-primary);
+      }
+    }
+
+    .result-container {
+      height: 100%;
+      min-height: auto;
+    }
+
+    .data-card-table {
+      height: 100%;
+    }
+
+    .t-table__pagination {
+      padding: var(--td-comp-paddingTB) 0;
+    }
+
+    .t-pagination__btn {
+      border: 1px solid var(--td-component-border);
+
+      &.t-is-disabled {
+        display: none;
+      }
+
+      &:hover {
+        color: var(--td-brand-color-hover);
+        border-color: var(--td-brand-color-hover);
+        background-color: initial;
+        transition: all 0.2s cubic-bezier(0.82, 0, 1, 0.9);
+      }
+    }
+  }
+}

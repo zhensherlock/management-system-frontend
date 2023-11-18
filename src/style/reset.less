@@ -1,11 +1,39 @@
 // 对部分样式进行重置
+:root {
+  --td-font-family: AlibabaPuHuiTi, -apple-system, BlinkMacSystemFont, PingFang SC, Microsoft YaHei, Arial Regular;
+  --td-font-family-medium: AlibabaPuHuiTi, -apple-system, BlinkMacSystemFont, PingFang SC, Microsoft YaHei, Arial Medium;
+  --td-component-border: var(--td-gray-color-2);
+  --td-bg-color-page: var(--td-gray-color-1);
+  --td-comp-paddingTB: var(--td-comp-paddingTB-l);
+  --td-comp-paddingLR: var(--td-comp-paddingLR-l);
+  --td-comp-margin: var(--td-comp-margin-l);
+  --td-scrollbar-color: #BBBBBB;
+}
+
+@media screen and (max-width: 1400px) {
+  :root {
+    --td-comp-paddingTB: var(--td-comp-paddingTB-m);
+    --td-comp-paddingLR: var(--td-comp-paddingLR-m);
+    --td-comp-margin: var(--td-comp-margin-m);
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  :root {
+    --td-comp-paddingTB: var(--td-comp-paddingTB-s);
+    --td-comp-paddingLR: var(--td-comp-paddingLR-s);
+    --td-comp-margin: var(--td-comp-margin-s);
+  }
+}
+
 body {
   color: var(--td-text-color-secondary);
   font: var(--td-font-body-medium);
-  font-family: -apple-system, BlinkMacSystemFont, var(--td-font-family);
+  font-family: var(--td-font-family);
   -webkit-font-smoothing: antialiased;
   padding: 0;
   margin: 0;
+  overflow: hidden;
 }
 
 pre {
@@ -37,3 +65,83 @@ p {
   box-sizing: border-box;
 }
 
+.ps__thumb-x {
+  background-color: var(--scrollbar-background-color);
+}
+
+.ps__thumb-y {
+  background-color: var(--scrollbar-background-color);
+  width: 4px;
+}
+
+.t-table {
+  --table-background-color: #F2F9FC;
+  --table-hover-background-color: #F2F8FE;
+  --table-border-color: #E4EEF6;
+  .t-table__content {
+    border-color: var(--table-border-color) !important;
+    &::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+  }
+  .t-table__scroll-bar-divider {
+    border-color: var(--table-border-color) !important;
+  }
+  tr:hover {
+    background-color: var(--table-hover-background-color) !important;
+  }
+  th {
+    background-color: var(--table-background-color) !important;
+    border-color: var(--table-border-color) !important;
+  }
+  td {
+    border-color: var(--table-border-color) !important;
+  }
+}
+
+.t-button.icon-operation {
+  font-size: var(--td-font-size-mark-medium);
+  color: var(--td-text-color-primary);
+  padding: 0 var(--td-comp-paddingLR-xs);
+  border: none;
+
+  .t-icon {
+    color: var(--td-brand-color-hover);
+    font-size: 18px;
+
+    & + .t-button__text {
+      margin-left: 5px;
+    }
+  }
+
+  &:hover {
+    background-color: var(--td-brand-color-2);
+    border: none;
+  }
+}
+
+.t-dialog--default {
+  padding: var(--td-comp-paddingTB) var(--td-comp-paddingLR);
+  border-radius: var(--td-radius-small);
+
+  .t-dialog__header {
+    padding-bottom: var(--td-comp-paddingTB);
+    border-bottom: 1px solid var(--td-component-border);
+  }
+
+  .t-dialog__close {
+    font-size: calc(var(--td-font-size-body-large) + 8px);
+    width: calc(var(--td-font-size-body-large) + 8px);
+    height: calc(var(--td-font-size-body-large) + 8px);
+  }
+
+  .t-dialog__body {
+    padding: var(--td-comp-paddingTB) 0;
+  }
+
+  .t-dialog__footer {
+    padding: var(--td-comp-paddingTB) 0 0;
+    border-top: 1px solid var(--td-component-border);
+  }
+}

@@ -1,25 +1,17 @@
 <template>
   <div class="login-wrapper">
-    <login-header />
+<!--    <login-header />-->
 
     <div class="login-container">
       <div class="title-container">
-        <h1 class="title margin-no">{{ $t('pages.login.loginTitle') }}</h1>
-        <h1 class="title">TDesign Starter</h1>
-        <div class="sub-title">
-          <p class="tip">{{ type == 'register' ? $t('pages.login.existAccount') : $t('pages.login.noAccount') }}</p>
-          <p class="tip" @click="switchType(type == 'register' ? 'login' : 'register')">
-            {{ type == 'register' ? $t('pages.login.signIn') : $t('pages.login.createAccount') }}
-          </p>
-        </div>
+        <h1 class="title margin-no">{{ sss }}</h1>
       </div>
 
-      <login v-if="type === 'login'" />
-      <register v-else @register-success="switchType('login')" />
+      <login />
       <tdesign-setting />
     </div>
 
-    <footer class="copyright">Copyright @ 2021-2023 Tencent. All Rights Reserved</footer>
+    <footer class="copyright">Copyright @ 2023 MichaelSun. All Rights Reserved</footer>
   </div>
 </template>
 <script lang="ts">
@@ -37,6 +29,8 @@ import Login from './components/Login.vue';
 import Register from './components/Register.vue';
 
 const type = ref('login');
+
+const sss = __TITLE__;
 const switchType = (val: string) => {
   type.value = val;
 };

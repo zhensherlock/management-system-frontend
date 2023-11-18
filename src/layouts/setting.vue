@@ -15,7 +15,7 @@
           <div v-for="(item, index) in MODE_OPTIONS" :key="index" class="setting-layout-drawer">
             <div>
               <t-radio-button :key="index" :value="item.type"
-                ><component :is="getModeIcon(item.type)"
+              ><component :is="getModeIcon(item.type)"
               /></t-radio-button>
               <p :style="{ textAlign: 'center', marginTop: '8px' }">{{ item.text }}</p>
             </div>
@@ -98,10 +98,10 @@
   </t-drawer>
 </template>
 <script setup lang="ts">
+import { useClipboard } from '@vueuse/core';
 import type { PopupVisibleChangeContext } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { computed, onMounted, ref, watchEffect } from 'vue';
-import useClipboard from 'vue-clipboard3';
 
 import SettingAutoIcon from '@/assets/assets-setting-auto.svg';
 import SettingDarkIcon from '@/assets/assets-setting-dark.svg';
@@ -169,9 +169,9 @@ const onPopupVisibleChange = (visible: boolean, context: PopupVisibleChangeConte
 };
 
 const handleCopy = () => {
-  const text = JSON.stringify(formData.value, null, 4);
-  const { toClipboard } = useClipboard();
-  toClipboard(text)
+  const sourceText = JSON.stringify(formData.value, null, 4);
+  const { copy } = useClipboard({ source: sourceText });
+  copy()
     .then(() => {
       MessagePlugin.closeAll();
       MessagePlugin.success('复制成功');
