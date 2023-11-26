@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { FormInstanceFunctions, SubmitContext } from 'tdesign-vue-next';
 import { ref, toRaw, watch } from 'vue';
 import { useCloned } from '@vueuse/core';
 import _ from 'lodash';
@@ -19,7 +20,7 @@ const props = defineProps({
 })
 const emits = defineEmits(['update:modelValue'])
 
-const form = ref(null)
+const form = ref<FormInstanceFunctions>()
 
 let { cloned: formData } = useCloned(props.mdl)
 
@@ -34,7 +35,7 @@ const handleConfirm = () => {
   form.value.submit();
 }
 
-const handleSubmit = ({ validateResult }) => {
+const handleSubmit = ({ validateResult }: SubmitContext) => {
   if (validateResult === true) {
     _.merge(props.mdl, toRaw(formData.value));
     handleClose();

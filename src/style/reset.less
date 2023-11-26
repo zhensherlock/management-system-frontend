@@ -1,5 +1,6 @@
 // 对部分样式进行重置
 :root {
+  //--td-radius-default: 2px;
   --td-font-family: AlibabaPuHuiTi, -apple-system, BlinkMacSystemFont, PingFang SC, Microsoft YaHei, Arial Regular;
   --td-font-family-medium: AlibabaPuHuiTi, -apple-system, BlinkMacSystemFont, PingFang SC, Microsoft YaHei, Arial Medium;
   --td-component-border: var(--td-gray-color-2);
@@ -122,11 +123,11 @@ p {
 }
 
 .t-dialog--default {
-  padding: var(--td-comp-paddingTB) var(--td-comp-paddingLR);
+  padding: var(--td-comp-paddingTB-l) var(--td-comp-paddingLR-l);
   border-radius: var(--td-radius-small);
 
   .t-dialog__header {
-    padding-bottom: var(--td-comp-paddingTB);
+    padding-bottom: var(--td-comp-paddingTB-l);
     border-bottom: 1px solid var(--td-component-border);
   }
 
@@ -137,11 +138,11 @@ p {
   }
 
   .t-dialog__body {
-    padding: var(--td-comp-paddingTB) 0;
+    padding: var(--td-comp-paddingTB-l) 0;
   }
 
   .t-dialog__footer {
-    padding: var(--td-comp-paddingTB) 0 0;
+    padding: var(--td-comp-paddingTB-l) 0 0;
     border-top: 1px solid var(--td-component-border);
   }
 }

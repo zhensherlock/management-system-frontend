@@ -91,6 +91,8 @@ export interface RequestOptions {
 export interface Result<T = any> {
   code: number;
   data: T;
+  message: string;
+  traceId: string;
 }
 
 export interface AxiosRequestConfigRetry extends AxiosRequestConfig {

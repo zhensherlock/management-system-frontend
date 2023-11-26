@@ -16,7 +16,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background-size: 85%;
+  background-size: 95%;
   background-position: center;
   position: relative;
   background-color: #73ccf5;
@@ -127,17 +127,23 @@
     }
   }
 
-  .verification-code {
+  .captcha-form-item {
     display: flex;
     align-items: center;
+
+    .t-image__wrapper {
+      margin-left: var(--td-comp-margin-l);
+      border-radius: var(--td-radius-default);
+      cursor: pointer;
+    }
 
     :deep(.t-form__controls) {
       width: 100%;
 
-      button {
-        flex-shrink: 0;
-        margin-left: var(--td-comp-margin-l);
-        width: 128px;
+      img {
+        width: 120px;
+        height: 40px;
+        display: block;
       }
     }
   }

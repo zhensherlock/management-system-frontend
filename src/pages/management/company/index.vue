@@ -9,6 +9,7 @@
             :data="searchData"
             layout="inline"
             labelWidth="0px"
+            @submit="handleSearchSubmit"
           >
             <t-form-item name="name">
               <t-input
@@ -22,6 +23,14 @@
               </t-input>
             </t-form-item>
           </t-form>
+        </div>
+        <div class="filter-body-reset" v-if="resetFilterVisible">
+          <t-link theme="primary" hover="color" @click="handleResetFilter">
+            <t-space :size="4">
+              <swap-icon slot="prefix-icon"></swap-icon>
+              重置筛选
+            </t-space>
+          </t-link>
         </div>
       </div>
       <template #actions>
@@ -37,7 +46,7 @@
       <template #title>
         <i18n-t keypath="pages.record.table.total">
           <template #number>
-            <span class="t-link--theme-danger">111</span>
+            <span class="t-link--theme-danger">{{ total }}</span>
           </template>
         </i18n-t>
       </template>
@@ -51,8 +60,9 @@
         >
         </result>
       </template>
-      <div v-else class="data-card-table" ref="tableElement">
+      <div v-else class="data-card-table" ref="tableParentElement">
         <t-table
+	        ref="tableElement"
           bordered
           hover
           cell-empty-content="-"
@@ -65,7 +75,8 @@
           :loading="loading"
           :loadingProps="loadingProps"
           :max-height="tableHeight"
-          :height="tableHeight"
+	        :key="tableKey"
+	        @page-change="handleChangePage"
         >
           <template #title-slot-name>
             {{ $t('pages.company.name') }}
@@ -113,44 +124,65 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
-import { SearchIcon } from 'tdesign-icons-vue-next';
+import {ref, reactive, onMounted, computed} from 'vue';
+import _ from 'lodash'
+import { SearchIcon, SwapIcon } from 'tdesign-icons-vue-next';
 import { useTable } from '@/composeable /useTable';
 import { OperationCompany, ImportCompany } from './components';
-const tableElement = ref(null)
+import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
+const tableParentElement = ref(null);
+const tableElement = ref(null);
 
 const searchData = reactive({
   name: '',
+  keyword: '',
 });
 
-const data = ref([]);
-setTimeout(() => {
-  total.value = 100
-  for (let i = 0; i < 100; i++) {
-    data.value.push({
-      name: 'nameXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX公司',
-      person: 'personXXX',
-      contact: 'contactXXX',
-      address: 'addressXXX',
-    })
-  }
-  loading.value = false;
+const resetFilterVisible = computed(() => {
+  return !_.isEmpty(searchData.keyword);
 })
-const columns = ref([
-  { colKey: 'name', title: 'title-slot-name' },
-  { colKey: 'person', title: 'title-slot-person' },
-  { colKey: 'contact', title: 'title-slot-contact' },
-  { colKey: 'address', title: 'title-slot-address' },
-  { colKey: 'operation', title: 'title-slot-operation' },
+
+const fetchData = async () => {
+  loading.value = true;
+  try {
+    // const { list } = await getList();
+    const list = []
+    for (let i = 0; i < 20; i++) {
+      list.push({
+        name: 'nameXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX公司',
+        person: 'personXXX',
+        contact: 'contactXXX',
+        address: 'addressXXX',
+      })
+    }
+    data.value = list;
+    total.value = 100
+  } catch {
+  } finally {
+    loading.value = false;
+  }
+};
+const columns = ref<PrimaryTableCol[]>([
+	{ colKey: 'name', title: 'title-slot-name' },
+	{ colKey: 'person', title: 'title-slot-person' },
+	{ colKey: 'contact', title: 'title-slot-contact' },
+	{ colKey: 'address', title: 'title-slot-address' },
+	{ colKey: 'operation', title: 'title-slot-operation', width: 100 },
 ]);
 const rowKey = 'index';
 const verticalAlign = 'top' as const;
 const total = ref(0);
 const loading = ref(true);
 
-const { pagination, isEmpty, loadingProps, tableHeight } = useTable({
+const data = ref([]);
+onMounted(() => {
+  fetchData();
+});
+
+const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({
   total,
-  parent: tableElement,
+	table: tableElement,
+  parent: tableParentElement,
   loading,
 })
 
@@ -175,6 +207,22 @@ const handleShowUpdate = (company: any) => {
 const importVisible = ref(false);
 const handleShowImport = () => {
   importVisible.value = true
+}
+
+const handleSearchSubmit = () => {
+  searchData.keyword = searchData.name;
+	pagination.value.current = 1;
+  fetchData();
+}
+
+const handleChangePage = (pageInfo: PageInfo) => {
+	pagination.value.current = pageInfo.current;
+	pagination.value.pageSize = pageInfo.pageSize;
+}
+
+const handleResetFilter = () => {
+  searchData.name = '';
+  searchData.keyword = '';
 }
 </script>
 <style lang="less" scoped>

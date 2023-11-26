@@ -18,21 +18,21 @@
       <template #operations>
         <div class="operations-container">
           <!-- 搜索框 -->
-          <search v-if="layout !== 'side'" :layout="layout" />
+<!--          <search v-if="layout !== 'side'" :layout="layout" />-->
 
           <!-- 全局通知 -->
           <notice />
 
-          <t-tooltip placement="bottom" :content="$t('layout.header.code')">
-            <t-button theme="default" shape="square" variant="text" @click="navToGitHub">
-              <t-icon name="logo-github" />
-            </t-button>
-          </t-tooltip>
-          <t-tooltip placement="bottom" :content="$t('layout.header.help')">
-            <t-button theme="default" shape="square" variant="text" @click="navToHelper">
-              <t-icon name="help-circle" />
-            </t-button>
-          </t-tooltip>
+<!--          <t-tooltip placement="bottom" :content="$t('layout.header.code')">-->
+<!--            <t-button theme="default" shape="square" variant="text" @click="navToGitHub">-->
+<!--              <t-icon name="logo-github" />-->
+<!--            </t-button>-->
+<!--          </t-tooltip>-->
+<!--          <t-tooltip placement="bottom" :content="$t('layout.header.help')">-->
+<!--            <t-button theme="default" shape="square" variant="text" @click="navToHelper">-->
+<!--              <t-icon name="help-circle" />-->
+<!--            </t-button>-->
+<!--          </t-tooltip>-->
           <t-dropdown trigger="click">
             <t-button theme="default" shape="square" variant="text">
               <translate-icon />
@@ -81,7 +81,7 @@ import { useRouter } from 'vue-router';
 
 import LogoFull from '@/assets/assets-logo-full.svg?component';
 import { prefix } from '@/config/global';
-import { langList } from '@/locales/index';
+import { langList } from '@/locales';
 import { useLocale } from '@/locales/useLocale';
 import { getActive } from '@/router';
 import { useSettingStore, useUserStore } from '@/store';
@@ -171,14 +171,6 @@ const handleLogout = () => {
     query: { redirect: encodeURIComponent(router.currentRoute.value.fullPath) },
   });
 };
-
-const navToGitHub = () => {
-  window.open('https://github.com/tencent/tdesign-vue-next-starter');
-};
-
-const navToHelper = () => {
-  window.open('http://tdesign.tencent.com/starter/docs/get-started');
-};
 </script>
 <style lang="less" scoped>
 .@{starter-prefix}-header {
@@ -186,6 +178,7 @@ const navToHelper = () => {
     position: fixed;
     top: 0;
     z-index: 1001;
+    box-shadow: rgba(0, 0, 0, 0.08) 0 2px 2px 0;
 
     :deep(.t-head-menu__inner) {
       padding-right: var(--td-comp-margin-xl);
@@ -211,7 +204,7 @@ const navToHelper = () => {
 }
 
 .header-menu {
-  flex: 1 1 1;
+  flex: 1;
   display: inline-flex;
 
   :deep(.t-menu__item) {

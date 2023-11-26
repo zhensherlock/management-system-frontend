@@ -38,7 +38,7 @@ const transform: AxiosTransform = {
     }
 
     // 错误的时候返回
-    const { data } = res;
+    const { data, message } = res;
     if (!data) {
       throw new Error('请求接口错误');
     }
@@ -47,12 +47,12 @@ const transform: AxiosTransform = {
     const { code } = data;
 
     // 这里逻辑可以根据项目进行修改
-    const hasSuccess = data && code === 0;
+    const hasSuccess = data && code === 200;
     if (hasSuccess) {
       return data.data;
     }
 
-    throw new Error(`请求接口错误, 错误码: ${code}`);
+    throw new Error(message || `请求接口错误, 错误码: ${code}`);
   },
 
   // 请求前处理配置
@@ -114,13 +114,13 @@ const transform: AxiosTransform = {
   requestInterceptors: (config, options) => {
     // 请求之前处理config
     const userStore = useUserStore();
-    const { token } = userStore;
+    const { loginInfo } = userStore;
 
-    if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
+    if (loginInfo && (config as Recordable)?.requestOptions?.withToken !== false) {
       // jwt token
       (config as Recordable).headers.Authorization = options.authenticationScheme
-        ? `${options.authenticationScheme} ${token}`
-        : token;
+        ? `${options.authenticationScheme} ${loginInfo.accessToken}`
+        : loginInfo.accessToken;
     }
     return config;
   },
@@ -157,7 +157,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
       <CreateAxiosOptions>{
         // https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#authentication_schemes
         // 例如: authenticationScheme: 'Bearer'
-        authenticationScheme: '',
+        authenticationScheme: 'Bearer',
         // 超时
         timeout: 10 * 1000,
         // 携带Cookie

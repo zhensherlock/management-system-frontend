@@ -40,17 +40,6 @@ export default [
           },
         },
       },
-      {
-        path: 'detail1',
-        name: 'SecurityCompany',
-        component: () => import('@/pages/company/index.vue'),
-        meta: {
-          title: {
-            zh_CN: '保安公司',
-            en_US: 'Security Company',
-          },
-        },
-      },
     ],
   },
 ];

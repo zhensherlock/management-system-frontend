@@ -2,18 +2,26 @@ import type { MaybeComputedElementRef } from '@vueuse/core';
 import { useResizeObserver } from '@vueuse/core';
 import type { MaybeRefOrGetter } from '@vueuse/shared';
 import { syncRef, toRef, toValue } from '@vueuse/shared';
-import { computed, isRef, nextTick, ref, watch } from 'vue';
+import { computed, isRef, nextTick, Ref, ref, watch } from 'vue';
+import { nanoid } from 'nanoid';
 
 export interface UseTableOptions {
   loading: MaybeRefOrGetter<boolean>;
   total: MaybeRefOrGetter<number>;
   pageSize?: MaybeRefOrGetter<number>;
-  parent: MaybeComputedElementRef | MaybeComputedElementRef[];
+  table?: Ref;
+  parent: MaybeComputedElementRef;
   excludeHeightElements?: string[];
 }
 
 export function useTable(options: UseTableOptions) {
-  const { loading = false, total = 0, pageSize = 20, parent, excludeHeightElements = [] } = options;
+  const {
+    loading = false,
+    total = 0,
+    pageSize = 20,
+    parent,
+    excludeHeightElements = []
+  } = options;
 
   const currentTotal = ref(0);
 
@@ -30,15 +38,21 @@ export function useTable(options: UseTableOptions) {
   const pagination = computed(() => {
     return toValue(total) > toValue(pageSize)
       ? {
-          defaultPageSize: toValue(pageSize),
-          total: 100,
-          defaultCurrent: 1,
-          totalContent: false,
-        }
+        pageSize: toValue(pageSize),
+        total: toValue(total),
+        current: 1,
+        totalContent: false,
+      }
       : null;
   });
 
   const isEmpty = computed(() => !loading && total === 0);
+
+  const randomTableKey = () => {
+    return nanoid(6);
+  }
+
+  const tableKey = ref(randomTableKey());
 
   const calculateTableHeight = () => {
     const _excludeHeightElements = [...excludeHeightElements];
@@ -50,10 +64,13 @@ export function useTable(options: UseTableOptions) {
       return prev + (el?.getBoundingClientRect()?.height || 0);
     }, 0);
     tableHeight.value = (toRef(parent).value as Element).clientHeight - excludeHeight;
+    tableKey.value = randomTableKey();
   };
 
   useResizeObserver(parent, () => {
-    calculateTableHeight();
+    nextTick(() => {
+      calculateTableHeight();
+    });
   });
 
   watch(currentTotal, () => {
@@ -67,5 +84,6 @@ export function useTable(options: UseTableOptions) {
     isEmpty,
     loadingProps,
     tableHeight,
+    tableKey,
   };
 }
