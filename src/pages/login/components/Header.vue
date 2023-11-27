@@ -25,14 +25,6 @@ const toggleSettingPanel = () => {
     showSettingPanel: true,
   });
 };
-
-const navToGitHub = () => {
-  window.open('https://github.com/tencent/tdesign-vue-next-starter');
-};
-
-const navToHelper = () => {
-  window.open('http://tdesign.tencent.com/starter/docs/get-started');
-};
 </script>
 
 <style lang="less" scoped>

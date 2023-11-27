@@ -47,14 +47,14 @@
 		  </t-input>
 	  </t-form-item>
     <t-form-item
-      v-if="showCaptcha"
+      v-if="userStore.showCaptcha"
       class="captcha-form-item"
       name="captcha"
       :rules="[
-        { required: false, message: $t('login.form.userName.errMsg'), type: 'error' }
+        { required: userStore.showCaptcha, message: $t('login.form.userName.errMsg'), type: 'error' }
       ]"
     >
-      <t-input v-model="formData.captcha" size="large" placeholder="请输入验证码">
+      <t-input v-model="formData.captcha" size="large" placeholder="请输入验证码" ref="captchaInput">
         <template #prefix-icon>
           <t-icon name="secured" />
         </template>
@@ -75,10 +75,11 @@
 <script setup lang="ts">
 import type { FormInstanceFunctions, SubmitContext } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watchEffect, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useUserStore } from '@/store';
+import type { LoginData } from "@/types/api/passport";
 
 const userStore = useUserStore();
 
@@ -87,10 +88,11 @@ const formData = ref({
 	account: 'blxx-user31',
 	password: '1qaz!QAZ',
   captcha: '',
+  captchaId: '',
 	checked: false,
 });
 const showPsw = ref(false);
-const showCaptcha = ref(true);
+const captchaInput = ref();
 
 const router = useRouter();
 const route = useRoute();
@@ -98,8 +100,13 @@ const route = useRoute();
 const fetchCaptcha = () => {
   userStore.getCaptcha();
 }
+
+watchEffect(() => {
+  if (userStore.showCaptcha) {
+    fetchCaptcha();
+  }
+})
 onMounted(() => {
-  fetchCaptcha();
 })
 
 const handleSubmit = async ({ validateResult }: SubmitContext) => {
@@ -107,15 +114,23 @@ const handleSubmit = async ({ validateResult }: SubmitContext) => {
 		return
 	}
 	try {
-		await userStore.login(formData.value);
+    if (userStore.captchaInfo?.id) {
+      formData.value.captchaId = userStore.captchaInfo?.id
+    }
+		await userStore.login(formData.value as LoginData);
 
 		MessagePlugin.success('登录成功');
 		const redirect = route.query.redirect as string;
 		const redirectUrl = redirect ? decodeURIComponent(redirect) : '/dashboard';
 		router.push(redirectUrl);
-	} catch (e) {
-		console.log(e);
-		MessagePlugin.error(e.message);
+	} catch ({ cause }) {
+    if (cause.code === 'HY_10004') {
+      userStore.showCaptcha = true;
+      nextTick(() => {
+        captchaInput.value.focus();
+      })
+    }
+		MessagePlugin.error(cause.message);
 	}
 };
 </script>

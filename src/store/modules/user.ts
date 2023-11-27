@@ -98,6 +98,6 @@ export const useUserStore = defineStore('user', {
       permissionStore.initRoutes();
     },
     key: 'user',
-    paths: ['loginInfo'],
+    paths: ['loginInfo', 'showCaptcha'],
   },
 });
