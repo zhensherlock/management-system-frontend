@@ -1,6 +1,7 @@
 export default {
   account: '账号',
   password: '登录密码',
+  captcha: '验证码',
   loginTitle: '登录到',
   noAccount: '没有账号吗?',
   existAccount: '已有账号?',

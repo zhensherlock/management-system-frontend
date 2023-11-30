@@ -16,7 +16,7 @@
 		  <t-input
 			  v-model="formData.account"
 			  size="large"
-			  :placeholder="$t('pages.login.input.account')"
+        :placeholder="$t('pages.form.placeholder', { field: $t('pages.login.account') })"
 		  >
 			  <template #prefix-icon>
 				  <t-icon name="user" />
@@ -36,7 +36,7 @@
 			  size="large"
 			  :type="showPsw ? 'text' : 'password'"
 			  clearable
-			  :placeholder="$t('pages.login.input.password')"
+        :placeholder="$t('pages.form.placeholder', { field: $t('pages.login.password') })"
 		  >
 			  <template #prefix-icon>
 				  <t-icon name="lock-on" />
@@ -51,10 +51,16 @@
       class="captcha-form-item"
       name="captcha"
       :rules="[
-        { required: userStore.showCaptcha, message: $t('login.form.userName.errMsg'), type: 'error' }
+        { required: userStore.showCaptcha, message: $t('pages.form.requiredText', { field: $t('pages.login.captcha') }), type: 'error', trigger: 'change' },
+        { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.login.captcha') }), type: 'error', trigger: 'change' },
       ]"
     >
-      <t-input v-model="formData.captcha" size="large" placeholder="请输入验证码" ref="captchaInput">
+      <t-input
+        v-model="formData.captcha"
+        size="large"
+        :placeholder="$t('pages.form.placeholder', { field: $t('pages.login.captcha') })"
+        ref="captchaInput"
+      >
         <template #prefix-icon>
           <t-icon name="secured" />
         </template>
