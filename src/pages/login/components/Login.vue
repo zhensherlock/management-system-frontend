@@ -91,7 +91,7 @@ const userStore = useUserStore();
 
 const form = ref<FormInstanceFunctions>();
 const formData = ref({
-	account: 'blxx-user31',
+	account: 'jyj-user',
 	password: '1qaz!QAZ',
   captcha: '',
   captchaId: '',
@@ -129,6 +129,7 @@ const handleSubmit = async ({ validateResult }: SubmitContext) => {
 		const redirect = route.query.redirect as string;
 		const redirectUrl = redirect ? decodeURIComponent(redirect) : '/dashboard';
 		router.push(redirectUrl);
+    userStore.showCaptcha = false;
 	} catch ({ cause }) {
     if (cause.code === 'HY_10004') {
       userStore.showCaptcha = true;

@@ -16,6 +16,7 @@ import user from './user';
 import record from './lang.zh_cn.record';
 import company from './lang.zh_cn.company';
 import form from './lang.zh_cn.form';
+import message from './lang.zh_cn.message';
 
 export default {
   dashboardBase,
@@ -36,4 +37,5 @@ export default {
   result,
   company,
   form,
+  message,
 };

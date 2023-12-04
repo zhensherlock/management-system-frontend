@@ -1,13 +1,13 @@
 <template>
   <div>
-    <!-- 顶部 card  -->
-    <top-panel class="row-container" />
-    <!-- 中部图表  -->
-    <middle-chart class="row-container" />
-    <!-- 列表排名 -->
-    <rank-list class="row-container" />
-    <!-- 出入库概览 -->
-    <output-overview class="row-container" />
+<!--    &lt;!&ndash; 顶部 card  &ndash;&gt;-->
+<!--    <top-panel class="row-container" />-->
+<!--    &lt;!&ndash; 中部图表  &ndash;&gt;-->
+<!--    <middle-chart class="row-container" />-->
+<!--    &lt;!&ndash; 列表排名 &ndash;&gt;-->
+<!--    <rank-list class="row-container" />-->
+<!--    &lt;!&ndash; 出入库概览 &ndash;&gt;-->
+<!--    <output-overview class="row-container" />-->
   </div>
 </template>
 

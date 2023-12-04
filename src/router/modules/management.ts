@@ -11,7 +11,7 @@ export default [
         zh_CN: '系统管理',
         en_US: 'System Management',
       },
-      icon: 'check-circle',
+      icon: 'layers',
     },
     children: [
       {

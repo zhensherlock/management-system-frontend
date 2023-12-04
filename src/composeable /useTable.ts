@@ -46,7 +46,7 @@ export function useTable(options: UseTableOptions) {
       : null;
   });
 
-  const isEmpty = computed(() => !loading && total === 0);
+  const isEmpty = computed(() => !toValue(loading) && toValue(total) === 0);
 
   const randomTableKey = () => {
     return nanoid(6);

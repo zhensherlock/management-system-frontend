@@ -1,6 +1,6 @@
 <template>
   <div class="record-page">
-    <t-card title="保安公司" header-bordered :bordered="false" class="filter-card">
+    <t-card title="学校公司" header-bordered :bordered="false" class="filter-card">
       <div class="filter-body">
         <div class="filter-body-label">{{ $t('pages.record.filter.label') }}</div>
         <div class="filter-body-content">
@@ -90,16 +90,10 @@
           <template #title-slot-address>
             {{ $t('pages.company.address') }}
           </template>
-          <template #title-slot-createdDate>
-            {{ $t('pages.company.createdDate') }}
-          </template>
-          <template #title-slot-updatedDate>
-            {{ $t('pages.company.updatedDate') }}
-          </template>
           <template #title-slot-operation>
             {{ $t('pages.record.operation.label') }}
           </template>
-          <template #operation="{ row }">
+          <template #operation="{ row, index }">
             <t-space align="center" :size="0">
               <t-link hover="color" theme="primary" @click="handleShowUpdate(row)">
                 {{ $t('pages.record.operation.update') }}
@@ -107,7 +101,7 @@
               <t-popconfirm
                 theme="danger"
                 :content="$t('pages.record.operation.deleteConfirm')"
-                @confirm="handleDeleteConfirm(row)"
+                @onConfirm="handleDeleteConfirm(row, index)"
               >
                 <t-link hover="color" theme="danger">{{ $t('pages.record.operation.delete') }}</t-link>
               </t-popconfirm>
@@ -123,7 +117,6 @@
       v-model="operationCompany.visible"
       :is-edit="operationCompany.isEdit"
       v-model:mdl="operationCompany.mdl"
-      @refresh-list="handleRefreshList"
     >
     </OperationCompany>
     <ImportCompany v-model="importVisible"></ImportCompany>
@@ -142,8 +135,6 @@ import { useTable } from '@/composeable /useTable';
 import { OperationCompany, ImportCompany } from './components';
 import { getList, deleteCompany } from '@/api/company';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
-import { MessagePlugin } from 'tdesign-vue-next';
-import { t } from '@/locales';
 
 const tableParentElement = ref(null);
 const tableElement = ref(null);
@@ -161,7 +152,7 @@ const resetFilterVisible = computed(() => {
 const fetchData = async () => {
   loading.value = true;
   try {
-    const { list, count } = await getList({ keyword: searchData.keyword });
+    const { list, count } = await getList(searchData);
     dataSource.value = list;
     total.value = count;
   } catch {
@@ -173,9 +164,7 @@ const columns = ref<PrimaryTableCol[]>([
 	{ colKey: 'name', title: 'title-slot-name' },
 	{ colKey: 'person', title: 'title-slot-person' },
 	{ colKey: 'contact', title: 'title-slot-contact' },
-  { colKey: 'address', title: 'title-slot-address' },
-  { colKey: 'createdDate', title: 'title-slot-createdDate', width: 160 },
-  { colKey: 'updatedDate', title: 'title-slot-updatedDate', width: 160 },
+	{ colKey: 'address', title: 'title-slot-address' },
 	{ colKey: 'operation', title: 'title-slot-operation', width: 100 },
 ]);
 const rowKey = 'index';
@@ -238,15 +227,10 @@ const handleResetFilter = () => {
   fetchData();
 }
 
-const handleDeleteConfirm = (row: any) => {
+const handleDeleteConfirm = (row, index) => {
   deleteCompany(row.id).then(() => {
-    fetchData();
-    MessagePlugin.success(t('pages.message.delete'));
+    dataSource.value.splice(index, 1);
   })
-}
-
-const handleRefreshList = () => {
-  fetchData();
 }
 </script>
 <style lang="less" scoped>

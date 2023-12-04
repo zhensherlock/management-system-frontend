@@ -3,7 +3,8 @@
     <t-head-menu :class="menuCls" :theme="menuTheme" expand-type="popup" :value="active">
       <template #logo>
         <span v-if="showLogo" class="header-logo-container" @click="handleNav('/dashboard/base')">
-          <logo-full class="t-logo" />
+<!--          <logo-full class="t-logo" />-->
+          <img src="/logo.png" >{{ title }}
         </span>
         <div v-else class="header-operate-left">
           <t-button theme="default" shape="square" variant="text" @click="changeCollapsed">
@@ -21,7 +22,7 @@
 <!--          <search v-if="layout !== 'side'" :layout="layout" />-->
 
           <!-- 全局通知 -->
-          <notice />
+<!--          <notice />-->
 
 <!--          <t-tooltip placement="bottom" :content="$t('layout.header.code')">-->
 <!--            <t-button theme="default" shape="square" variant="text" @click="navToGitHub">-->
@@ -33,16 +34,16 @@
 <!--              <t-icon name="help-circle" />-->
 <!--            </t-button>-->
 <!--          </t-tooltip>-->
-          <t-dropdown trigger="click">
-            <t-button theme="default" shape="square" variant="text">
-              <translate-icon />
-            </t-button>
-            <t-dropdown-menu>
-              <t-dropdown-item v-for="(lang, index) in langList" :key="index" :value="lang.value" @click="changeLang">{{
-                lang.content
-              }}</t-dropdown-item></t-dropdown-menu
-            >
-          </t-dropdown>
+<!--          <t-dropdown trigger="click">-->
+<!--            <t-button theme="default" shape="square" variant="text">-->
+<!--              <translate-icon />-->
+<!--            </t-button>-->
+<!--            <t-dropdown-menu>-->
+<!--              <t-dropdown-item v-for="(lang, index) in langList" :key="index" :value="lang.value" @click="changeLang">{{-->
+<!--                lang.content-->
+<!--              }}</t-dropdown-item></t-dropdown-menu-->
+<!--            >-->
+<!--          </t-dropdown>-->
           <t-dropdown :min-column-width="120" trigger="click">
             <template #dropdown>
               <t-dropdown-menu>
@@ -62,11 +63,11 @@
               <template #suffix><chevron-down-icon /></template>
             </t-button>
           </t-dropdown>
-          <t-tooltip placement="bottom" :content="$t('layout.header.setting')">
-            <t-button theme="default" shape="square" variant="text" @click="toggleSettingPanel">
-              <setting-icon />
-            </t-button>
-          </t-tooltip>
+<!--          <t-tooltip placement="bottom" :content="$t('layout.header.setting')">-->
+<!--            <t-button theme="default" shape="square" variant="text" @click="toggleSettingPanel">-->
+<!--              <setting-icon />-->
+<!--            </t-button>-->
+<!--          </t-tooltip>-->
         </div>
       </template>
     </t-head-menu>
@@ -122,6 +123,7 @@ const props = defineProps({
   },
 });
 
+const title = __TITLE__;
 const router = useRouter();
 const settingStore = useSettingStore();
 const user = useUserStore();
@@ -180,12 +182,12 @@ const handleLogout = () => {
     z-index: 1001;
     box-shadow: rgba(0, 0, 0, 0.08) 0 2px 2px 0;
 
-    :deep(.t-head-menu__inner) {
-      padding-right: var(--td-comp-margin-xl);
-    }
+    //:deep(.t-head-menu__inner) {
+    //  padding-right: var(--td-comp-margin-xl);
+    //}
 
     &-side {
-      left: 232px;
+      left: 200px;
       right: 0;
       z-index: 10;
       width: auto;
@@ -235,11 +237,19 @@ const handleLogout = () => {
 }
 
 .header-logo-container {
-  width: 184px;
-  height: 26px;
+  width: 216px;
+  height: 55px;
   display: flex;
-  margin-left: 24px;
+  margin-left: 8px;
   color: var(--td-text-color-primary);
+  align-items: center;
+  font-size: 20px;
+
+  img {
+    width: 35px;
+    height: 35px;
+    margin-right: 5px;
+  }
 
   .t-logo {
     width: 100%;

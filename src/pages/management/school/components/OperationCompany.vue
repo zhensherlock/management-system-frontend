@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import type { FormInstanceFunctions, SubmitContext } from 'tdesign-vue-next';
-import { ref, watch } from 'vue';
+import { ref, toRaw, watch } from 'vue';
 import { useCloned } from '@vueuse/core';
 import _ from 'lodash';
 import { createCompany, updateCompany } from '@/api/company';
-import { MessagePlugin } from 'tdesign-vue-next';
-import { t } from '@/locales';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -22,7 +20,7 @@ const props = defineProps({
     }
   }
 })
-const emits = defineEmits(['update:modelValue', 'refresh-list'])
+const emits = defineEmits(['update:modelValue'])
 
 const form = ref<FormInstanceFunctions>()
 
@@ -41,41 +39,19 @@ const handleConfirm = () => {
 
 const handleSubmit = ({ validateResult }: SubmitContext) => {
   if (validateResult !== true) {
-    return
   }
+  _.merge(props.mdl, toRaw(formData.value));
   if (props.isEdit) {
-    handleEditSubmit()
+    updateCompany(formData.value).then(() => {
+      emits('update:modelValue', false)
+      handleClose();
+    })
   } else {
-    handleCreateSubmit()
+    createCompany(formData.value).then(() => {
+      emits('update:modelValue', false)
+      handleClose();
+    })
   }
-}
-
-const handleEditSubmit = () => {
-  const params = {
-    name: formData.value.name,
-    person: formData.value.person,
-    contact: formData.value.contact,
-    address: formData.value.address,
-  }
-  updateCompany(formData.value.id, params).then(() => {
-    _.merge(props.mdl, params);
-    handleClose();
-    MessagePlugin.success(t('pages.message.update'));
-  })
-}
-
-const handleCreateSubmit = () => {
-  const params = {
-    name: formData.value.name,
-    person: formData.value.person,
-    contact: formData.value.contact,
-    address: formData.value.address,
-  }
-  createCompany(params).then(() => {
-    emits('refresh-list');
-    handleClose();
-    MessagePlugin.success(t('pages.message.create'));
-  })
 }
 
 const handleClose = () => {
@@ -107,7 +83,6 @@ const handleClose = () => {
         ]"
       >
         <t-input
-          autofocus
           v-model="formData.name"
           clearable
           :maxlength="255"

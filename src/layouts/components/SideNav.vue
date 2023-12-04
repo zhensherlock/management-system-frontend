@@ -124,4 +124,9 @@ const getLogo = () => {
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+:deep(.t-menu__item) {
+	margin-bottom: 5px;
+	padding: 0 10px;
+}
+</style>

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { DownloadIcon } from 'tdesign-icons-vue-next'
-import { importCompanies } from '@/api/company';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -26,13 +25,6 @@ const formatResponse = (res) => {
   }
   return res;
 };
-
-const handleFileChange = (files: File[]) => {
-	const [file] = files
-	importCompanies(<File>file).then(() => {
-		handleClose()
-	})
-}
 </script>
 
 <template>
@@ -53,13 +45,12 @@ const handleFileChange = (files: File[]) => {
       v-model="files"
       class="upload"
       draggable
-      accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+      accept=""
+      action="https://service-bv448zsw-1257786608.gz.apigw.tencentcs.com/api/upload-demo"
       theme="custom"
       :auto-upload="false"
       :show-thumbnail="false"
-      :with-credentials="true"
       :format-response="formatResponse"
-      @select-change="handleFileChange"
     >
       <template #dragContent>
         <div class="flex flex-col items-center">
@@ -73,7 +64,7 @@ const handleFileChange = (files: File[]) => {
                 size="small"
                 class="upload-template-link"
                 download
-                href="/template/导入公司模板.xlsx"
+                href="https://tdesign.gtimg.com/starter/result-page/import-template.xlsx"
                 @click.stop
               >
                 <download-icon slot="prefix-icon"></download-icon>
