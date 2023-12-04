@@ -4,13 +4,7 @@
       <div class="filter-body">
         <div class="filter-body-label">{{ $t('pages.record.filter.label') }}</div>
         <div class="filter-body-content">
-          <t-form
-            ref="form"
-            :data="searchData"
-            layout="inline"
-            labelWidth="0px"
-            @submit="handleSearchSubmit"
-          >
+          <t-form ref="form" :data="searchData" layout="inline" labelWidth="0px" @submit="handleSearchSubmit">
             <t-form-item name="name">
               <t-input
                 v-model="searchData.name"
@@ -35,10 +29,12 @@
       </div>
       <template #actions>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
-          <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>{{ $t('pages.company.import') }}
+          <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template
+          >{{ $t('pages.company.import') }}
         </t-button>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowCreate">
-          <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>{{ $t('pages.company.create') }}
+          <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template
+          >{{ $t('pages.company.create') }}
         </t-button>
       </template>
     </t-card>
@@ -50,19 +46,13 @@
           </template>
         </i18n-t>
       </template>
-      <template #actions>
-      </template>
+      <template #actions> </template>
       <template v-if="isEmpty">
-        <result
-          type="empty"
-          :title="$t('pages.record.empty.title')"
-          :tip="$t('pages.record.empty.tip')"
-        >
-        </result>
+        <result type="empty" :title="$t('pages.record.empty.title')" :tip="$t('pages.record.empty.tip')"> </result>
       </template>
       <div v-else class="data-card-table" ref="tableParentElement">
         <t-table
-	        ref="tableElement"
+          ref="tableElement"
           bordered
           hover
           cell-empty-content="-"
@@ -75,8 +65,8 @@
           :loading="loading"
           :loadingProps="loadingProps"
           :max-height="tableHeight"
-	        :key="tableKey"
-	        @page-change="handleChangePage"
+          :key="tableKey"
+          @page-change="handleChangePage"
         >
           <template #title-slot-name>
             {{ $t('pages.company.name') }}
@@ -126,7 +116,7 @@
       @refresh-list="handleRefreshList"
     >
     </OperationCompany>
-    <ImportCompany v-model="importVisible"></ImportCompany>
+    <ImportCompany v-model="importVisible" @refresh-list="handleRefreshList"></ImportCompany>
   </div>
 </template>
 <script lang="ts">
@@ -136,7 +126,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { ref, reactive, onMounted, computed } from 'vue';
-import _ from 'lodash'
+import _ from 'lodash';
 import { SearchIcon, SwapIcon } from 'tdesign-icons-vue-next';
 import { useTable } from '@/composeable /useTable';
 import { OperationCompany, ImportCompany } from './components';
@@ -156,7 +146,7 @@ const searchData = reactive({
 
 const resetFilterVisible = computed(() => {
   return !_.isEmpty(searchData.keyword);
-})
+});
 
 const fetchData = async () => {
   loading.value = true;
@@ -170,13 +160,13 @@ const fetchData = async () => {
   }
 };
 const columns = ref<PrimaryTableCol[]>([
-	{ colKey: 'name', title: 'title-slot-name' },
-	{ colKey: 'person', title: 'title-slot-person' },
-	{ colKey: 'contact', title: 'title-slot-contact' },
+  { colKey: 'name', title: 'title-slot-name' },
+  { colKey: 'person', title: 'title-slot-person' },
+  { colKey: 'contact', title: 'title-slot-contact' },
   { colKey: 'address', title: 'title-slot-address' },
   { colKey: 'createdDate', title: 'title-slot-createdDate', width: 160 },
   { colKey: 'updatedDate', title: 'title-slot-updatedDate', width: 160 },
-	{ colKey: 'operation', title: 'title-slot-operation', width: 100 },
+  { colKey: 'operation', title: 'title-slot-operation', width: 100 },
 ]);
 const rowKey = 'index';
 const verticalAlign = 'top' as const;
@@ -189,65 +179,64 @@ onMounted(() => {
 
 const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({
   total,
-	table: tableElement,
+  table: tableElement,
   parent: tableParentElement,
   loading,
-})
+});
 
 const operationCompany = reactive({
   visible: false,
   isEdit: false,
   mdl: undefined,
-})
+});
 
 const handleShowCreate = () => {
   operationCompany.mdl = undefined;
   operationCompany.isEdit = false;
   operationCompany.visible = true;
-}
+};
 
 const handleShowUpdate = (company: any) => {
   operationCompany.mdl = company;
   operationCompany.isEdit = true;
   operationCompany.visible = true;
-}
+};
 
 const importVisible = ref(false);
 const handleShowImport = () => {
-  importVisible.value = true
-}
+  importVisible.value = true;
+};
 
 const handleSearchSubmit = () => {
   searchData.keyword = searchData.name;
   pagination.value && (pagination.value.current = 1);
   fetchData();
-}
+};
 
 const handleChangePage = (pageInfo: PageInfo) => {
   if (!pagination) {
-    return
+    return;
   }
-	pagination.value.current = pageInfo.current;
-	pagination.value.pageSize = pageInfo.pageSize;
-}
+  pagination.value.current = pageInfo.current;
+  pagination.value.pageSize = pageInfo.pageSize;
+};
 
 const handleResetFilter = () => {
   searchData.name = '';
   searchData.keyword = '';
   pagination.value && (pagination.value.current = 1);
   fetchData();
-}
+};
 
 const handleDeleteConfirm = (row: any) => {
   deleteCompany(row.id).then(() => {
     fetchData();
     MessagePlugin.success(t('pages.message.delete'));
-  })
-}
+  });
+};
 
 const handleRefreshList = () => {
   fetchData();
-}
+};
 </script>
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>
