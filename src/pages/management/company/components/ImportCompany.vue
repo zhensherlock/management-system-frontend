@@ -32,7 +32,7 @@ const handleFileChange = (files: File[]) => {
     loading.value = false;
     emits('refresh-list');
     handleClose();
-    MessagePlugin.success(t('pages.message.import'));
+    MessagePlugin.success(t('pages.message.import.success'));
   });
 };
 
@@ -79,7 +79,7 @@ const loading = ref(false);
                   size="small"
                   class="upload-template-link"
                   download
-                  href="/template/导入公司模板.xlsx"
+                  href="/template/保安公司导入模板.xlsx"
                   @click.stop
                 >
                   <download-icon slot="prefix-icon"></download-icon>

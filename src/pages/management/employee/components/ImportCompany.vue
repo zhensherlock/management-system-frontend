@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { DownloadIcon } from 'tdesign-icons-vue-next';
-import { importCompanies } from '@/api/company';
+import { importEmployees } from '@/api/employee';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
 
@@ -18,21 +18,17 @@ const handleClose = () => {
 
 const files = ref([]);
 
-const formatResponse = (res) => {
-  if (!res) {
-    return { status: 'fail', error: '上传失败，原因：文件过大或网络不通' };
-  }
-  return res;
-};
-
 const handleFileChange = (files: File[]) => {
   loading.value = true;
   const [file] = files;
-  importCompanies(<File>file).then(() => {
+  importEmployees(<File>file).then(() => {
     loading.value = false;
     emits('refresh-list');
     handleClose();
-    MessagePlugin.success(t('pages.message.import'));
+    MessagePlugin.success(t('pages.message.import.success'));
+  }).catch((error: Error) => {
+    loading.value = false;
+    MessagePlugin.error(t('pages.message.import.error', { reason: error.message }));
   });
 };
 
@@ -63,8 +59,6 @@ const loading = ref(false);
         theme="custom"
         :auto-upload="false"
         :show-thumbnail="false"
-        :with-credentials="true"
-        :format-response="formatResponse"
         @select-change="handleFileChange"
       >
         <template #dragContent>
@@ -79,7 +73,7 @@ const loading = ref(false);
                   size="small"
                   class="upload-template-link"
                   download
-                  href="/template/导入公司模板.xlsx"
+                  href="/template/保安员工导入模板.xlsx"
                   @click.stop
                 >
                   <download-icon slot="prefix-icon"></download-icon>

@@ -1,6 +1,6 @@
 <template>
   <div class="record-page">
-    <t-card title="保安公司" header-bordered :bordered="false" class="filter-card">
+    <t-card title="保安人员" header-bordered :bordered="false" class="filter-card">
       <div class="filter-body">
         <div class="filter-body-label">{{ $t('pages.record.filter.label') }}</div>
         <div class="filter-body-content">
@@ -29,10 +29,10 @@
       </div>
       <template #actions>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
-          <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>{{ $t('pages.company.import') }}
+          <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>{{ $t('pages.employee.import') }}
         </t-button>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowCreate">
-          <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>{{ $t('pages.company.create') }}
+          <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>{{ $t('pages.employee.create') }}
         </t-button>
       </template>
     </t-card>
@@ -67,22 +67,22 @@
           @page-change="handleChangePage"
         >
           <template #title-slot-name>
-            {{ $t('pages.company.name') }}
+            {{ $t('pages.employee.name') }}
           </template>
           <template #title-slot-person>
-            {{ $t('pages.company.person') }}
+            {{ $t('pages.employee.person') }}
           </template>
           <template #title-slot-contact>
-            {{ $t('pages.company.contact') }}
+            {{ $t('pages.employee.contact') }}
           </template>
           <template #title-slot-address>
-            {{ $t('pages.company.address') }}
+            {{ $t('pages.employee.address') }}
           </template>
           <template #title-slot-createdDate>
-            {{ $t('pages.company.createdDate') }}
+            {{ $t('pages.employee.createdDate') }}
           </template>
           <template #title-slot-updatedDate>
-            {{ $t('pages.company.updatedDate') }}
+            {{ $t('pages.employee.updatedDate') }}
           </template>
           <template #title-slot-operation>
             {{ $t('pages.record.operation.label') }}
@@ -128,7 +128,7 @@ import _ from 'lodash';
 import { SearchIcon, SwapIcon } from 'tdesign-icons-vue-next';
 import { useTable } from '@/composeable /useTable';
 import { OperationCompany, ImportCompany } from './components';
-import { getList, deleteCompany } from '@/api/company';
+import { getList, deleteEmployee } from '@/api/employee';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
@@ -232,7 +232,7 @@ const handleResetFilter = () => {
 };
 
 const handleDeleteConfirm = (row: any) => {
-  deleteCompany(row.id).then(() => {
+  deleteEmployee(row.id).then(() => {
     fetchData();
     MessagePlugin.success(t('pages.message.delete'));
   });

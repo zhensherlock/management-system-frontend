@@ -27,6 +27,18 @@ export default [
         },
       },
       {
+        path: 'employee',
+        name: 'EmployeeManage',
+        component: () => import('@/pages/management/employee/index.vue'),
+        meta: {
+          title: {
+            zh_CN: '保安人员管理',
+            en_US: 'Employee',
+          },
+          icon: 'user-safety',
+        },
+      },
+      {
         path: 'company',
         name: 'CompanyManage',
         component: () => import('@/pages/management/company/index.vue'),

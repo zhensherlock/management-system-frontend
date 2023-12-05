@@ -74,9 +74,9 @@ export function useTable(options: UseTableOptions) {
   });
 
   watch(currentTotal, () => {
-    nextTick(() => {
+    setTimeout(() => {
       calculateTableHeight();
-    });
+    })
   });
 
   return {

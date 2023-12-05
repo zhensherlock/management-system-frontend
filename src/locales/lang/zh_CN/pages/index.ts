@@ -15,6 +15,7 @@ import result from './result';
 import user from './user';
 import record from './lang.zh_cn.record';
 import company from './lang.zh_cn.company';
+import employee from './lang.zh_cn.employee';
 import form from './lang.zh_cn.form';
 import message from './lang.zh_cn.message';
 
@@ -36,6 +37,7 @@ export default {
   login,
   result,
   company,
+  employee,
   form,
   message,
 };

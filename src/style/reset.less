@@ -1,17 +1,17 @@
 // 对部分样式进行重置
 :root {
   //--td-radius-default: 2px;
-  --td-font-family: AlibabaPuHuiTi, -apple-system, BlinkMacSystemFont, PingFang SC, Microsoft YaHei, Arial Regular;
-  --td-font-family-medium: AlibabaPuHuiTi, -apple-system, BlinkMacSystemFont, PingFang SC, Microsoft YaHei, Arial Medium;
+  --td-font-family: alibabapuhuiti, -apple-system, blinkmacsystemfont, pingfang sc, microsoft yahei, arial regular;
+  --td-font-family-medium: alibabapuhuiti, -apple-system, blinkmacsystemfont, pingfang sc, microsoft yahei, arial medium;
   --td-component-border: var(--td-gray-color-2);
   --td-bg-color-page: var(--td-gray-color-1);
   --td-comp-paddingTB: var(--td-comp-paddingTB-l);
   --td-comp-paddingLR: var(--td-comp-paddingLR-l);
   --td-comp-margin: var(--td-comp-margin-l);
-  --td-scrollbar-color: #BBBBBB;
+  --td-scrollbar-color: #BBB;
 }
 
-@media screen and (max-width: 1400px) {
+@media screen and (width <= 1400px) {
   :root {
     --td-comp-paddingTB: var(--td-comp-paddingTB-m);
     --td-comp-paddingLR: var(--td-comp-paddingLR-m);
@@ -19,7 +19,7 @@
   }
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (width <= 1000px) {
   :root {
     --td-comp-paddingTB: var(--td-comp-paddingTB-s);
     --td-comp-paddingLR: var(--td-comp-paddingLR-s);
@@ -79,23 +79,29 @@ p {
   --table-background-color: #F2F9FC;
   --table-hover-background-color: #F2F8FE;
   --table-border-color: #E4EEF6;
+
   .t-table__content {
     border-color: var(--table-border-color) !important;
+
     &::-webkit-scrollbar {
       width: 5px;
       height: 5px;
     }
   }
+
   .t-table__scroll-bar-divider {
     border-color: var(--table-border-color) !important;
   }
+
   tr:hover {
     background-color: var(--table-hover-background-color) !important;
   }
+
   th {
     background-color: var(--table-background-color) !important;
     border-color: var(--table-border-color) !important;
   }
+
   td {
     border-color: var(--table-border-color) !important;
   }
