@@ -5,11 +5,18 @@
         <div class="filter-body-label">{{ $t('pages.record.filter.label') }}</div>
         <div class="filter-body-content">
           <t-form ref="form" :data="searchData" layout="inline" labelWidth="0px" @submit="handleSearchSubmit">
+            <t-form-item name="company">
+              <t-select
+                v-model="searchData.companyId"
+                :options="companyList"
+                :placeholder="$t('pages.form.selectPlaceholder', { field: $t('pages.employee.company') })"
+              />
+            </t-form-item>
             <t-form-item name="name">
               <t-input
                 v-model="searchData.name"
-                :label="$t('pages.company.name')"
-                :placeholder="$t('pages.form.placeholder', { field: $t('pages.company.name') })"
+                :label="$t('pages.employee.name')"
+                :placeholder="$t('pages.form.placeholder', { field: $t('pages.employee.name') })"
               >
                 <template #suffixIcon>
                   <search-icon :style="{ cursor: 'pointer' }" />
@@ -29,10 +36,12 @@
       </div>
       <template #actions>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
-          <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>{{ $t('pages.employee.import') }}
+          <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template
+          >{{ $t('pages.employee.import') }}
         </t-button>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowCreate">
-          <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>{{ $t('pages.employee.create') }}
+          <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template
+          >{{ $t('pages.employee.create') }}
         </t-button>
       </template>
     </t-card>
@@ -69,14 +78,20 @@
           <template #title-slot-name>
             {{ $t('pages.employee.name') }}
           </template>
-          <template #title-slot-person>
-            {{ $t('pages.employee.person') }}
+          <template #title-slot-sex>
+            {{ $t('pages.employee.sex') }}
+          </template>
+          <template #title-slot-age>
+            {{ $t('pages.employee.age') }}
+          </template>
+          <template #title-slot-id-card>
+            {{ $t('pages.employee.idCard') }}
+          </template>
+          <template #title-slot-certificate>
+            {{ $t('pages.employee.certificate') }}
           </template>
           <template #title-slot-contact>
             {{ $t('pages.employee.contact') }}
-          </template>
-          <template #title-slot-address>
-            {{ $t('pages.employee.address') }}
           </template>
           <template #title-slot-createdDate>
             {{ $t('pages.employee.createdDate') }}
@@ -86,6 +101,12 @@
           </template>
           <template #title-slot-operation>
             {{ $t('pages.record.operation.label') }}
+          </template>
+          <template #sex="{ row }">
+            {{ getSex(row.sex) }}
+          </template>
+          <template #age="{ row }">
+            {{ getAge(row.birthday) }}
           </template>
           <template #operation="{ row }">
             <t-space align="center" :size="0">
@@ -129,15 +150,19 @@ import { SearchIcon, SwapIcon } from 'tdesign-icons-vue-next';
 import { useTable } from '@/composeable /useTable';
 import { OperationCompany, ImportCompany } from './components';
 import { getList, deleteEmployee } from '@/api/employee';
+import { getList as getCompanyList } from '@/api/company';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
+import { getAge } from '@/utils/date';
+import { getSex } from '@/utils/string';
 
 const tableParentElement = ref(null);
 const tableElement = ref(null);
 const dataSource = ref([]);
 
 const searchData = reactive({
+  companyId: '',
   name: '',
   keyword: '',
 });
@@ -152,7 +177,7 @@ const fetchData = async () => {
     const { list, count } = await getList({
       currentPage: pagination.value?.current || 1,
       pageSize: pagination.value?.pageSize || 20,
-      keyword: searchData.keyword
+      keyword: searchData.keyword,
     });
     dataSource.value = list;
     total.value = count;
@@ -162,10 +187,12 @@ const fetchData = async () => {
   }
 };
 const columns = ref<PrimaryTableCol[]>([
-  { colKey: 'name', title: 'title-slot-name' },
-  { colKey: 'person', title: 'title-slot-person' },
-  { colKey: 'contact', title: 'title-slot-contact' },
-  { colKey: 'address', title: 'title-slot-address' },
+  { colKey: 'name', title: 'title-slot-name', width: 100 },
+  { colKey: 'sex', title: 'title-slot-sex', width: 60 },
+  { colKey: 'age', title: 'title-slot-age', width: 60 },
+  { colKey: 'idCard', title: 'title-slot-id-card', width: 160 },
+  { colKey: 'certificateNumber', title: 'title-slot-certificate', width: 100 },
+  { colKey: 'contact', title: 'title-slot-contact', width: 120 },
   { colKey: 'createdDate', title: 'title-slot-createdDate', width: 160 },
   { colKey: 'updatedDate', title: 'title-slot-updatedDate', width: 160 },
   { colKey: 'operation', title: 'title-slot-operation', width: 100 },
@@ -175,8 +202,13 @@ const verticalAlign = 'top' as const;
 const total = ref(0);
 const loading = ref(true);
 
+const companyList = ref([]);
+
 onMounted(() => {
   fetchData();
+  getCompanyList({}).then((res) => {
+    companyList.value = res.list;
+  });
 });
 
 const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({

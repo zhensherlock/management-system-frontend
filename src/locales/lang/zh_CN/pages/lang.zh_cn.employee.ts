@@ -6,6 +6,10 @@ export default {
   sex: '性别',
   age: '年龄',
   idCard: '身份证号',
+  certificate: '保安证',
+  certificateNumber: '保安证编号',
+  contact: '联系方式',
+  company: '所属保安公司',
   createdDate: '新建时间',
   updatedDate: '修改时间',
 };

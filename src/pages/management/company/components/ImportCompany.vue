@@ -18,13 +18,6 @@ const handleClose = () => {
 
 const files = ref([]);
 
-const formatResponse = (res) => {
-  if (!res) {
-    return { status: 'fail', error: '上传失败，原因：文件过大或网络不通' };
-  }
-  return res;
-};
-
 const handleFileChange = (files: File[]) => {
   loading.value = true;
   const [file] = files;
@@ -64,7 +57,6 @@ const loading = ref(false);
         :auto-upload="false"
         :show-thumbnail="false"
         :with-credentials="true"
-        :format-response="formatResponse"
         @select-change="handleFileChange"
       >
         <template #dragContent>
@@ -79,7 +71,7 @@ const loading = ref(false);
                   size="small"
                   class="upload-template-link"
                   download
-                  href="/template/保安公司导入模板.xlsx"
+                  href="/files/保安公司导入模板.xlsx"
                   @click.stop
                 >
                   <download-icon slot="prefix-icon"></download-icon>

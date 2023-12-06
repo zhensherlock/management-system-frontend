@@ -21,15 +21,17 @@ const files = ref([]);
 const handleFileChange = (files: File[]) => {
   loading.value = true;
   const [file] = files;
-  importEmployees(<File>file).then(() => {
-    loading.value = false;
-    emits('refresh-list');
-    handleClose();
-    MessagePlugin.success(t('pages.message.import.success'));
-  }).catch((error: Error) => {
-    loading.value = false;
-    MessagePlugin.error(t('pages.message.import.error', { reason: error.message }));
-  });
+  importEmployees(<File>file)
+    .then(() => {
+      loading.value = false;
+      emits('refresh-list');
+      handleClose();
+      MessagePlugin.success(t('pages.message.import.success'));
+    })
+    .catch((error: Error) => {
+      loading.value = false;
+      MessagePlugin.error(t('pages.message.import.error', { reason: error.message }));
+    });
 };
 
 const loading = ref(false);
@@ -73,7 +75,7 @@ const loading = ref(false);
                   size="small"
                   class="upload-template-link"
                   download
-                  href="/template/保安员工导入模板.xlsx"
+                  href="/files/保安员工导入模板.xlsx"
                   @click.stop
                 >
                   <download-icon slot="prefix-icon"></download-icon>
