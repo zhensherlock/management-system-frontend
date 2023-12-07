@@ -1,50 +1,46 @@
 <template>
   <div class="record-page">
-    <t-card title="保安人员" header-bordered :bordered="false" class="filter-card">
-      <div class="filter-body">
-        <div class="filter-body-label">{{ $t('pages.record.filter.label') }}</div>
-        <div class="filter-body-content">
-          <t-form ref="form" :data="searchData" layout="inline" labelWidth="0px" @submit="handleSearchSubmit">
-            <t-form-item name="company">
-              <t-select
-                v-model="searchData.companyId"
-                :options="companyList"
-                :placeholder="$t('pages.form.selectPlaceholder', { field: $t('pages.employee.company') })"
-              />
-            </t-form-item>
-            <t-form-item name="name">
-              <t-input
-                v-model="searchData.name"
-                :label="$t('pages.employee.name')"
-                :placeholder="$t('pages.form.placeholder', { field: $t('pages.employee.name') })"
-              >
-                <template #suffixIcon>
-                  <search-icon :style="{ cursor: 'pointer' }" />
-                </template>
-              </t-input>
-            </t-form-item>
-          </t-form>
-        </div>
-        <div class="filter-body-reset" v-if="resetFilterVisible">
-          <t-link theme="primary" hover="color" @click="handleResetFilter">
-            <t-space :size="4">
-              <swap-icon slot="prefix-icon"></swap-icon>
-              重置筛选
-            </t-space>
-          </t-link>
-        </div>
-      </div>
-      <template #actions>
-        <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
-          <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template
-          >{{ $t('pages.employee.import') }}
-        </t-button>
-        <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowCreate">
-          <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template
-          >{{ $t('pages.employee.create') }}
-        </t-button>
-      </template>
-    </t-card>
+	  <FilterCard
+		  title="保安人员"
+		  v-model="searchData"
+		  :options="[
+				{
+					type: 'select',
+					name: 'companyId',
+					value: '',
+          label: $t('pages.employee.company'),
+          placeholder: $t('pages.form.selectPlaceholder', { field: $t('pages.employee.company') }),
+          children: companyList,
+				},
+				{
+					type: 'select',
+					name: 'organizationIds',
+					value: [],
+          label: $t('pages.employee.company'),
+          placeholder: $t('pages.form.selectPlaceholder', { field: $t('pages.employee.company') }),
+          children: companyList,
+				},
+        {
+          type: 'input',
+          name: 'keyword',
+          value: '',
+          label: $t('pages.employee.name'),
+          placeholder: $t('pages.form.placeholder', { field: $t('pages.employee.name') }),
+        },
+      ]"
+		  @submit="handleSearchSubmit"
+	  >
+		  <template #actions>
+			  <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
+				  <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>
+				  {{ $t('pages.employee.import') }}
+			  </t-button>
+			  <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowCreate">
+				  <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>
+				  {{ $t('pages.employee.create') }}
+			  </t-button>
+		  </template>
+	  </FilterCard>
     <t-card header-bordered :bordered="false" class="data-card">
       <template #title>
         <i18n-t keypath="pages.record.table.total">
@@ -75,33 +71,6 @@
           :key="tableKey"
           @page-change="handleChangePage"
         >
-          <template #title-slot-name>
-            {{ $t('pages.employee.name') }}
-          </template>
-          <template #title-slot-sex>
-            {{ $t('pages.employee.sex') }}
-          </template>
-          <template #title-slot-age>
-            {{ $t('pages.employee.age') }}
-          </template>
-          <template #title-slot-id-card>
-            {{ $t('pages.employee.idCard') }}
-          </template>
-          <template #title-slot-certificate>
-            {{ $t('pages.employee.certificate') }}
-          </template>
-          <template #title-slot-contact>
-            {{ $t('pages.employee.contact') }}
-          </template>
-          <template #title-slot-createdDate>
-            {{ $t('pages.employee.createdDate') }}
-          </template>
-          <template #title-slot-updatedDate>
-            {{ $t('pages.employee.updatedDate') }}
-          </template>
-          <template #title-slot-operation>
-            {{ $t('pages.record.operation.label') }}
-          </template>
           <template #sex="{ row }">
             {{ getSex(row.sex) }}
           </template>
@@ -140,13 +109,11 @@
 </template>
 <script lang="ts">
 export default {
-  name: 'CompanyList',
+  name: 'EmployeeList',
 };
 </script>
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from 'vue';
-import _ from 'lodash';
-import { SearchIcon, SwapIcon } from 'tdesign-icons-vue-next';
+import { ref, reactive, onMounted } from 'vue';
 import { useTable } from '@/composeable /useTable';
 import { OperationCompany, ImportCompany } from './components';
 import { getList, deleteEmployee } from '@/api/employee';
@@ -161,14 +128,10 @@ const tableParentElement = ref(null);
 const tableElement = ref(null);
 const dataSource = ref([]);
 
-const searchData = reactive({
-  companyId: '',
-  name: '',
+const searchData = ref({
+  companyId: null,
+  organizationIds: [],
   keyword: '',
-});
-
-const resetFilterVisible = computed(() => {
-  return !_.isEmpty(searchData.keyword);
 });
 
 const fetchData = async () => {
@@ -177,7 +140,9 @@ const fetchData = async () => {
     const { list, count } = await getList({
       currentPage: pagination.value?.current || 1,
       pageSize: pagination.value?.pageSize || 20,
-      keyword: searchData.keyword,
+      keyword: searchData.value.keyword,
+      companyIds: searchData.value.companyId,
+      organizationIds: searchData.value.organizationIds,
     });
     dataSource.value = list;
     total.value = count;
@@ -187,15 +152,15 @@ const fetchData = async () => {
   }
 };
 const columns = ref<PrimaryTableCol[]>([
-  { colKey: 'name', title: 'title-slot-name', width: 100 },
-  { colKey: 'sex', title: 'title-slot-sex', width: 60 },
-  { colKey: 'age', title: 'title-slot-age', width: 60 },
-  { colKey: 'idCard', title: 'title-slot-id-card', width: 160 },
-  { colKey: 'certificateNumber', title: 'title-slot-certificate', width: 100 },
-  { colKey: 'contact', title: 'title-slot-contact', width: 120 },
-  { colKey: 'createdDate', title: 'title-slot-createdDate', width: 160 },
-  { colKey: 'updatedDate', title: 'title-slot-updatedDate', width: 160 },
-  { colKey: 'operation', title: 'title-slot-operation', width: 100 },
+  { colKey: 'name', title: t('pages.employee.name'), width: 100 },
+  { colKey: 'sex', title: t('pages.employee.sex'), width: 60 },
+  { colKey: 'age', title: t('pages.employee.age'), width: 60 },
+  { colKey: 'idCard', title: t('pages.employee.idCard'), width: 160 },
+  { colKey: 'certificateNumber', title: t('pages.employee.certificate'), width: 100 },
+  { colKey: 'contact', title: t('pages.employee.contact'), width: 120 },
+  { colKey: 'createdDate', title: t('pages.employee.createdDate'), width: 160 },
+  { colKey: 'updatedDate', title: t('pages.employee.updatedDate'), width: 160 },
+	{ colKey: 'operation', title: t('pages.record.operation.label'), width: 100 },
 ]);
 const rowKey = 'index';
 const verticalAlign = 'top' as const;
@@ -207,7 +172,11 @@ const companyList = ref([]);
 onMounted(() => {
   fetchData();
   getCompanyList({}).then((res) => {
-    companyList.value = res.list;
+    companyList.value = res.list.map(item => ({
+			label: item.name,
+      title: item.name,
+      value: item.id,
+    }));
   });
 });
 
@@ -242,7 +211,6 @@ const handleShowImport = () => {
 };
 
 const handleSearchSubmit = () => {
-  searchData.keyword = searchData.name;
   pagination.value && (pagination.value.current = 1);
   fetchData();
 };
@@ -253,13 +221,6 @@ const handleChangePage = (pageInfo: PageInfo) => {
   }
   pagination.value.current = pageInfo.current;
   pagination.value.pageSize = pageInfo.pageSize;
-  fetchData();
-};
-
-const handleResetFilter = () => {
-  searchData.name = '';
-  searchData.keyword = '';
-  pagination.value && (pagination.value.current = 1);
   fetchData();
 };
 

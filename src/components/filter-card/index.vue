@@ -6,19 +6,27 @@
         <t-form ref="form" :data="inputData" layout="inline" labelWidth="0px" @submit="handleSearchSubmit">
           <t-form-item v-for="item in props.options" :name="item.name" :key="item.name">
             <t-select
+	            auto-width
+	            clearable
+              borderless
               v-if="item.type === 'select'"
               v-model="inputData[item.name]"
               :options="item.children"
               :placeholder="item.placeholder"
+              @change="handleChangeItem(item)"
+              v-bind="item.props"
             />
             <t-input
+              auto-width
               v-else-if="item.type === 'input'"
               v-model="inputData[item.name]"
               :label="item.label"
               :placeholder="item.placeholder"
+              @enter="handleChangeItem(item)"
+              v-bind="item.props"
             >
               <template #suffixIcon>
-                <search-icon :style="{ cursor: 'pointer' }" @click="handleInputSearchClick(item)" />
+                <search-icon :style="{ cursor: 'pointer' }" @click="handleChangeItem(item)" />
               </template>
             </t-input>
           </t-form-item>
@@ -57,6 +65,7 @@ export interface OptionsType {
   label: string;
   placeholder: string;
   children: any[];
+  props: any;
 }
 
 const props = defineProps({
@@ -111,7 +120,7 @@ const syncSearchData = () => {
   });
 };
 
-const handleInputSearchClick = (item: OptionsType) => {
+const handleChangeItem = (item: OptionsType) => {
   searchData.value[item.name] = inputData.value[item.name];
   handleSubmit();
 };
@@ -122,4 +131,11 @@ const handleSubmit = () => {
 };
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.t-form-inline {
+  .t-form__item {
+    margin-right: 0;
+    min-width: auto;
+  }
+}
+</style>

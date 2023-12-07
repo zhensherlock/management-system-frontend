@@ -16,12 +16,12 @@
     >
       <template #actions>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
-          <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template
-          >{{ $t('pages.company.import') }}
+          <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>
+	        {{ $t('pages.company.import') }}
         </t-button>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowCreate">
-          <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template
-          >{{ $t('pages.company.create') }}
+          <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>
+	        {{ $t('pages.company.create') }}
         </t-button>
       </template>
     </FilterCard>
