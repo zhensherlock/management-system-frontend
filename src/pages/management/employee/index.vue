@@ -13,12 +13,17 @@
           children: companyList,
 				},
 				{
-					type: 'select',
+					type: 'cascader',
 					name: 'organizationIds',
 					value: [],
           label: $t('pages.employee.company'),
-          placeholder: $t('pages.form.selectPlaceholder', { field: $t('pages.employee.company') }),
-          children: companyList,
+          placeholder: $t('pages.form.selectPlaceholder', { field: $t('pages.employee.school') }),
+          children: schoolList,
+          props: {
+						multiple: true,
+						valueMode: 'parentFirst',
+						'min-collapsed-num': 1,
+          }
 				},
         {
           type: 'input',
@@ -123,6 +128,8 @@ import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
 import { getAge } from '@/utils/date';
 import { getSex } from '@/utils/string';
+import { getSchoolTree } from '@/api/school';
+import {recursiveMap} from "@/utils/array";
 
 const tableParentElement = ref(null);
 const tableElement = ref(null);
@@ -168,6 +175,7 @@ const total = ref(0);
 const loading = ref(true);
 
 const companyList = ref([]);
+const schoolList = ref([]);
 
 onMounted(() => {
   fetchData();
@@ -178,6 +186,13 @@ onMounted(() => {
       value: item.id,
     }));
   });
+	getSchoolTree({}).then((res) => {
+		schoolList.value = recursiveMap(res.list, (item) => ({
+			label: item.name,
+			title: item.name,
+			value: item.id,
+		}));
+	});
 });
 
 const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({

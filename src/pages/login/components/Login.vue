@@ -73,7 +73,7 @@
 	  </div>
 
     <t-form-item class="btn-container">
-      <t-button block size="large" type="submit"> {{ $t('pages.login.signIn') }} </t-button>
+      <t-button block size="large" type="submit" :loading="loading"> {{ $t('pages.login.signIn') }} </t-button>
     </t-form-item>
   </t-form>
 </template>
@@ -98,6 +98,7 @@ const formData = ref({
 	checked: false,
 });
 const showPsw = ref(false);
+const loading = ref(false);
 const captchaInput = ref();
 
 const router = useRouter();
@@ -119,6 +120,7 @@ const handleSubmit = async ({ validateResult }: SubmitContext) => {
 	if (validateResult !== true) {
 		return
 	}
+	loading.value = true
 	try {
     if (userStore.captchaInfo?.id) {
       formData.value.captchaId = userStore.captchaInfo?.id
@@ -139,6 +141,7 @@ const handleSubmit = async ({ validateResult }: SubmitContext) => {
     }
 		MessagePlugin.error(cause.message);
 	}
+	loading.value = false
 };
 </script>
 
