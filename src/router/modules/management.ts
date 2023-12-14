@@ -27,6 +27,18 @@ export default [
         },
       },
       {
+        path: 'company',
+        name: 'CompanyManage',
+        component: () => import('@/pages/management/company/index.vue'),
+        meta: {
+          title: {
+            zh_CN: '保安公司管理',
+            en_US: 'Security Company',
+          },
+          icon: 'dam-7',
+        },
+      },
+      {
         path: 'employee',
         name: 'EmployeeManage',
         component: () => import('@/pages/management/employee/index.vue'),
@@ -39,15 +51,15 @@ export default [
         },
       },
       {
-        path: 'company',
-        name: 'CompanyManage',
-        component: () => import('@/pages/management/company/index.vue'),
+        path: 'user',
+        name: 'UserManage',
+        component: () => import('@/pages/management/user/index.vue'),
         meta: {
           title: {
-            zh_CN: '保安公司管理',
-            en_US: 'Security Company',
+            zh_CN: '用户管理',
+            en_US: 'User',
           },
-          icon: 'dam-7',
+          icon: 'user-list',
         },
       },
       // {

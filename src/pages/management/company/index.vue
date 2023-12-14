@@ -57,6 +57,9 @@
         >
           <template #operation="{ row }">
             <t-space align="center" :size="0">
+	            <t-link hover="color" theme="primary" @click="handleRedirectUserList(row)">
+		            {{ $t('pages.company.userList') }}
+	            </t-link>
               <t-link hover="color" theme="primary" @click="handleShowUpdate(row)">
                 {{ $t('pages.record.operation.update') }}
               </t-link>
@@ -129,7 +132,7 @@ const columns = ref<PrimaryTableCol[]>([
   { colKey: 'address', title: t('pages.company.address') },
   { colKey: 'createdDate', title: t('pages.company.createdDate'), width: 160 },
   { colKey: 'updatedDate', title: t('pages.company.updatedDate'), width: 160 },
-  { colKey: 'operation', title: t('pages.record.operation.label'), width: 100 },
+  { colKey: 'operation', title: t('pages.record.operation.label'), width: 180 },
 ]);
 const rowKey = 'index';
 const verticalAlign = 'top' as const;
@@ -158,6 +161,8 @@ const handleShowCreate = () => {
   operationCompany.isEdit = false;
   operationCompany.visible = true;
 };
+
+const handleRedirectUserList = () => {};
 
 const handleShowUpdate = (company: any) => {
   operationCompany.mdl = company;

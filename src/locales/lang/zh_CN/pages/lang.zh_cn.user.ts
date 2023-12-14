@@ -1,4 +1,5 @@
 export default {
+  list: '用户列表',
   create: '新增用户',
   update: '编辑用户',
   import: '导入用户',

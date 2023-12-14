@@ -8,4 +8,5 @@ export default {
   address: '公司地址',
   createdDate: '新建时间',
   updatedDate: '修改时间',
+  userList: '用户列表',
 };

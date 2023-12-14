@@ -9,6 +9,7 @@ import { useUserStore } from '@/store';
 import { VAxios } from './Axios';
 import type { AxiosTransform, CreateAxiosOptions } from './AxiosTransform';
 import { formatRequestDate, joinTimestamp, setObjToUrlParams } from './utils';
+import { MessagePlugin } from 'tdesign-vue-next';
 
 const env = import.meta.env.MODE || 'development';
 
@@ -52,7 +53,9 @@ const transform: AxiosTransform = {
       return data.data;
     }
 
-    throw new Error(message || `请求接口错误, 错误码: ${code}`, { cause: { code, message } });
+    const errorMessage = message || `请求接口错误, 错误码: ${code}`;
+    MessagePlugin.error(errorMessage);
+    throw new Error(errorMessage, { cause: { code, message } });
   },
 
   // 请求前处理配置

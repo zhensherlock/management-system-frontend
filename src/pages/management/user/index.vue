@@ -1,18 +1,27 @@
 <template>
   <div class="record-page">
     <FilterCard
-      title="学校列表"
       v-model="searchData"
+      title="用户列表"
+      :options="[
+        {
+          type: 'input',
+          name: 'keyword',
+          value: '',
+          label: $t('pages.user.name'),
+          placeholder: $t('pages.form.placeholder', { field: $t('pages.user.name') }),
+        },
+      ]"
       @submit="handleSearchSubmit"
     >
       <template #actions>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
           <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>
-          {{ $t('pages.school.import') }}
+          {{ $t('pages.user.import') }}
         </t-button>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowCreate">
           <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>
-          {{ $t('pages.school.create') }}
+          {{ $t('pages.user.create') }}
         </t-button>
       </template>
     </FilterCard>
@@ -28,11 +37,12 @@
       <template v-if="isEmpty">
         <result type="empty" :title="$t('pages.record.empty.title')" :tip="$t('pages.record.empty.tip')"> </result>
       </template>
-      <div v-else class="data-card-table" ref="tableParentElement">
-        <t-enhanced-table
+      <div v-else ref="tableParentElement" class="data-card-table">
+        <t-table
           ref="tableElement"
           bordered
           hover
+          :key="tableKey"
           cell-empty-content="-"
           size="small"
           :data="dataSource"
@@ -41,20 +51,12 @@
           :vertical-align="verticalAlign"
           :pagination="pagination"
           :loading="loading"
-          :loadingProps="loadingProps"
+          :loading-props="loadingProps"
           :max-height="tableHeight"
-          :key="tableKey"
-          :tree="treeConfig"
           @page-change="handleChangePage"
         >
           <template #operation="{ row }">
             <t-space align="center" :size="0">
-              <t-link hover="color" theme="primary" @click="handleShowAddDialog(row)">
-                {{ $t('pages.school.addSchool') }}
-              </t-link>
-	            <t-link hover="color" theme="primary" @click="handleRedirectUserList(row)">
-		            {{ $t('pages.school.userList') }}
-	            </t-link>
               <t-link hover="color" theme="primary" @click="handleShowUpdate(row)">
                 {{ $t('pages.record.operation.update') }}
               </t-link>
@@ -70,33 +72,34 @@
               </template>
             </t-space>
           </template>
-        </t-enhanced-table>
+        </t-table>
       </div>
     </t-card>
-    <OperationSchool
-      v-model="operationModel.visible"
-      v-model:mdl="operationModel.mdl"
-      :is-edit="operationModel.isEdit"
-      :list="dataSource"
-      @refresh-list="handleRefreshList"
-    >
-    </OperationSchool>
-    <ImportCompany v-model="importVisible" @refresh-list="handleRefreshList"></ImportCompany>
+<!--    <operation-user-->
+<!--      v-model="operationUser.visible"-->
+<!--      v-model:mdl="operationUser.mdl"-->
+<!--      :is-edit="operationUser.isEdit"-->
+<!--      @refresh-list="handleRefreshList"-->
+<!--    >-->
+<!--    </operation-user>-->
+<!--    <import-user v-model="importVisible" @refresh-list="handleRefreshList"></import-user>-->
   </div>
 </template>
 <script lang="ts">
 export default {
-  name: 'CompanyList',
+  name: 'UserList',
 };
 </script>
 <script setup lang="ts">
-import {ref, reactive, onMounted, nextTick} from 'vue';
-import { useTable } from '@/composeable /useTable';
-import { OperationSchool, ImportCompany } from './components';
-import { getSchoolTree, deleteSchool } from '@/api/school';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
+import { onMounted, reactive, ref } from 'vue';
+
+import { deleteUser, getList } from '@/api/user';
+import { useTable } from '@/composeable /useTable';
 import { t } from '@/locales';
+
+// import { ImportUser, OperationUser } from './components';
 
 const tableParentElement = ref(null);
 const tableElement = ref(null);
@@ -109,7 +112,11 @@ const searchData = ref({
 const fetchData = async () => {
   loading.value = true;
   try {
-    const { list, count } = await getSchoolTree({ keyword: searchData.keyword });
+    const { list, count } = await getList({
+      currentPage: pagination.value?.current || 1,
+      pageSize: pagination.value?.pageSize || 20,
+      keyword: searchData.value.keyword,
+    });
     dataSource.value = list;
     total.value = count;
   } catch {
@@ -118,14 +125,15 @@ const fetchData = async () => {
   }
 };
 const columns = ref<PrimaryTableCol[]>([
-  { colKey: 'name', title: t('pages.school.name') },
-  { colKey: 'person', title: t('pages.school.person') },
-  { colKey: 'contact', title: t('pages.school.contact') },
-  { colKey: 'createdDate', title: t('pages.employee.createdDate'), width: 160 },
-  { colKey: 'updatedDate', title: t('pages.employee.updatedDate'), width: 160 },
-  { colKey: 'operation', title: t('pages.record.operation.label'), width: 260 },
+  { colKey: 'name', title: t('pages.user.name') },
+  { colKey: 'person', title: t('pages.user.person') },
+  { colKey: 'contact', title: t('pages.user.contact') },
+  { colKey: 'address', title: t('pages.user.address') },
+  { colKey: 'createdDate', title: t('pages.user.createdDate'), width: 160 },
+  { colKey: 'updatedDate', title: t('pages.user.updatedDate'), width: 160 },
+  { colKey: 'operation', title: t('pages.record.operation.label'), width: 100 },
 ]);
-const rowKey = 'id';
+const rowKey = 'index';
 const verticalAlign = 'top' as const;
 const total = ref(0);
 const loading = ref(true);
@@ -141,32 +149,22 @@ const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({
   loading,
 });
 
-const operationModel = reactive({
+const operationUser = reactive({
   visible: false,
   isEdit: false,
   mdl: undefined,
 });
 
 const handleShowCreate = () => {
-  operationModel.mdl = undefined;
-  operationModel.isEdit = false;
-  operationModel.visible = true;
+  operationUser.mdl = undefined;
+  operationUser.isEdit = false;
+  operationUser.visible = true;
 };
 
-const handleShowAddDialog = (row) => {
-  operationModel.mdl = {
-    parentId: row.id,
-  };
-  operationModel.isEdit = false;
-  operationModel.visible = true;
-}
-
-const handleRedirectUserList = () => {};
-
-const handleShowUpdate = (company: any) => {
-  operationModel.mdl = company;
-  operationModel.isEdit = true;
-  operationModel.visible = true;
+const handleShowUpdate = (user: any) => {
+  operationUser.mdl = user;
+  operationUser.isEdit = true;
+  operationUser.visible = true;
 };
 
 const importVisible = ref(false);
@@ -185,26 +183,18 @@ const handleChangePage = (pageInfo: PageInfo) => {
   }
   pagination.value.current = pageInfo.current;
   pagination.value.pageSize = pageInfo.pageSize;
+  fetchData();
 };
 
 const handleDeleteConfirm = (row: any) => {
-  deleteSchool(row.id).then(() => {
+  deleteUser(row.id).then(() => {
     fetchData();
     MessagePlugin.success(t('pages.message.delete'));
   });
 };
 
-const handleRefreshList = async () => {
-  await fetchData();
-  await nextTick(() => {
-    tableElement.value.expandAll()
-  })
+const handleRefreshList = () => {
+  fetchData();
 };
-
-const treeConfig = reactive({
-	treeNodeColumnIndex: 0,
-	indent: 25,
-  defaultExpandAll: true,
-});
 </script>
 <style lang="less" scoped></style>
