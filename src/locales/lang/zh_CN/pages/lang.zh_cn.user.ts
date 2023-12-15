@@ -6,6 +6,7 @@ export default {
   name: '用户名',
   person: '联系人',
   contact: '联系方式',
+  address: '地址',
   createdDate: '新建时间',
   updatedDate: '修改时间',
 };

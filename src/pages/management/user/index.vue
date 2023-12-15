@@ -95,7 +95,7 @@ import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { onMounted, reactive, ref } from 'vue';
 
-import { deleteUser, getList } from '@/api/user';
+import { deleteUser, getUserList } from '@/api/user';
 import { useTable } from '@/composeable /useTable';
 import { t } from '@/locales';
 
@@ -112,7 +112,8 @@ const searchData = ref({
 const fetchData = async () => {
   loading.value = true;
   try {
-    const { list, count } = await getList({
+    // @ts-ignore
+    const { list, count } = await getUserList({
       currentPage: pagination.value?.current || 1,
       pageSize: pagination.value?.pageSize || 20,
       keyword: searchData.value.keyword,

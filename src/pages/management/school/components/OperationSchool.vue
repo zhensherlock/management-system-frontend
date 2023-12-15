@@ -33,7 +33,7 @@ const emits = defineEmits(['update:modelValue', 'refresh-list'])
 const form = ref<FormInstanceFunctions>()
 
 const schoolTreeData = computed(() => {
-  return recursiveMap(props.list, (item) => ({
+  return recursiveMap(props.list, (item: any) => ({
     label: item.name,
     title: item.name,
     value: item.id,

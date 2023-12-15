@@ -18,7 +18,7 @@ const handleClose = () => {
 
 const files = ref([]);
 
-const formatResponse = (res) => {
+const formatResponse = (res: any) => {
   if (!res) {
     return { status: 'fail', error: '上传失败，原因：文件过大或网络不通' };
   }

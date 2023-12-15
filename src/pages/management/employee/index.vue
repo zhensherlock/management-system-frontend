@@ -144,6 +144,7 @@ const searchData = ref({
 const fetchData = async () => {
   loading.value = true;
   try {
+    // @ts-ignore
     const { list, count } = await getList({
       currentPage: pagination.value?.current || 1,
       pageSize: pagination.value?.pageSize || 20,
@@ -180,6 +181,7 @@ const schoolList = ref([]);
 onMounted(() => {
   fetchData();
   getCompanyList({}).then((res) => {
+    // @ts-ignore
     companyList.value = res.list.map(item => ({
 			label: item.name,
       title: item.name,
@@ -187,9 +189,13 @@ onMounted(() => {
     }));
   });
 	getSchoolTree({}).then((res) => {
+    // @ts-ignore
 		schoolList.value = recursiveMap(res.list, (item) => ({
+      // @ts-ignore
 			label: item.name,
+      // @ts-ignore
 			title: item.name,
+      // @ts-ignore
 			value: item.id,
 		}));
 	});

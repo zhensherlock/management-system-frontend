@@ -109,6 +109,7 @@ const searchData = ref({
 const fetchData = async () => {
   loading.value = true;
   try {
+    // @ts-ignore
     const { list, count } = await getSchoolTree({ keyword: searchData.keyword });
     dataSource.value = list;
     total.value = count;
@@ -153,7 +154,7 @@ const handleShowCreate = () => {
   operationModel.visible = true;
 };
 
-const handleShowAddDialog = (row) => {
+const handleShowAddDialog = (row: any) => {
   operationModel.mdl = {
     parentId: row.id,
   };
@@ -161,7 +162,7 @@ const handleShowAddDialog = (row) => {
   operationModel.visible = true;
 }
 
-const handleRedirectUserList = () => {};
+const handleRedirectUserList = (row: any) => {};
 
 const handleShowUpdate = (company: any) => {
   operationModel.mdl = company;

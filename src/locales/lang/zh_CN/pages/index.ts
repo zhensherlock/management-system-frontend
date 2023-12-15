@@ -12,13 +12,14 @@ import listFilter from './list-filter';
 import listTree from './list-tree';
 import login from './login';
 import result from './result';
-import user from './user';
+// import user from './user';
 import record from './lang.zh_cn.record';
 import company from './lang.zh_cn.company';
 import employee from './lang.zh_cn.employee';
 import school from './lang.zh_cn.school';
 import form from './lang.zh_cn.form';
 import message from './lang.zh_cn.message';
+import user from './lang.zh_cn.user';
 
 export default {
   dashboardBase,

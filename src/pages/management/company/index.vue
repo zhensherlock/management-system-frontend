@@ -113,6 +113,7 @@ const searchData = ref({
 const fetchData = async () => {
   loading.value = true;
   try {
+    // @ts-ignore
     const { list, count } = await getList({
       currentPage: pagination.value?.current || 1,
       pageSize: pagination.value?.pageSize || 20,
@@ -162,7 +163,7 @@ const handleShowCreate = () => {
   operationCompany.visible = true;
 };
 
-const handleRedirectUserList = () => {};
+const handleRedirectUserList = (row: any) => {};
 
 const handleShowUpdate = (company: any) => {
   operationCompany.mdl = company;

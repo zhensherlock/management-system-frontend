@@ -123,6 +123,7 @@ const props = defineProps({
   },
 });
 
+// @ts-ignore
 const title = __TITLE__;
 const router = useRouter();
 const settingStore = useSettingStore();

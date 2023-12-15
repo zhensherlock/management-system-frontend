@@ -20,6 +20,7 @@ import Login from './components/Login.vue';
 
 import TdesignSetting from '@/layouts/setting.vue';
 
+// @ts-ignore
 const title = __TITLE__;
 </script>
 
