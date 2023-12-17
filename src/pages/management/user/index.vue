@@ -5,6 +5,27 @@
       title="用户列表"
       :options="[
         {
+          type: 'select',
+          name: 'companyId',
+          value: '',
+          label: $t('pages.user.company'),
+          placeholder: $t('pages.form.selectPlaceholder', { field: $t('pages.user.company') }),
+          children: companyList,
+        },
+        {
+          type: 'cascader',
+          name: 'organizationIds',
+          value: [],
+          label: $t('pages.user.school'),
+          placeholder: $t('pages.form.selectPlaceholder', { field: $t('pages.user.school') }),
+          children: schoolList,
+          props: {
+            multiple: true,
+            valueMode: 'parentFirst',
+            'min-collapsed-num': 1,
+          },
+        },
+        {
           type: 'input',
           name: 'keyword',
           value: '',
@@ -75,14 +96,14 @@
         </t-table>
       </div>
     </t-card>
-<!--    <operation-user-->
-<!--      v-model="operationUser.visible"-->
-<!--      v-model:mdl="operationUser.mdl"-->
-<!--      :is-edit="operationUser.isEdit"-->
-<!--      @refresh-list="handleRefreshList"-->
-<!--    >-->
-<!--    </operation-user>-->
-<!--    <import-user v-model="importVisible" @refresh-list="handleRefreshList"></import-user>-->
+    <!--    <operation-user-->
+    <!--      v-model="operationUser.visible"-->
+    <!--      v-model:mdl="operationUser.mdl"-->
+    <!--      :is-edit="operationUser.isEdit"-->
+    <!--      @refresh-list="handleRefreshList"-->
+    <!--    >-->
+    <!--    </operation-user>-->
+    <!--    <import-user v-model="importVisible" @refresh-list="handleRefreshList"></import-user>-->
   </div>
 </template>
 <script lang="ts">
@@ -91,6 +112,7 @@ export default {
 };
 </script>
 <script setup lang="ts">
+import { useRoute } from 'vue-router';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { onMounted, reactive, ref } from 'vue';
@@ -98,6 +120,9 @@ import { onMounted, reactive, ref } from 'vue';
 import { deleteUser, getUserList } from '@/api/user';
 import { useTable } from '@/composeable /useTable';
 import { t } from '@/locales';
+import { getList as getCompanyList } from '@/api/company';
+import { getSchoolTree } from '@/api/school';
+import { recursiveMap } from '@/utils/array';
 
 // import { ImportUser, OperationUser } from './components';
 
@@ -105,7 +130,14 @@ const tableParentElement = ref(null);
 const tableElement = ref(null);
 const dataSource = ref([]);
 
+const companyList = ref([]);
+const schoolList = ref([]);
+
+const route = useRoute();
+
 const searchData = ref({
+  companyId: null,
+  organizationIds: [],
   keyword: '',
 });
 
@@ -117,6 +149,8 @@ const fetchData = async () => {
       currentPage: pagination.value?.current || 1,
       pageSize: pagination.value?.pageSize || 20,
       keyword: searchData.value.keyword,
+      companyIds: searchData.value.companyId,
+      organizationIds: searchData.value.organizationIds,
     });
     dataSource.value = list;
     total.value = count;
@@ -140,7 +174,31 @@ const total = ref(0);
 const loading = ref(true);
 
 onMounted(() => {
+  route.query &&
+    Object.keys(route.query).forEach((key) => {
+      const value = route.query[key];
+      if (key === 'organizationIds') {
+        searchData.value.organizationIds = [value];
+      } else {
+        // @ts-ignore
+        searchData.value[key] = value;
+      }
+    });
   fetchData();
+  getCompanyList({}).then((res: any) => {
+    companyList.value = res.list.map((item: any) => ({
+      label: item.name,
+      title: item.name,
+      value: item.id,
+    }));
+  });
+  getSchoolTree({}).then((res: any) => {
+    schoolList.value = recursiveMap(res.list, (item: any) => ({
+      label: item.name,
+      title: item.name,
+      value: item.id,
+    }));
+  });
 });
 
 const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({

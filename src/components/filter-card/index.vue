@@ -3,61 +3,61 @@
     <div class="filter-body">
       <div class="filter-body-label">{{ $t('pages.record.filter.label') }}</div>
       <div class="filter-body-content">
-        <t-form ref="form" :data="inputData" layout="inline" labelWidth="0px" @submit="handleSearchSubmit">
-<!--          <perfect-scrollbar>-->
-            <t-form-item v-for="item in props.options" :name="item.name" :key="item.name">
-              <t-select
-                v-if="item.type === 'select'"
-                auto-width
-                clearable
-                borderless
-                v-model="inputData[item.name]"
-                :options="item.children"
-                :placeholder="item.placeholder"
-                @change="handleChangeItem(item)"
-                v-bind="item.props"
-              />
-              <t-input
-                v-else-if="item.type === 'input'"
-                auto-width
-                v-model="inputData[item.name]"
-                :label="item.label"
-                :placeholder="item.placeholder"
-                @enter="handleChangeItem(item)"
-                v-bind="item.props"
-              >
-                <template #suffixIcon>
-                  <search-icon :style="{ cursor: 'pointer' }" @click="handleChangeItem(item)"/>
-                </template>
-              </t-input>
-              <t-tree-select
-                v-else-if="item.type === 'tree-select'"
-                multiple
-                borderless
-                autoWidth
-                clearable
-                filterable
-                :data="item.children"
-                :placeholder="item.placeholder"
-                v-bind="item.props"
-              >
-              </t-tree-select>
-              <t-cascader
-                v-else-if="item.type === 'cascader'"
-                :options="item.children"
-                :showAllLevels="true"
-                v-model="inputData[item.name]"
-                multiple
-                borderless
-                autoWidth
-                clearable
-                filterable
-                :placeholder="item.placeholder"
-                v-bind="item.props"
-                @change="handleChangeItem(item)"
-              />
-            </t-form-item>
-<!--          </perfect-scrollbar>-->
+        <t-form ref="form" layout="inline" labelWidth="0px">
+          <!--          <perfect-scrollbar>-->
+          <t-form-item v-for="item in props.options" :name="item.name" :key="item.name">
+            <t-select
+              v-if="item.type === 'select'"
+              auto-width
+              clearable
+              borderless
+              v-model="inputData[item.name]"
+              :options="item.children"
+              :placeholder="item.placeholder"
+              @change="handleChangeItem(item)"
+              v-bind="item.props"
+            />
+            <t-input
+              v-else-if="item.type === 'input'"
+              auto-width
+              v-model="inputData[item.name]"
+              :label="item.label"
+              :placeholder="item.placeholder"
+              @enter="handleChangeItem(item)"
+              v-bind="item.props"
+            >
+              <template #suffixIcon>
+                <search-icon :style="{ cursor: 'pointer' }" @click="handleChangeItem(item)" />
+              </template>
+            </t-input>
+            <t-tree-select
+              v-else-if="item.type === 'tree-select'"
+              multiple
+              borderless
+              autoWidth
+              clearable
+              filterable
+              :data="item.children"
+              :placeholder="item.placeholder"
+              v-bind="item.props"
+            >
+            </t-tree-select>
+            <t-cascader
+              v-else-if="item.type === 'cascader'"
+              :options="item.children"
+              :showAllLevels="true"
+              v-model="inputData[item.name]"
+              multiple
+              borderless
+              autoWidth
+              clearable
+              filterable
+              :placeholder="item.placeholder"
+              v-bind="item.props"
+              @change="handleChangeItem(item)"
+            />
+          </t-form-item>
+          <!--          </perfect-scrollbar>-->
         </t-form>
       </div>
       <div class="filter-body-reset" v-if="resetFilterVisible">
@@ -81,10 +81,11 @@ export default {
 </script>
 
 <script setup lang="ts">
-import {SearchIcon, SwapIcon} from 'tdesign-icons-vue-next';
-import type {PropType} from 'vue';
-import {computed, onMounted, ref} from 'vue';
-import {isEmpty} from 'lodash';
+import { SearchIcon, SwapIcon } from 'tdesign-icons-vue-next';
+import type { PropType } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { isEmpty } from 'lodash';
+import { syncRef } from '@vueuse/shared';
 
 export interface OptionsType {
   type: string;
@@ -110,10 +111,13 @@ const props = defineProps({
 });
 
 const emits = defineEmits(['update:modelValue', 'submit']);
-
+const defaultInputData = {};
+props.options.forEach((item: any) => {
+  // @ts-ignore
+  defaultInputData[item.name] = item.value;
+});
 // 组件受控数据
-const inputData = ref<{ [key: string]: any }>({});
-
+const inputData = ref<{ [key: string]: any }>(defaultInputData);
 // 搜索确认数据
 const searchData = ref<{ [key: string]: any }>({});
 
@@ -123,16 +127,10 @@ const resetFilterVisible = computed(() => {
   });
 });
 
-onMounted(() => {
-  props.options.forEach((item) => {
-    inputData.value[item.name] = item.value;
-  });
-});
+// @ts-ignore
+syncRef(props.modelValue, inputData);
 
-const handleSearchSubmit = () => {
-  syncSearchData();
-  handleSubmit();
-};
+onMounted(() => {});
 
 const handleResetFilter = () => {
   Object.keys(inputData.value).forEach((key) => {

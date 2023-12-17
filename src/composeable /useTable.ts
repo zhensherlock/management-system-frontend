@@ -57,7 +57,10 @@ export function useTable(options: UseTableOptions) {
       const el = document.querySelector(className);
       return prev + (el?.getBoundingClientRect()?.height || 0);
     }, 0);
-    tableHeight.value = (toRef(parent).value as Element).clientHeight - excludeHeight;
+    const parentElement = toRef(parent).value as Element;
+    if (parentElement) {
+      tableHeight.value = parentElement.clientHeight - excludeHeight;
+    }
     tableKey.value = randomTableKey();
   };
 

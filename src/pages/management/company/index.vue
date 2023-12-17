@@ -17,11 +17,11 @@
       <template #actions>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
           <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>
-	        {{ $t('pages.company.import') }}
+          {{ $t('pages.company.import') }}
         </t-button>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowCreate">
           <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>
-	        {{ $t('pages.company.create') }}
+          {{ $t('pages.company.create') }}
         </t-button>
       </template>
     </FilterCard>
@@ -57,9 +57,9 @@
         >
           <template #operation="{ row }">
             <t-space align="center" :size="0">
-	            <t-link hover="color" theme="primary" @click="handleRedirectUserList(row)">
-		            {{ $t('pages.company.userList') }}
-	            </t-link>
+              <t-link hover="color" theme="primary" @click="handleRedirectUserList(row)">
+                {{ $t('pages.company.userList') }}
+              </t-link>
               <t-link hover="color" theme="primary" @click="handleShowUpdate(row)">
                 {{ $t('pages.record.operation.update') }}
               </t-link>
@@ -95,6 +95,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { useTable } from '@/composeable /useTable';
 import { OperationCompany, ImportCompany } from './components';
 import { getList, deleteCompany } from '@/api/company';
@@ -105,6 +106,7 @@ import { t } from '@/locales';
 const tableParentElement = ref(null);
 const tableElement = ref(null);
 const dataSource = ref([]);
+const router = useRouter();
 
 const searchData = ref({
   keyword: '',
@@ -163,7 +165,14 @@ const handleShowCreate = () => {
   operationCompany.visible = true;
 };
 
-const handleRedirectUserList = (row: any) => {};
+const handleRedirectUserList = (row: any) => {
+  router.push({
+    name: 'UserManage',
+    query: {
+      companyId: row.id,
+    },
+  });
+};
 
 const handleShowUpdate = (company: any) => {
   operationCompany.mdl = company;

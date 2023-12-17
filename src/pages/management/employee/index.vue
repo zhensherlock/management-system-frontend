@@ -1,30 +1,30 @@
 <template>
   <div class="record-page">
-	  <FilterCard
-		  title="保安人员"
-		  v-model="searchData"
-		  :options="[
-				{
-					type: 'select',
-					name: 'companyId',
-					value: '',
+    <FilterCard
+      title="保安人员"
+      v-model="searchData"
+      :options="[
+        {
+          type: 'select',
+          name: 'companyId',
+          value: '',
           label: $t('pages.employee.company'),
           placeholder: $t('pages.form.selectPlaceholder', { field: $t('pages.employee.company') }),
           children: companyList,
-				},
-				{
-					type: 'cascader',
-					name: 'organizationIds',
-					value: [],
+        },
+        {
+          type: 'cascader',
+          name: 'organizationIds',
+          value: [],
           label: $t('pages.employee.company'),
           placeholder: $t('pages.form.selectPlaceholder', { field: $t('pages.employee.school') }),
           children: schoolList,
           props: {
-						multiple: true,
-						valueMode: 'parentFirst',
-						'min-collapsed-num': 1,
-          }
-				},
+            multiple: true,
+            valueMode: 'parentFirst',
+            'min-collapsed-num': 1,
+          },
+        },
         {
           type: 'input',
           name: 'keyword',
@@ -33,19 +33,19 @@
           placeholder: $t('pages.form.placeholder', { field: $t('pages.employee.name') }),
         },
       ]"
-		  @submit="handleSearchSubmit"
-	  >
-		  <template #actions>
-			  <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
-				  <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>
-				  {{ $t('pages.employee.import') }}
-			  </t-button>
-			  <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowCreate">
-				  <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>
-				  {{ $t('pages.employee.create') }}
-			  </t-button>
-		  </template>
-	  </FilterCard>
+      @submit="handleSearchSubmit"
+    >
+      <template #actions>
+        <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
+          <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>
+          {{ $t('pages.employee.import') }}
+        </t-button>
+        <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowCreate">
+          <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>
+          {{ $t('pages.employee.create') }}
+        </t-button>
+      </template>
+    </FilterCard>
     <t-card header-bordered :bordered="false" class="data-card">
       <template #title>
         <i18n-t keypath="pages.record.table.total">
@@ -129,7 +129,7 @@ import { t } from '@/locales';
 import { getAge } from '@/utils/date';
 import { getSex } from '@/utils/string';
 import { getSchoolTree } from '@/api/school';
-import {recursiveMap} from "@/utils/array";
+import { recursiveMap } from '@/utils/array';
 
 const tableParentElement = ref(null);
 const tableElement = ref(null);
@@ -168,7 +168,7 @@ const columns = ref<PrimaryTableCol[]>([
   { colKey: 'contact', title: t('pages.employee.contact'), width: 120 },
   { colKey: 'createdDate', title: t('pages.employee.createdDate'), width: 160 },
   { colKey: 'updatedDate', title: t('pages.employee.updatedDate'), width: 160 },
-	{ colKey: 'operation', title: t('pages.record.operation.label'), width: 100 },
+  { colKey: 'operation', title: t('pages.record.operation.label'), width: 100 },
 ]);
 const rowKey = 'index';
 const verticalAlign = 'top' as const;
@@ -180,25 +180,20 @@ const schoolList = ref([]);
 
 onMounted(() => {
   fetchData();
-  getCompanyList({}).then((res) => {
-    // @ts-ignore
-    companyList.value = res.list.map(item => ({
-			label: item.name,
+  getCompanyList({}).then((res: any) => {
+    companyList.value = res.list.map((item: any) => ({
+      label: item.name,
       title: item.name,
       value: item.id,
     }));
   });
-	getSchoolTree({}).then((res) => {
-    // @ts-ignore
-		schoolList.value = recursiveMap(res.list, (item) => ({
-      // @ts-ignore
-			label: item.name,
-      // @ts-ignore
-			title: item.name,
-      // @ts-ignore
-			value: item.id,
-		}));
-	});
+  getSchoolTree({}).then((res: any) => {
+    schoolList.value = recursiveMap(res.list, (item: any) => ({
+      label: item.name,
+      title: item.name,
+      value: item.id,
+    }));
+  });
 });
 
 const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({

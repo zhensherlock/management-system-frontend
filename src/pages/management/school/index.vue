@@ -1,10 +1,6 @@
 <template>
   <div class="record-page">
-    <FilterCard
-      title="学校列表"
-      v-model="searchData"
-      @submit="handleSearchSubmit"
-    >
+    <FilterCard title="学校列表" v-model="searchData" @submit="handleSearchSubmit">
       <template #actions>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
           <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>
@@ -52,9 +48,9 @@
               <t-link hover="color" theme="primary" @click="handleShowAddDialog(row)">
                 {{ $t('pages.school.addSchool') }}
               </t-link>
-	            <t-link hover="color" theme="primary" @click="handleRedirectUserList(row)">
-		            {{ $t('pages.school.userList') }}
-	            </t-link>
+              <t-link hover="color" theme="primary" @click="handleRedirectUserList(row)">
+                {{ $t('pages.school.userList') }}
+              </t-link>
               <t-link hover="color" theme="primary" @click="handleShowUpdate(row)">
                 {{ $t('pages.record.operation.update') }}
               </t-link>
@@ -90,7 +86,8 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import {ref, reactive, onMounted, nextTick} from 'vue';
+import { ref, reactive, onMounted, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
 import { useTable } from '@/composeable /useTable';
 import { OperationSchool, ImportCompany } from './components';
 import { getSchoolTree, deleteSchool } from '@/api/school';
@@ -101,6 +98,7 @@ import { t } from '@/locales';
 const tableParentElement = ref(null);
 const tableElement = ref(null);
 const dataSource = ref([]);
+const router = useRouter();
 
 const searchData = ref({
   keyword: '',
@@ -160,9 +158,16 @@ const handleShowAddDialog = (row: any) => {
   };
   operationModel.isEdit = false;
   operationModel.visible = true;
-}
+};
 
-const handleRedirectUserList = (row: any) => {};
+const handleRedirectUserList = (row: any) => {
+  router.push({
+    name: 'UserManage',
+    query: {
+      organizationIds: row.id,
+    },
+  });
+};
 
 const handleShowUpdate = (company: any) => {
   operationModel.mdl = company;
@@ -198,13 +203,13 @@ const handleDeleteConfirm = (row: any) => {
 const handleRefreshList = async () => {
   await fetchData();
   await nextTick(() => {
-    tableElement.value.expandAll()
-  })
+    tableElement.value.expandAll();
+  });
 };
 
 const treeConfig = reactive({
-	treeNodeColumnIndex: 0,
-	indent: 25,
+  treeNodeColumnIndex: 0,
+  indent: 25,
   defaultExpandAll: true,
 });
 </script>
