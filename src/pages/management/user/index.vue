@@ -1,8 +1,8 @@
 <template>
   <div class="record-page">
     <FilterCard
-      v-model="searchData"
       title="用户列表"
+      v-model="searchData"
       :options="[
         {
           type: 'select',
@@ -36,10 +36,6 @@
       @submit="handleSearchSubmit"
     >
       <template #actions>
-        <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
-          <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>
-          {{ $t('pages.user.import') }}
-        </t-button>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowCreate">
           <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>
           {{ $t('pages.user.create') }}
@@ -72,7 +68,7 @@
           :vertical-align="verticalAlign"
           :pagination="pagination"
           :loading="loading"
-          :loading-props="loadingProps"
+          :loadingProps="loadingProps"
           :max-height="tableHeight"
           @page-change="handleChangePage"
         >
@@ -96,14 +92,14 @@
         </t-table>
       </div>
     </t-card>
-    <!--    <operation-user-->
-    <!--      v-model="operationUser.visible"-->
-    <!--      v-model:mdl="operationUser.mdl"-->
-    <!--      :is-edit="operationUser.isEdit"-->
-    <!--      @refresh-list="handleRefreshList"-->
-    <!--    >-->
-    <!--    </operation-user>-->
-    <!--    <import-user v-model="importVisible" @refresh-list="handleRefreshList"></import-user>-->
+    <OperationUser
+      v-model="operationModel.visible"
+      v-model:mdl="operationModel.mdl"
+      :is-edit="operationModel.isEdit"
+      :list="dataSource"
+      @refresh-list="handleRefreshList"
+    >
+    </OperationUser>
   </div>
 </template>
 <script lang="ts">
@@ -112,13 +108,13 @@ export default {
 };
 </script>
 <script setup lang="ts">
+import { ref, reactive, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { useTable } from '@/composeable /useTable';
+import { OperationUser } from './components';
+import { getUserList, deleteUser } from '@/api/user';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
-import { onMounted, reactive, ref } from 'vue';
-
-import { deleteUser, getUserList } from '@/api/user';
-import { useTable } from '@/composeable /useTable';
 import { t } from '@/locales';
 import { getList as getCompanyList } from '@/api/company';
 import { getSchoolTree } from '@/api/school';
@@ -145,13 +141,7 @@ const fetchData = async () => {
   loading.value = true;
   try {
     // @ts-ignore
-    const { list, count } = await getUserList({
-      currentPage: pagination.value?.current || 1,
-      pageSize: pagination.value?.pageSize || 20,
-      keyword: searchData.value.keyword,
-      companyIds: searchData.value.companyId,
-      organizationIds: searchData.value.organizationIds,
-    });
+    const { list, count } = await getUserList({ keyword: searchData.keyword });
     dataSource.value = list;
     total.value = count;
   } catch {
@@ -161,29 +151,25 @@ const fetchData = async () => {
 };
 const columns = ref<PrimaryTableCol[]>([
   { colKey: 'name', title: t('pages.user.name') },
-  { colKey: 'person', title: t('pages.user.person') },
-  { colKey: 'contact', title: t('pages.user.contact') },
-  { colKey: 'address', title: t('pages.user.address') },
-  { colKey: 'createdDate', title: t('pages.user.createdDate'), width: 160 },
-  { colKey: 'updatedDate', title: t('pages.user.updatedDate'), width: 160 },
+  { colKey: 'createdDate', title: t('pages.employee.createdDate'), width: 160 },
+  { colKey: 'updatedDate', title: t('pages.employee.updatedDate'), width: 160 },
   { colKey: 'operation', title: t('pages.record.operation.label'), width: 100 },
 ]);
-const rowKey = 'index';
+const rowKey = 'id';
 const verticalAlign = 'top' as const;
 const total = ref(0);
 const loading = ref(true);
 
 onMounted(() => {
-  route.query &&
-    Object.keys(route.query).forEach((key) => {
-      const value = route.query[key];
-      if (key === 'organizationIds') {
-        searchData.value.organizationIds = [value];
-      } else {
-        // @ts-ignore
-        searchData.value[key] = value;
-      }
-    });
+  Object.keys(route.query).forEach((key) => {
+    const value = route.query[key];
+    if (key === 'organizationIds') {
+      searchData.value.organizationIds = [value];
+    } else {
+      // @ts-ignore
+      searchData.value[key] = value;
+    }
+  });
   fetchData();
   getCompanyList({}).then((res: any) => {
     companyList.value = res.list.map((item: any) => ({
@@ -208,27 +194,22 @@ const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({
   loading,
 });
 
-const operationUser = reactive({
+const operationModel = reactive({
   visible: false,
   isEdit: false,
   mdl: undefined,
 });
 
 const handleShowCreate = () => {
-  operationUser.mdl = undefined;
-  operationUser.isEdit = false;
-  operationUser.visible = true;
+  operationModel.mdl = undefined;
+  operationModel.isEdit = false;
+  operationModel.visible = true;
 };
 
-const handleShowUpdate = (user: any) => {
-  operationUser.mdl = user;
-  operationUser.isEdit = true;
-  operationUser.visible = true;
-};
-
-const importVisible = ref(false);
-const handleShowImport = () => {
-  importVisible.value = true;
+const handleShowUpdate = (company: any) => {
+  operationModel.mdl = company;
+  operationModel.isEdit = true;
+  operationModel.visible = true;
 };
 
 const handleSearchSubmit = () => {
@@ -242,7 +223,6 @@ const handleChangePage = (pageInfo: PageInfo) => {
   }
   pagination.value.current = pageInfo.current;
   pagination.value.pageSize = pageInfo.pageSize;
-  fetchData();
 };
 
 const handleDeleteConfirm = (row: any) => {
