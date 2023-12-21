@@ -82,7 +82,7 @@
 </template>
 <script lang="ts">
 export default {
-  name: 'CompanyList',
+  name: 'SchoolList',
 };
 </script>
 <script setup lang="ts">
