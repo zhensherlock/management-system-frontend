@@ -102,14 +102,14 @@
         </t-table>
       </div>
     </t-card>
-    <OperationCompany
-      v-model="operationCompany.visible"
-      :is-edit="operationCompany.isEdit"
-      v-model:mdl="operationCompany.mdl"
+    <OperationEmployee
+      v-model="operationEmployee.visible"
+      :is-edit="operationEmployee.isEdit"
+      v-model:mdl="operationEmployee.mdl"
       @refresh-list="handleRefreshList"
     >
-    </OperationCompany>
-    <ImportCompany v-model="importVisible" @refresh-list="handleRefreshList"></ImportCompany>
+    </OperationEmployee>
+    <ImportEmployee v-model="importVisible" @refresh-list="handleRefreshList"></ImportEmployee>
   </div>
 </template>
 <script lang="ts">
@@ -120,7 +120,7 @@ export default {
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import { useTable } from '@/composeable /useTable';
-import { OperationCompany, ImportCompany } from './components';
+import { OperationEmployee, ImportEmployee } from './components';
 import { getList, deleteEmployee } from '@/api/employee';
 import { getList as getCompanyList } from '@/api/company';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
@@ -203,22 +203,22 @@ const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({
   loading,
 });
 
-const operationCompany = reactive({
+const operationEmployee = reactive({
   visible: false,
   isEdit: false,
   mdl: undefined,
 });
 
 const handleShowCreate = () => {
-  operationCompany.mdl = undefined;
-  operationCompany.isEdit = false;
-  operationCompany.visible = true;
+  operationEmployee.mdl = undefined;
+  operationEmployee.isEdit = false;
+  operationEmployee.visible = true;
 };
 
 const handleShowUpdate = (company: any) => {
-  operationCompany.mdl = company;
-  operationCompany.isEdit = true;
-  operationCompany.visible = true;
+  operationEmployee.mdl = company;
+  operationEmployee.isEdit = true;
+  operationEmployee.visible = true;
 };
 
 const importVisible = ref(false);

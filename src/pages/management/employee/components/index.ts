@@ -1,4 +1,4 @@
-import ImportCompany from './ImportCompany.vue';
-import OperationCompany from './OperationCompany.vue';
+import ImportEmployee from './ImportEmployee.vue';
+import OperationEmployee from './OperationEmployee.vue';
 
-export { ImportCompany, OperationCompany };
+export { ImportEmployee, OperationEmployee };
