@@ -129,13 +129,13 @@ const fetchData = async () => {
   }
 };
 const columns = ref<PrimaryTableCol[]>([
-  { colKey: 'name', title: t('pages.company.name') },
+  { colKey: 'name', title: t('pages.company.name'), width: 200, fixed: 'left' },
   { colKey: 'person', title: t('pages.company.person') },
   { colKey: 'contact', title: t('pages.company.contact') },
   { colKey: 'address', title: t('pages.company.address') },
   { colKey: 'createdDate', title: t('pages.company.createdDate'), width: 160 },
   { colKey: 'updatedDate', title: t('pages.company.updatedDate'), width: 160 },
-  { colKey: 'operation', title: t('pages.record.operation.label'), width: 180 },
+  { colKey: 'operation', title: t('pages.record.operation.label'), width: 180, fixed: 'right' },
 ]);
 const rowKey = 'index';
 const verticalAlign = 'top' as const;

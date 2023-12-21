@@ -112,6 +112,7 @@ const handleClose = () => {
           clearable
           :maxlength="255"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.company.name') })"
+          @enter="handleConfirm"
         >
         </t-input>
       </t-form-item>
@@ -128,6 +129,7 @@ const handleClose = () => {
           clearable
           :maxlength="40"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.company.person') })"
+          @enter="handleConfirm"
         >
         </t-input>
       </t-form-item>
@@ -144,6 +146,7 @@ const handleClose = () => {
           clearable
           :maxlength="40"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.company.contact') })"
+          @enter="handleConfirm"
         >
         </t-input>
       </t-form-item>
