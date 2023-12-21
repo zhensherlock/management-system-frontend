@@ -11,6 +11,6 @@ export default {
   contact: '联系方式',
   company: '所属保安公司',
   school: '所属学校',
-  createdDate: '新建时间',
+  createdDate: '新增时间',
   updatedDate: '修改时间',
 };
