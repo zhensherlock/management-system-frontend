@@ -47,6 +47,9 @@ watch(() => props.modelValue, () => {
     return;
   }
   formData = useCloned(props.mdl).cloned;
+  if (!props.isEdit && props.list.length > 0) {
+    formData.value.parentId = (props.list[0] as any)?.id
+  }
 });
 
 const handleConfirm = () => {
@@ -132,8 +135,9 @@ const handleClose = () => {
         </t-input>
       </t-form-item>
       <t-form-item
+        v-if="!(isEdit && formData.level === 1)"
         :label="$t('pages.school.parentSchool')"
-        name="name"
+        name="parentId"
         :rules="[
           { required: true, message: $t('pages.form.selectPlaceholder', { field: $t('pages.school.parentSchool') }), type: 'error', trigger: 'change' },
         ]"

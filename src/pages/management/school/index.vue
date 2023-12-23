@@ -1,6 +1,19 @@
 <template>
   <div class="record-page">
-    <FilterCard title="学校列表" v-model="searchData" @submit="handleSearchSubmit">
+    <FilterCard
+      title="学校列表"
+      v-model="searchData"
+      :options="[
+        {
+          type: 'input',
+          name: 'keyword',
+          value: '',
+          label: $t('pages.school.name'),
+          placeholder: $t('pages.form.placeholder', { field: $t('pages.school.name') }),
+        },
+      ]"
+      @submit="handleSearchSubmit"
+    >
       <template #actions>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
           <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>
@@ -51,7 +64,7 @@
               <t-link hover="color" theme="primary" @click="handleRedirectUserList(row)">
                 {{ $t('pages.school.userList') }}
               </t-link>
-              <t-link hover="color" theme="primary" @click="handleShowUpdate(row)">
+              <t-link hover="color" theme="primary" @click="handleShowUpdate(row)" :disabled="row.level === 1">
                 {{ $t('pages.record.operation.update') }}
               </t-link>
               <t-popconfirm
@@ -108,7 +121,9 @@ const fetchData = async () => {
   loading.value = true;
   try {
     // @ts-ignore
-    const { list, count } = await getSchoolTree({ keyword: searchData.keyword });
+    const { list, count } = await getSchoolTree({
+      keyword: searchData.value.keyword
+    });
     dataSource.value = list;
     total.value = count;
   } catch {
@@ -117,12 +132,12 @@ const fetchData = async () => {
   }
 };
 const columns = ref<PrimaryTableCol[]>([
-  { colKey: 'name', title: t('pages.school.name') },
+  { colKey: 'name', title: t('pages.school.name'), width: 300, fixed: 'left' },
   { colKey: 'person', title: t('pages.school.person') },
   { colKey: 'contact', title: t('pages.school.contact') },
   { colKey: 'createdDate', title: t('pages.employee.createdDate'), width: 160 },
   { colKey: 'updatedDate', title: t('pages.employee.updatedDate'), width: 160 },
-  { colKey: 'operation', title: t('pages.record.operation.label'), width: 260 },
+  { colKey: 'operation', title: t('pages.record.operation.label'), width: 260, fixed: 'right' },
 ]);
 const rowKey = 'id';
 const verticalAlign = 'top' as const;
