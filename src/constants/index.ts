@@ -1,3 +1,6 @@
+export * from './employee.constant';
+export * from './organization.constant';
+
 // 合同状态枚举
 export const CONTRACT_STATUS = {
   FAIL: 0,

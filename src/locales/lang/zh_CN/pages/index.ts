@@ -13,6 +13,7 @@ import listTree from './list-tree';
 import login from './login';
 import result from './result';
 // import user from './user';
+import common from './lang.zh_cn.common';
 import record from './lang.zh_cn.record';
 import company from './lang.zh_cn.company';
 import employee from './lang.zh_cn.employee';
@@ -35,6 +36,7 @@ export default {
   formBase,
   formStep,
   user,
+  common,
   record,
   login,
   result,
