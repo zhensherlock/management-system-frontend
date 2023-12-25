@@ -11,6 +11,7 @@
               auto-width
               clearable
               borderless
+              filterable
               v-model="inputData[item.name]"
               :options="item.children"
               :placeholder="item.placeholder"

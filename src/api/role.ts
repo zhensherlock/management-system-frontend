@@ -2,12 +2,12 @@ import type { CommonResponse } from '@/types/api';
 import { request } from '@/utils/request';
 
 const Api = {
-  TreeUrl: '/user/organization/tree',
+  ListUrl: '/user/role/list',
 };
 
-export function getOrganizationTree(data: any = {}) {
+export function getRoleList(data: any = {}) {
   return request.get<CommonResponse<any>>({
-    url: Api.TreeUrl,
+    url: Api.ListUrl,
     params: data,
   });
 }

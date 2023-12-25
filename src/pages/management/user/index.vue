@@ -18,6 +18,18 @@
           },
         },
         {
+          type: 'select',
+          name: 'roleIds',
+          value: [],
+          label: $t('pages.user.role'),
+          placeholder: $t('pages.form.selectPlaceholder', { field: $t('pages.user.role') }),
+          children: roleList,
+          props: {
+            multiple: true,
+            'min-collapsed-num': 1,
+          },
+        },
+        {
           type: 'input',
           name: 'keyword',
           value: '',
@@ -95,6 +107,7 @@
       v-model:mdl="operationModel.mdl"
       :is-edit="operationModel.isEdit"
       :organization-list="organizationList"
+      :role-list="roleList"
       :list="dataSource"
       @refresh-list="handleRefreshList"
     >
@@ -117,17 +130,20 @@ import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
 import { recursiveMap } from '@/utils/array';
 import { getOrganizationTree } from '@/api/organization';
+import { getRoleList } from '@/api/role';
 
 const tableParentElement = ref(null);
 const tableElement = ref(null);
 const dataSource = ref([]);
 
 const organizationList = ref([]);
+const roleList = ref([]);
 
 const route = useRoute();
 
 const searchData = ref({
   organizationIds: [],
+  roleIds: [],
   keyword: '',
 });
 
@@ -137,6 +153,7 @@ const fetchData = async () => {
     // @ts-ignore
     const { list, count } = await getUserList({
       keyword: searchData.value.keyword,
+      roleIds: searchData.value.roleIds,
       organizationIds: searchData.value.organizationIds,
     });
     dataSource.value = list;
@@ -173,7 +190,7 @@ onMounted(() => {
     }
   });
   fetchData();
-  getOrganizationTree({}).then((res: any) => {
+  getOrganizationTree().then((res: any) => {
     organizationList.value = recursiveMap(res.list, (item: any) => ({
       type: item.type,
       label: item.name,
@@ -181,6 +198,13 @@ onMounted(() => {
       value: item.id,
     }));
   });
+  getRoleList().then((res: any) => {
+    roleList.value = res.list.map((item: any) => ({
+      label: item.name,
+      title: item.name,
+      value: item.id,
+    }));
+  })
 });
 
 const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({

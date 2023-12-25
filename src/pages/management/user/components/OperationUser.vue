@@ -14,6 +14,10 @@ const props = defineProps({
     type: Array,
     default: () => ([]),
   },
+  roleList: {
+    type: Array,
+    default: () => ([]),
+  },
   mdl: {
     type: Object,
     default() {
@@ -24,7 +28,7 @@ const props = defineProps({
         email: '',
         tel: '',
         organizationIds: [],
-        roleIds: [],
+        roleIds: '',
       }
     }
   },
@@ -74,7 +78,8 @@ const handleEditSubmit = () => {
     roleIds: [formData.value.roleIds],
   };
   updateUser(formData.value.id, params).then(() => {
-    _.merge(props.mdl, params);
+    // _.merge(props.mdl, params);
+    emits('refresh-list');
     handleClose();
     MessagePlugin.success(t('pages.message.update'));
   });
@@ -116,7 +121,7 @@ const handleClose = () => {
     <template #header>
       {{ isEdit ? $t('pages.user.update') : $t('pages.user.create') }}
     </template>
-    <t-form ref="form" :data="formData" scroll-to-first-error="smooth" labelWidth="90px" @submit="handleSubmit">
+    <t-form ref="form" :data="formData" scroll-to-first-error="smooth" labelWidth="75px" @submit="handleSubmit">
       <t-form-item
         :label="$t('pages.user.name')"
         name="name"
@@ -193,6 +198,13 @@ const handleClose = () => {
           { required: true, message: $t('pages.form.requiredText', { field: $t('pages.user.role') }), type: 'error', trigger: 'change' },
         ]"
       >
+        <t-select
+          clearable
+          filterable
+          v-model="formData.roleIds"
+          :options="roleList"
+          :placeholder="$t('pages.form.selectPlaceholder', { field: $t('pages.user.role') })"
+        />
       </t-form-item>
       <t-form-item
         :label="$t('pages.user.email')"
