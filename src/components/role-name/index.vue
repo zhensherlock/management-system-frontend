@@ -27,4 +27,9 @@ const props = defineProps({
 </template>
 
 <style scoped lang="less">
+.role-name:empty {
+  &:before {
+    content: '-';
+  }
+}
 </style>

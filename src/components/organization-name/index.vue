@@ -28,4 +28,9 @@ const props = defineProps({
 </template>
 
 <style scoped lang="less">
+.organization-name:empty {
+  &:before {
+    content: '-';
+  }
+}
 </style>

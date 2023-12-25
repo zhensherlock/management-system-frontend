@@ -38,7 +38,7 @@ const props = defineProps({
         schoolOrganizationId: '',
       };
     },
-  }
+  },
 });
 const emits = defineEmits(['update:modelValue', 'refresh-list']);
 

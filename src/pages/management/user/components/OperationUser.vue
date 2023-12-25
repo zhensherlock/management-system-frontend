@@ -3,7 +3,7 @@ import type { FormInstanceFunctions, SubmitContext } from 'tdesign-vue-next';
 import { ref, watch } from 'vue';
 import { useCloned } from '@vueuse/core';
 import _ from 'lodash';
-import { createCompany, updateCompany } from '@/api/company';
+import { createUser, updateUser } from '@/api/user';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
 
@@ -24,69 +24,82 @@ const props = defineProps({
         email: '',
         tel: '',
         organizationIds: [],
+        roleIds: [],
       }
     }
   },
-})
-const emits = defineEmits(['update:modelValue', 'refresh-list'])
+});
+const emits = defineEmits(['update:modelValue', 'refresh-list']);
 
-const form = ref<FormInstanceFunctions>()
+const form = ref<FormInstanceFunctions>();
 
-let { cloned: formData } = useCloned(props.mdl)
+let { cloned: formData } = useCloned(props.mdl);
 
 watch(() => props.modelValue, () => {
   if (!props.modelValue) {
-    return
+    return;
   }
-  formData = useCloned(props.mdl).cloned
+  formData = useCloned(props.mdl).cloned;
+  if (!_.isEmpty(formData.value.organizationUserMappings)) {
+    formData.value.organizationIds = formData.value.organizationUserMappings.map((item: any) => item.organizationId)[0];
+  }
+  if (!_.isEmpty(formData.value.userRoleMappings)) {
+    formData.value.roleIds = formData.value.userRoleMappings.map((item: any) => item.roleId)[0];
+  }
 });
 
 const handleConfirm = () => {
   form.value.submit();
-}
+};
 
 const handleSubmit = ({ validateResult }: SubmitContext) => {
   if (validateResult !== true) {
-    return
+    return;
   }
   if (props.isEdit) {
-    handleEditSubmit()
+    handleEditSubmit();
   } else {
-    handleCreateSubmit()
+    handleCreateSubmit();
   }
-}
+};
 
 const handleEditSubmit = () => {
   const params = {
     name: formData.value.name,
-    person: formData.value.person,
-    contact: formData.value.contact,
-    address: formData.value.address,
-  }
-  updateCompany(formData.value.id, params).then(() => {
+    new_password: formData.value.password,
+    realName: formData.value.realName || '',
+    email: formData.value.email || '',
+    tel: formData.value.tel || '',
+    organizationIds: [formData.value.organizationIds],
+    roleIds: [formData.value.roleIds],
+  };
+  updateUser(formData.value.id, params).then(() => {
     _.merge(props.mdl, params);
     handleClose();
     MessagePlugin.success(t('pages.message.update'));
-  })
-}
+  });
+};
 
 const handleCreateSubmit = () => {
   const params = {
     name: formData.value.name,
-    person: formData.value.person,
-    contact: formData.value.contact,
-    address: formData.value.address,
-  }
-  createCompany(params).then(() => {
+    password: formData.value.password,
+    realName: formData.value.realName || '',
+    email: formData.value.email || '',
+    tel: formData.value.tel || '',
+    organizationIds: [formData.value.organizationIds],
+    roleIds: [formData.value.roleIds],
+  };
+  createUser(params).then(() => {
     emits('refresh-list');
     handleClose();
     MessagePlugin.success(t('pages.message.create'));
-  })
-}
+  });
+};
 
 const handleClose = () => {
-  emits('update:modelValue', false)
-}
+  emits('update:modelValue', false);
+};
 </script>
 
 <template>
@@ -125,7 +138,7 @@ const handleClose = () => {
         :label="$t('pages.user.password')"
         name="password"
         :rules="[
-          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.user.password') }), type: 'error', trigger: 'change' },
+          { required: !isEdit, message: $t('pages.form.requiredText', { field: $t('pages.user.password') }), type: 'error', trigger: 'change' },
           { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.user.password') }), type: 'error', trigger: 'change' },
         ]"
       >
@@ -159,7 +172,6 @@ const handleClose = () => {
         name="organizationIds"
         :rules="[
           { required: true, message: $t('pages.form.requiredText', { field: $t('pages.user.organization') }), type: 'error', trigger: 'change' },
-          { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.user.organization') }), type: 'error', trigger: 'change' },
         ]"
       >
         <t-cascader
@@ -173,6 +185,14 @@ const handleClose = () => {
           filterable
           :placeholder="$t('pages.form.selectPlaceholder', { field: $t('pages.user.organization') })"
         />
+      </t-form-item>
+      <t-form-item
+        :label="$t('pages.user.role')"
+        name="roleIds"
+        :rules="[
+          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.user.role') }), type: 'error', trigger: 'change' },
+        ]"
+      >
       </t-form-item>
       <t-form-item
         :label="$t('pages.user.email')"

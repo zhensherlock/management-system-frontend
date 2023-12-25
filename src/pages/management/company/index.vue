@@ -169,7 +169,7 @@ const handleRedirectUserList = (row: any) => {
   router.push({
     name: 'UserManage',
     query: {
-      companyId: row.id,
+      organizationIds: row.id,
     },
   });
 };
