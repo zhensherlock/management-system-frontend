@@ -5,20 +5,12 @@
       v-model="searchData"
       :options="[
         {
-          type: 'select',
-          name: 'companyId',
-          value: '',
-          label: $t('pages.user.company'),
-          placeholder: $t('pages.form.selectPlaceholder', { field: $t('pages.user.company') }),
-          children: companyList,
-        },
-        {
           type: 'cascader',
           name: 'organizationIds',
           value: [],
-          label: $t('pages.user.school'),
-          placeholder: $t('pages.form.selectPlaceholder', { field: $t('pages.user.school') }),
-          children: schoolList,
+          label: $t('pages.user.organization'),
+          placeholder: $t('pages.form.selectPlaceholder', { field: $t('pages.user.organization') }),
+          children: organizationList,
           props: {
             multiple: true,
             valueMode: 'parentFirst',
@@ -72,6 +64,12 @@
           :max-height="tableHeight"
           @page-change="handleChangePage"
         >
+          <template #organization="{ row }">
+            <OrganizationName :mdl="row.organizationUserMappings"></OrganizationName>
+          </template>
+          <template #role="{ row }">
+            <RoleName :mdl="row.userRoleMappings"></RoleName>
+          </template>
           <template #operation="{ row }">
             <t-space align="center" :size="0">
               <t-link hover="color" theme="primary" @click="handleShowUpdate(row)">
@@ -96,6 +94,7 @@
       v-model="operationModel.visible"
       v-model:mdl="operationModel.mdl"
       :is-edit="operationModel.isEdit"
+      :organization-list="organizationList"
       :list="dataSource"
       @refresh-list="handleRefreshList"
     >
@@ -116,23 +115,18 @@ import { getUserList, deleteUser } from '@/api/user';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
-import { getList as getCompanyList } from '@/api/company';
-import { getSchoolTree } from '@/api/school';
 import { recursiveMap } from '@/utils/array';
-
-// import { ImportUser, OperationUser } from './components';
+import { getOrganizationTree } from '@/api/organization';
 
 const tableParentElement = ref(null);
 const tableElement = ref(null);
 const dataSource = ref([]);
 
-const companyList = ref([]);
-const schoolList = ref([]);
+const organizationList = ref([]);
 
 const route = useRoute();
 
 const searchData = ref({
-  companyId: null,
   organizationIds: [],
   keyword: '',
 });
@@ -141,7 +135,10 @@ const fetchData = async () => {
   loading.value = true;
   try {
     // @ts-ignore
-    const { list, count } = await getUserList({ keyword: searchData.keyword });
+    const { list, count } = await getUserList({
+      keyword: searchData.value.keyword,
+      organizationIds: searchData.value.organizationIds,
+    });
     dataSource.value = list;
     total.value = count;
   } catch {
@@ -150,10 +147,15 @@ const fetchData = async () => {
   }
 };
 const columns = ref<PrimaryTableCol[]>([
-  { colKey: 'name', title: t('pages.user.name') },
-  { colKey: 'createdDate', title: t('pages.employee.createdDate'), width: 160 },
-  { colKey: 'updatedDate', title: t('pages.employee.updatedDate'), width: 160 },
-  { colKey: 'operation', title: t('pages.record.operation.label'), width: 100 },
+  { colKey: 'name', title: t('pages.user.name'), width: 150, fixed: 'left' },
+  { colKey: 'realName', title: t('pages.user.realName'), width: 100 },
+  { colKey: 'organization', title: t('pages.user.organization'), width: 100 },
+  { colKey: 'role', title: t('pages.user.role'), width: 100 },
+  { colKey: 'email', title: t('pages.user.email'), width: 160 },
+  { colKey: 'tel', title: t('pages.user.tel'), width: 140 },
+  { colKey: 'createdDate', title: t('pages.user.createdDate'), width: 160 },
+  { colKey: 'updatedDate', title: t('pages.user.updatedDate'), width: 160 },
+  { colKey: 'operation', title: t('pages.record.operation.label'), width: 100, fixed: 'right' },
 ]);
 const rowKey = 'id';
 const verticalAlign = 'top' as const;
@@ -171,15 +173,9 @@ onMounted(() => {
     }
   });
   fetchData();
-  getCompanyList({}).then((res: any) => {
-    companyList.value = res.list.map((item: any) => ({
-      label: item.name,
-      title: item.name,
-      value: item.id,
-    }));
-  });
-  getSchoolTree({}).then((res: any) => {
-    schoolList.value = recursiveMap(res.list, (item: any) => ({
+  getOrganizationTree({}).then((res: any) => {
+    organizationList.value = recursiveMap(res.list, (item: any) => ({
+      type: item.type,
       label: item.name,
       title: item.name,
       value: item.id,

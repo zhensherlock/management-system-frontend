@@ -10,17 +10,23 @@ import { t } from '@/locales';
 const props = defineProps({
   modelValue: Boolean,
   isEdit: Boolean,
+  organizationList: {
+    type: Array,
+    default: () => ([]),
+  },
   mdl: {
     type: Object,
     default() {
       return {
         name: '',
-        person: '',
-        contact: '',
-        address: '',
+        password: '',
+        realName: '',
+        email: '',
+        tel: '',
+        organizationIds: [],
       }
     }
-  }
+  },
 })
 const emits = defineEmits(['update:modelValue', 'refresh-list'])
 
@@ -117,7 +123,7 @@ const handleClose = () => {
       </t-form-item>
       <t-form-item
         :label="$t('pages.user.password')"
-        name="person"
+        name="password"
         :rules="[
           { required: true, message: $t('pages.form.requiredText', { field: $t('pages.user.password') }), type: 'error', trigger: 'change' },
           { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.user.password') }), type: 'error', trigger: 'change' },
@@ -129,6 +135,66 @@ const handleClose = () => {
           :maxlength="40"
           type="password"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.user.password') })"
+        >
+        </t-input>
+      </t-form-item>
+      <t-form-item
+        :label="$t('pages.user.realName')"
+        name="realName"
+        :rules="[
+          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.user.realName') }), type: 'error', trigger: 'change' },
+          { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.user.realName') }), type: 'error', trigger: 'change' },
+        ]"
+      >
+        <t-input
+          v-model="formData.realName"
+          clearable
+          :maxlength="255"
+          :placeholder="$t('pages.form.placeholder', { field: $t('pages.user.realName') })"
+        >
+        </t-input>
+      </t-form-item>
+      <t-form-item
+        :label="$t('pages.user.organization')"
+        name="organizationIds"
+        :rules="[
+          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.user.organization') }), type: 'error', trigger: 'change' },
+          { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.user.organization') }), type: 'error', trigger: 'change' },
+        ]"
+      >
+        <t-cascader
+          valueMode="parentFirst"
+          :options="organizationList"
+          :showAllLevels="true"
+          :checkStrictly="true"
+          :multiple="false"
+          v-model="formData.organizationIds"
+          clearable
+          filterable
+          :placeholder="$t('pages.form.selectPlaceholder', { field: $t('pages.user.organization') })"
+        />
+      </t-form-item>
+      <t-form-item
+        :label="$t('pages.user.email')"
+        name="email"
+      >
+        <t-input
+          v-model="formData.email"
+          clearable
+          :maxlength="255"
+          :placeholder="$t('pages.form.placeholder', { field: $t('pages.user.email') })"
+        >
+        </t-input>
+      </t-form-item>
+      <t-form-item
+        :label="$t('pages.user.tel')"
+        name="tel"
+      >
+        <t-input
+          v-model="formData.tel"
+          clearable
+          :maxlength="255"
+          :placeholder="$t('pages.form.placeholder', { field: $t('pages.user.tel') })"
         >
         </t-input>
       </t-form-item>
