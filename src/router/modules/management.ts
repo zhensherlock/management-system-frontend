@@ -62,6 +62,18 @@ export default [
           icon: 'user-list',
         },
       },
+      {
+        path: 'assessment',
+        name: 'AssessmentManage',
+        component: () => import('@/pages/management/assessment/index.vue'),
+        meta: {
+          title: {
+            zh_CN: '考核管理',
+            en_US: 'Assessment',
+          },
+          icon: 'tree-list',
+        },
+      },
       // {
       //   path: 'assessment',
       //   name: 'AssessmentManage',

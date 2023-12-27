@@ -21,6 +21,7 @@ import school from './lang.zh_cn.school';
 import form from './lang.zh_cn.form';
 import message from './lang.zh_cn.message';
 import user from './lang.zh_cn.user';
+import assessment from './lang.zh_cn.assessment';
 
 export default {
   dashboardBase,
@@ -45,4 +46,5 @@ export default {
   form,
   message,
   school,
+  assessment,
 };
