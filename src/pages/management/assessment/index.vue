@@ -105,7 +105,7 @@ export default {
 import { ref, reactive, onMounted, nextTick } from 'vue';
 import { useTable } from '@/composeable /useTable';
 import { OperationAssessment } from './components';
-import { getAssessmentList, deleteAssessment } from '@/api/assessment';
+import { deleteAssessment, getAssessmentTree } from '@/api/assessment';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
@@ -115,7 +115,7 @@ const tableParentElement = ref(null);
 const tableElement = ref(null);
 const dataSource = ref([]);
 
-const searchData = ref({
+const searchData = reactive({
   keyword: '',
 });
 
@@ -123,8 +123,8 @@ const fetchData = async () => {
   loading.value = true;
   try {
     // @ts-ignore
-    const { list, count } = await getAssessmentList({
-      keyword: searchData.value.keyword
+    const { list, count } = await getAssessmentTree({
+      keyword: searchData.keyword
     });
     dataSource.value = list;
     total.value = count;
@@ -134,7 +134,7 @@ const fetchData = async () => {
   }
 };
 const columns = ref<PrimaryTableCol[]>([
-  { colKey: 'title', title: t('pages.assessment.title'), width: 300, fixed: 'left' },
+  { colKey: 'title', title: t('pages.assessment.title'), minWidth: 300, fixed: 'left' },
   { colKey: 'sequence', title: t('pages.assessment.sequence'), width: 80 },
   { colKey: 'score', title: t('pages.assessment.score'), width: 100 },
   { colKey: 'createdDate', title: t('pages.employee.createdDate'), width: 160 },
@@ -172,6 +172,8 @@ const handleShowCreateDialog = () => {
 const handleShowCreateChildrenDialog = (row: any) => {
   operationModel.mdl = {
     parentId: row.id,
+    scoreType: row.scoreType,
+    maximumScore: row.maximumScore,
   };
   operationModel.isEdit = false;
   operationModel.visible = true;
@@ -183,8 +185,9 @@ const handleShowUpdateDialog = (company: any) => {
   operationModel.visible = true;
 };
 
-const handleSearchSubmit = () => {
+const handleSearchSubmit = (params: any) => {
   pagination.value && (pagination.value.current = 1);
+  Object.assign(searchData, params);
   fetchData();
 };
 

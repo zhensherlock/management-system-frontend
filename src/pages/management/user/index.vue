@@ -141,7 +141,7 @@ const roleList = ref([]);
 
 const route = useRoute();
 
-const searchData = ref({
+const searchData = reactive({
   organizationIds: [],
   roleIds: [],
   keyword: '',
@@ -152,9 +152,9 @@ const fetchData = async () => {
   try {
     // @ts-ignore
     const { list, count } = await getUserList({
-      keyword: searchData.value.keyword,
-      roleIds: searchData.value.roleIds,
-      organizationIds: searchData.value.organizationIds,
+      keyword: searchData.keyword,
+      roleIds: searchData.roleIds,
+      organizationIds: searchData.organizationIds,
     });
     dataSource.value = list;
     total.value = count;
@@ -183,10 +183,10 @@ onMounted(() => {
   Object.keys(route.query).forEach((key) => {
     const value = route.query[key];
     if (key === 'organizationIds') {
-      searchData.value.organizationIds = [value];
+      searchData.organizationIds = [value];
     } else {
       // @ts-ignore
-      searchData.value[key] = value;
+      searchData[key] = value;
     }
   });
   fetchData();
@@ -222,6 +222,11 @@ const operationModel = reactive({
 
 const handleShowCreate = () => {
   operationModel.mdl = undefined;
+  if (searchData.organizationIds.length === 1 && searchData.organizationIds[0] === route.query.organizationIds) {
+    operationModel.mdl = {
+      organizationIds: route.query.organizationIds,
+    }
+  }
   operationModel.isEdit = false;
   operationModel.visible = true;
 };
@@ -232,8 +237,9 @@ const handleShowUpdate = (company: any) => {
   operationModel.visible = true;
 };
 
-const handleSearchSubmit = () => {
+const handleSearchSubmit = (params: any) => {
   pagination.value && (pagination.value.current = 1);
+  Object.assign(searchData, params);
   fetchData();
 };
 

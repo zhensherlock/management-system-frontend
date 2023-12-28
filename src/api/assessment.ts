@@ -3,6 +3,7 @@ import { request } from '@/utils/request';
 
 const Api = {
   ListUrl: '/user/assessment/list',
+  TreeUrl: '/user/assessment/tree',
   CreateUrl: '/user/assessment/create',
   UpdateUrl: '/user/assessment/',
   DeleteUrl: '/user/assessment/',
@@ -11,6 +12,13 @@ const Api = {
 export function getAssessmentList(data: any) {
   return request.get<CommonResponse<any>>({
     url: Api.ListUrl,
+    params: data,
+  });
+}
+
+export function getAssessmentTree(data: any) {
+  return request.get<CommonResponse<any>>({
+    url: Api.TreeUrl,
     params: data,
   });
 }

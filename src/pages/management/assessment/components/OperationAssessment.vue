@@ -50,8 +50,13 @@ watch(() => props.modelValue, () => {
   }
   formData = useCloned(props.mdl).cloned;
   if (!props.isEdit && props.list.length > 0) {
-    formData.value.parentId = (props.list[0] as any)?.id
-    formData.value.sequence = props.list.length + 1
+    formData.value.sequence = props.list.length + 1;
+  }
+  if (_.isEmpty(formData.value.parentId)) {
+    // 添加考核的初始事件
+    formData.value.parentId = (props.list[0] as any)?.id;
+  } else {
+    // 添加考核子集的初始事件
   }
 });
 
@@ -103,6 +108,12 @@ const handleCreateSubmit = () => {
 const handleClose = () => {
   emits('update:modelValue', false);
 }
+
+const handleParentChange = () => {
+  if (_.isEmpty(formData.value.parentId)) {
+    formData.value.parentId = null
+  }
+}
 </script>
 
 <template>
@@ -147,6 +158,7 @@ const handleClose = () => {
           :options="assessmentTreeData"
           check-strictly
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.assessment.parentId') })"
+          @change="handleParentChange"
         />
       </t-form-item>
       <t-form-item

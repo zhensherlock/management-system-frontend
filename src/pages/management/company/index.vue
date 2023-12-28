@@ -108,7 +108,7 @@ const tableElement = ref(null);
 const dataSource = ref([]);
 const router = useRouter();
 
-const searchData = ref({
+const searchData = reactive({
   keyword: '',
 });
 
@@ -119,7 +119,7 @@ const fetchData = async () => {
     const { list, count } = await getList({
       currentPage: pagination.value?.current || 1,
       pageSize: pagination.value?.pageSize || 20,
-      keyword: searchData.value.keyword,
+      keyword: searchData.keyword,
     });
     dataSource.value = list;
     total.value = count;
@@ -185,8 +185,9 @@ const handleShowImport = () => {
   importVisible.value = true;
 };
 
-const handleSearchSubmit = () => {
+const handleSearchSubmit = (params: any) => {
   pagination.value && (pagination.value.current = 1);
+  Object.assign(searchData, params);
   fetchData();
 };
 

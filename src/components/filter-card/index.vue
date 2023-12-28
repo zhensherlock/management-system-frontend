@@ -83,10 +83,8 @@ export default {
 
 <script setup lang="ts">
 import { SearchIcon, SwapIcon } from 'tdesign-icons-vue-next';
-import type { PropType } from 'vue';
-import { computed, onMounted, ref } from 'vue';
+import { PropType, reactive, watch, computed, nextTick } from 'vue';
 import { isEmpty } from 'lodash';
-import { syncRef } from '@vueuse/shared';
 
 export interface OptionsType {
   type: string;
@@ -118,43 +116,46 @@ props.options.forEach((item: any) => {
   defaultInputData[item.name] = item.value;
 });
 // 组件受控数据
-const inputData = ref<{ [key: string]: any }>(defaultInputData);
+const inputData = reactive<{ [key: string]: any }>({...defaultInputData});
 // 搜索确认数据
-const searchData = ref<{ [key: string]: any }>({});
+const searchData = reactive<{ [key: string]: any }>({...defaultInputData});
 
 const resetFilterVisible = computed(() => {
-  return Object.values(searchData.value).some((value) => {
+  return Object.values(searchData).some((value) => {
     return !isEmpty(value);
   });
 });
 
-// @ts-ignore
-syncRef(props.modelValue, inputData);
-
-onMounted(() => {});
+watch(props.modelValue, () => {
+  Object.keys(props.modelValue).forEach((key) => {
+    inputData[key] = props.modelValue[key];
+    searchData[key] = props.modelValue[key];
+  });
+});
 
 const handleResetFilter = () => {
-  Object.keys(inputData.value).forEach((key) => {
-    inputData.value[key] = '';
+  Object.keys(inputData).forEach((key) => {
+    // @ts-ignore
+    inputData[key] = defaultInputData[key];
   });
   syncSearchData();
   handleSubmit();
 };
 
 const syncSearchData = () => {
-  Object.keys(inputData.value).forEach((key) => {
-    searchData.value[key] = inputData.value[key];
+  Object.keys(inputData).forEach((key) => {
+    searchData[key] = inputData[key];
   });
 };
 
 const handleChangeItem = (item: OptionsType) => {
-  searchData.value[item.name] = inputData.value[item.name];
+  searchData[item.name] = inputData[item.name];
   handleSubmit();
 };
 
 const handleSubmit = () => {
-  emits('update:modelValue', searchData.value);
-  emits('submit', searchData.value);
+  emits('update:modelValue', searchData);
+  emits('submit', searchData);
 };
 </script>
 

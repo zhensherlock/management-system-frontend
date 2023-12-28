@@ -113,7 +113,7 @@ const tableElement = ref(null);
 const dataSource = ref([]);
 const router = useRouter();
 
-const searchData = ref({
+const searchData = reactive({
   keyword: '',
 });
 
@@ -122,7 +122,7 @@ const fetchData = async () => {
   try {
     // @ts-ignore
     const { list, count } = await getSchoolTree({
-      keyword: searchData.value.keyword
+      keyword: searchData.keyword
     });
     dataSource.value = list;
     total.value = count;
@@ -195,8 +195,9 @@ const handleShowImport = () => {
   importVisible.value = true;
 };
 
-const handleSearchSubmit = () => {
+const handleSearchSubmit = (params: any) => {
   pagination.value && (pagination.value.current = 1);
+  Object.assign(searchData, params);
   fetchData();
 };
 
