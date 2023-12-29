@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 
 import * as passportApi from '@/api/passport';
+import * as profileApi from '@/api/profile';
 import { usePermissionStore } from '@/store';
 import type { LoginData } from '@/types/api/passport';
 import type { CaptchaInfo, LoginInfo, UserInfo } from '@/types/interface';
@@ -16,6 +17,10 @@ interface IUserStore {
 const InitUserInfo: UserInfo = {
   name: '', // 用户名，用于展示在页面右上角头像处
   roles: [], // 前端权限模型使用 如果使用请配置modules/permission-fe.ts使用
+  realName: '',
+  email: '',
+  tel: '',
+  organizations: [],
 };
 
 export const useUserStore = defineStore('user', {
@@ -81,7 +86,11 @@ export const useUserStore = defineStore('user', {
       //   };
       // };
       // const res = await mockRemoteUserInfo(this.token);
-      this.userInfo = await passportApi.getUserInfo();
+      const data = await profileApi.getProfile();
+      this.setUserInfo(data);
+    },
+    setUserInfo(data: UserInfo) {
+      this.userInfo = data;
     },
     async logout() {
       this.token = '';

@@ -47,7 +47,7 @@
           <t-dropdown :min-column-width="120" trigger="click">
             <template #dropdown>
               <t-dropdown-menu>
-                <t-dropdown-item class="operations-dropdown-container-item" @click="handleNav('/user/index')">
+                <t-dropdown-item class="operations-dropdown-container-item" @click="handleRedirect('profile')">
                   <user-circle-icon />{{ $t('layout.header.user') }}
                 </t-dropdown-item>
                 <t-dropdown-item class="operations-dropdown-container-item" @click="handleLogout">
@@ -166,6 +166,10 @@ const changeCollapsed = () => {
 
 const handleNav = (url: string) => {
   router.push(url);
+};
+
+const handleRedirect = (name: string) => {
+  router.push({ name });
 };
 
 const handleLogout = () => {

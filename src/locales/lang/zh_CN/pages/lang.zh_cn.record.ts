@@ -14,6 +14,8 @@ export default {
     create: '新建',
     update: '编辑',
     delete: '删除',
+    save: '保存',
+    cancel: '取消',
     deleteConfirm: '确定要删除吗？',
   },
 };

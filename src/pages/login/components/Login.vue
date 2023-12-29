@@ -133,13 +133,13 @@ const handleSubmit = async ({ validateResult }: SubmitContext) => {
 		router.push(redirectUrl);
     userStore.showCaptcha = false;
 	} catch ({ cause }) {
-    if (cause.code === 'HY_10004') {
+    if (cause?.code === 'HY_10004') {
       userStore.showCaptcha = true;
       nextTick(() => {
         captchaInput.value.focus();
       })
     }
-		MessagePlugin.error(cause.message);
+		MessagePlugin.error(cause?.message);
 	}
 	loading.value = false
 };
