@@ -48,6 +48,7 @@ const handleSubmit = ({ validateResult }: SubmitContext) => {
 }
 
 const handleCancel = () => {
+  form.value.clearValidate();
   status.value = 'view';
 }
 </script>
@@ -80,12 +81,25 @@ const handleCancel = () => {
         :data="formData"
         @submit="handleSubmit"
       >
-        <t-form-item :label="$t('pages.user.name')" name="name">
+        <t-form-item
+          :label="$t('pages.user.name')"
+          name="name"
+          :rules="[
+            {
+              required: true,
+              message: $t('pages.form.requiredText', { field: $t('pages.user.name') }),
+              type: 'error',
+              trigger: 'change',
+            },
+            { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.user.name') }), type: 'error', trigger: 'change'},
+          ]"
+        >
           <template v-if="status === 'view'">
             {{ user.userInfo.name }}
           </template>
           <template v-else>
             <t-input
+              autofocus
               v-model="formData.name"
               :maxlength="100"
               :placeholder="$t('pages.form.placeholder', { field: $t('pages.user.name') })"
@@ -93,7 +107,19 @@ const handleCancel = () => {
             />
           </template>
         </t-form-item>
-        <t-form-item :label="$t('pages.user.realName')" name="realName">
+        <t-form-item
+          :label="$t('pages.user.realName')"
+          name="realName"
+          :rules="[
+            {
+              required: true,
+              message: $t('pages.form.requiredText', { field: $t('pages.user.realName') }),
+              type: 'error',
+              trigger: 'change',
+            },
+            { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.user.realName') }), type: 'error', trigger: 'change'},
+          ]"
+        >
           <template v-if="status === 'view'">
             {{ user.userInfo.realName }}
           </template>
@@ -164,9 +190,4 @@ const handleCancel = () => {
 </template>
 
 <style scoped lang="less">
-.t-card {
-  :deep(.t-card__body:empty) {
-    display: none;
-  }
-}
 </style>

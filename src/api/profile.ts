@@ -22,7 +22,7 @@ export function updateProfile(data: any) {
 
 export function updatePassword(data: any) {
   return request.put<CommonResponse<any>>({
-    url: Api.UpdateProfileUrl,
+    url: Api.UpdatePasswordUrl,
     params: data,
   });
 }
