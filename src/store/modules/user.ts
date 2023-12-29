@@ -20,6 +20,7 @@ const InitUserInfo: UserInfo = {
   realName: '',
   email: '',
   tel: '',
+  type: '',
   organizations: [],
 };
 

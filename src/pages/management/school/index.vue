@@ -52,7 +52,6 @@
           :loading="loading"
           :loadingProps="loadingProps"
           :max-height="tableHeight"
-          :key="tableKey"
           :tree="treeConfig"
           @page-change="handleChangePage"
         >
@@ -107,11 +106,14 @@ import { getSchoolTree, deleteSchool } from '@/api/school';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
+import { AccountType } from '@/constants/account.constant';
+import { useUserStore } from '@/store';
 
 const tableParentElement = ref(null);
 const tableElement = ref(null);
 const dataSource = ref([]);
 const router = useRouter();
+const user = useUserStore();
 
 const searchData = reactive({
   keyword: '',
@@ -122,21 +124,39 @@ const fetchData = async () => {
   try {
     // @ts-ignore
     const { list, count } = await getSchoolTree({
-      keyword: searchData.keyword
+      keyword: searchData.keyword,
     });
     dataSource.value = list;
     total.value = count;
+
+    await nextTick(() => {
+      setTimeout(() => {
+        debugger;
+        const firstId = list?.[0]?.id;
+        if (!firstId) {
+          return;
+        }
+        const rowData = tableElement.value.getData(firstId);
+        tableElement.value.toggleExpandData(rowData);
+        // tableElement.value.expandAll();
+      });
+    });
   } catch {
   } finally {
     loading.value = false;
   }
 };
 const columns = ref<PrimaryTableCol[]>([
-  { colKey: 'name', title: t('pages.school.name'), width: 300, fixed: 'left' },
-  { colKey: 'person', title: t('pages.school.person') },
-  { colKey: 'contact', title: t('pages.school.contact') },
-  { colKey: 'createdDate', title: t('pages.employee.createdDate'), width: 160 },
-  { colKey: 'updatedDate', title: t('pages.employee.updatedDate'), width: 160 },
+  { colKey: 'name', title: t('pages.school.name'), minWidth: 300, fixed: 'left' },
+  { colKey: 'person', title: t('pages.school.person'), minWidth: 70 },
+  { colKey: 'contact', title: t('pages.school.contact'), minWidth: 110 },
+  ...(user.userInfo.type === AccountType.SuperAdmin
+    ? [
+        { colKey: 'createdDate', title: t('pages.employee.createdDate'), width: 160 },
+        { colKey: 'updatedDate', title: t('pages.employee.updatedDate'), width: 160 },
+      ]
+    : []),
+  { colKey: 'sequence', title: t('pages.school.sequence'), width: 60 },
   { colKey: 'operation', title: t('pages.record.operation.label'), width: 260, fixed: 'right' },
 ]);
 const rowKey = 'id';
@@ -148,7 +168,7 @@ onMounted(() => {
   fetchData();
 });
 
-const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({
+const { pagination, isEmpty, loadingProps, tableHeight } = useTable({
   total,
   table: tableElement,
   parent: tableParentElement,
@@ -218,15 +238,18 @@ const handleDeleteConfirm = (row: any) => {
 
 const handleRefreshList = async () => {
   await fetchData();
-  await nextTick(() => {
-    tableElement.value.expandAll();
-  });
 };
 
 const treeConfig = reactive({
   treeNodeColumnIndex: 0,
   indent: 25,
-  defaultExpandAll: true,
+  defaultExpandAll: false,
 });
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.data-card {
+  :deep(.t-card__body) {
+    padding: var(--td-comp-paddingTB) var(--td-comp-paddingLR);
+  }
+}
+</style>

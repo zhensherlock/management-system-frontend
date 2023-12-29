@@ -7,6 +7,7 @@ export default {
   person: '联系人',
   contact: '联系方式',
   address: '地址',
+  sequence: '顺序',
   createdDate: '新增时间',
   updatedDate: '修改时间',
   addSchool: '添加学校',

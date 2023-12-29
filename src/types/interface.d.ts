@@ -49,10 +49,11 @@ export interface LoginInfo {
 
 export interface UserInfo {
   name: string;
-  roles: string[];
   realName: string;
   email: string;
   tel: string;
+  type: string;
+  roles: string[];
   organizations: any[];
 }
 

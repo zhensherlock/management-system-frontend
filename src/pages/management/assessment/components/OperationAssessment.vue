@@ -173,7 +173,7 @@ const handleParentChange = () => {
       </t-form-item>
       <t-form-item
         :label="$t('pages.assessment.sequence')"
-        name="person"
+        name="sequence"
         :rules="[
           {
             required: false,
@@ -200,7 +200,7 @@ const handleParentChange = () => {
       </t-form-item>
       <t-form-item
         :label="$t('pages.assessment.score')"
-        name="person"
+        name="score"
         :rules="[
           {
             required: false,

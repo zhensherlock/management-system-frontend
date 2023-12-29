@@ -29,28 +29,30 @@ const handleToggleEdit = () => {
 
 const handleSave = () => {
   form.value.submit();
-}
+};
 
 const handleSubmit = ({ validateResult }: SubmitContext) => {
   if (validateResult !== true) {
     return;
   }
-  profileApi.updateProfile({
-    name: formData.name,
-    realName: formData.realName,
-    email: formData.email,
-    tel: formData.tel,
-  }).then((data: any) => {
-    user.setUserInfo(data);
-    status.value = 'view';
-    MessagePlugin.success(t('pages.message.update'));
-  });
-}
+  profileApi
+    .updateProfile({
+      name: formData.name,
+      realName: formData.realName,
+      email: formData.email,
+      tel: formData.tel,
+    })
+    .then((data: any) => {
+      user.setUserInfo(data);
+      status.value = 'view';
+      MessagePlugin.success(t('pages.message.update'));
+    });
+};
 
 const handleCancel = () => {
   form.value.clearValidate();
   status.value = 'view';
-}
+};
 </script>
 
 <template>
@@ -74,14 +76,9 @@ const handleCancel = () => {
           </t-button>
         </template>
       </template>
-      <t-form
-        class="w-50% mt-20px"
-        labelWidth="90px"
-        ref="form"
-        :data="formData"
-        @submit="handleSubmit"
-      >
+      <t-form class="w-50% mt-20px" labelWidth="90px" ref="form" :data="formData" @submit="handleSubmit">
         <t-form-item
+          :requiredMark="status === 'edit'"
           :label="$t('pages.user.name')"
           name="name"
           :rules="[
@@ -91,7 +88,12 @@ const handleCancel = () => {
               type: 'error',
               trigger: 'change',
             },
-            { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.user.name') }), type: 'error', trigger: 'change'},
+            {
+              whitespace: true,
+              message: $t('pages.form.whitespaceText', { field: $t('pages.user.name') }),
+              type: 'error',
+              trigger: 'change',
+            },
           ]"
         >
           <template v-if="status === 'view'">
@@ -108,6 +110,7 @@ const handleCancel = () => {
           </template>
         </t-form-item>
         <t-form-item
+          :requiredMark="status === 'edit'"
           :label="$t('pages.user.realName')"
           name="realName"
           :rules="[
@@ -117,7 +120,12 @@ const handleCancel = () => {
               type: 'error',
               trigger: 'change',
             },
-            { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.user.realName') }), type: 'error', trigger: 'change'},
+            {
+              whitespace: true,
+              message: $t('pages.form.whitespaceText', { field: $t('pages.user.realName') }),
+              type: 'error',
+              trigger: 'change',
+            },
           ]"
         >
           <template v-if="status === 'view'">
@@ -136,7 +144,12 @@ const handleCancel = () => {
           :label="$t('pages.user.email')"
           name="email"
           :rules="[
-            { email: true, message: $t('pages.form.errorText', { field: $t('pages.user.email') }), type: 'error', trigger: 'change' },
+            {
+              email: true,
+              message: $t('pages.form.errorText', { field: $t('pages.user.email') }),
+              type: 'error',
+              trigger: 'change',
+            },
           ]"
         >
           <template v-if="status === 'view'">
@@ -155,7 +168,12 @@ const handleCancel = () => {
           :label="$t('pages.user.tel')"
           name="tel"
           :rules="[
-            { telnumber: true, message: $t('pages.form.errorText', { field: $t('pages.user.tel') }), type: 'error', trigger: 'change' },
+            {
+              telnumber: true,
+              message: $t('pages.form.errorText', { field: $t('pages.user.tel') }),
+              type: 'error',
+              trigger: 'change',
+            },
           ]"
         >
           <template v-if="status === 'view'">
@@ -172,14 +190,14 @@ const handleCancel = () => {
         </t-form-item>
         <t-form-item :label="$t('pages.user.organization')">
           <t-space>
-            <t-tag v-for="(item) in user.userInfo.organizations" theme="primary" :key="item.id">
+            <t-tag v-for="item in user.userInfo.organizations" theme="primary" :key="item.id">
               {{ item.name }}
             </t-tag>
           </t-space>
         </t-form-item>
         <t-form-item :label="$t('pages.user.role')">
           <t-space>
-            <t-tag v-for="(item) in user.userInfo.roles" theme="success" :key="item.id">
+            <t-tag v-for="item in user.userInfo.roles" theme="success" :key="item.id">
               {{ item.name }}
             </t-tag>
           </t-space>
@@ -189,5 +207,4 @@ const handleCancel = () => {
   </div>
 </template>
 
-<style scoped lang="less">
-</style>
+<style scoped lang="less"></style>

@@ -171,6 +171,12 @@ const handleClose = () => {
             type: 'error',
             trigger: 'change',
           },
+          {
+            pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$/,
+            message: $t('pages.form.passwordPatternText'),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-input

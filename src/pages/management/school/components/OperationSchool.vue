@@ -20,6 +20,7 @@ const props = defineProps({
         person: '',
         contact: '',
         address: '',
+        sequence: 1,
       };
     },
   },
@@ -77,9 +78,11 @@ const handleEditSubmit = () => {
     contact: formData.value.contact,
     address: formData.value.address,
     parentId: formData.value.parentId,
+    sequence: formData.value.sequence,
   };
   updateSchool(formData.value.id, params).then(() => {
-    _.merge(props.mdl, params);
+    // _.merge(props.mdl, params);
+    emits('refresh-list');
     handleClose();
     MessagePlugin.success(t('pages.message.update'));
   });
@@ -92,6 +95,7 @@ const handleCreateSubmit = () => {
     contact: formData.value.contact,
     address: formData.value.address,
     parentId: formData.value.parentId,
+    sequence: formData.value.sequence,
   };
   createSchool(params).then(() => {
     emits('refresh-list');
@@ -144,6 +148,7 @@ const handleClose = () => {
           clearable
           :maxlength="100"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.school.name') })"
+          @enter="handleConfirm"
         >
         </t-input>
       </t-form-item>
@@ -185,6 +190,7 @@ const handleClose = () => {
           clearable
           :maxlength="40"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.school.person') })"
+          @enter="handleConfirm"
         >
         </t-input>
       </t-form-item>
@@ -211,8 +217,31 @@ const handleClose = () => {
           clearable
           :maxlength="40"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.school.contact') })"
+          @enter="handleConfirm"
         >
         </t-input>
+      </t-form-item>
+      <t-form-item
+        :label="$t('pages.school.sequence')"
+        name="sequence"
+        :rules="[
+          {
+            number: true,
+            message: $t('pages.form.errorText', { field: $t('pages.school.sequence') }),
+            type: 'error',
+            trigger: 'change',
+          },
+        ]"
+      >
+        <t-input-number
+          v-model="formData.sequence"
+          clearable
+          auto-width
+          theme="column"
+          :placeholder="$t('pages.form.placeholder', { field: $t('pages.school.sequence') })"
+          @enter="handleConfirm"
+        >
+        </t-input-number>
       </t-form-item>
       <t-form-item
         :label="$t('pages.school.address')"

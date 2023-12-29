@@ -102,11 +102,14 @@ import { getList, deleteCompany } from '@/api/company';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
+import { useUserStore } from '@/store';
+import { AccountType } from '@/constants/account.constant';
 
 const tableParentElement = ref(null);
 const tableElement = ref(null);
 const dataSource = ref([]);
 const router = useRouter();
+const user = useUserStore();
 
 const searchData = reactive({
   keyword: '',
@@ -129,12 +132,16 @@ const fetchData = async () => {
   }
 };
 const columns = ref<PrimaryTableCol[]>([
-  { colKey: 'name', title: t('pages.company.name'), width: 200, fixed: 'left' },
-  { colKey: 'person', title: t('pages.company.person') },
-  { colKey: 'contact', title: t('pages.company.contact') },
-  { colKey: 'address', title: t('pages.company.address') },
-  { colKey: 'createdDate', title: t('pages.company.createdDate'), width: 160 },
-  { colKey: 'updatedDate', title: t('pages.company.updatedDate'), width: 160 },
+  { colKey: 'name', title: t('pages.company.name'), minWidth: 200, fixed: 'left' },
+  { colKey: 'person', title: t('pages.company.person'), minWidth: 70 },
+  { colKey: 'contact', title: t('pages.company.contact'), minWidth: 110 },
+  { colKey: 'address', title: t('pages.company.address'), minWidth: 220 },
+  ...(user.userInfo.type === AccountType.SuperAdmin
+    ? [
+        { colKey: 'createdDate', title: t('pages.company.createdDate'), width: 160 },
+        { colKey: 'updatedDate', title: t('pages.company.updatedDate'), width: 160 },
+      ]
+    : []),
   { colKey: 'operation', title: t('pages.record.operation.label'), width: 180, fixed: 'right' },
 ]);
 const rowKey = 'index';
