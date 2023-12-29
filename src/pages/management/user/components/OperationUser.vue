@@ -12,11 +12,11 @@ const props = defineProps({
   isEdit: Boolean,
   organizationList: {
     type: Array,
-    default: () => ([]),
+    default: () => [],
   },
   roleList: {
     type: Array,
-    default: () => ([]),
+    default: () => [],
   },
   mdl: {
     type: Object,
@@ -29,8 +29,8 @@ const props = defineProps({
         tel: '',
         organizationIds: [],
         roleIds: '',
-      }
-    }
+      };
+    },
   },
 });
 const emits = defineEmits(['update:modelValue', 'refresh-list']);
@@ -39,18 +39,23 @@ const form = ref<FormInstanceFunctions>();
 
 let { cloned: formData } = useCloned(props.mdl);
 
-watch(() => props.modelValue, () => {
-  if (!props.modelValue) {
-    return;
-  }
-  formData = useCloned(props.mdl).cloned;
-  if (!_.isEmpty(formData.value.organizationUserMappings)) {
-    formData.value.organizationIds = formData.value.organizationUserMappings.map((item: any) => item.organizationId)[0];
-  }
-  if (!_.isEmpty(formData.value.userRoleMappings)) {
-    formData.value.roleIds = formData.value.userRoleMappings.map((item: any) => item.roleId)[0];
-  }
-});
+watch(
+  () => props.modelValue,
+  () => {
+    if (!props.modelValue) {
+      return;
+    }
+    formData = useCloned(props.mdl).cloned;
+    if (!_.isEmpty(formData.value.organizationUserMappings)) {
+      formData.value.organizationIds = formData.value.organizationUserMappings.map(
+        (item: any) => item.organizationId,
+      )[0];
+    }
+    if (!_.isEmpty(formData.value.userRoleMappings)) {
+      formData.value.roleIds = formData.value.userRoleMappings.map((item: any) => item.roleId)[0];
+    }
+  },
+);
 
 const handleConfirm = () => {
   form.value.submit();
@@ -126,16 +131,27 @@ const handleClose = () => {
         :label="$t('pages.user.name')"
         name="name"
         :rules="[
-          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.user.name') }), type: 'error', trigger: 'change' },
-          { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.user.name') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.requiredText', { field: $t('pages.user.name') }),
+            type: 'error',
+            trigger: 'change',
+          },
+          {
+            whitespace: true,
+            message: $t('pages.form.whitespaceText', { field: $t('pages.user.name') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-input
           autofocus
           v-model="formData.name"
           clearable
-          :maxlength="255"
+          :maxlength="100"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.user.name') })"
+          @enter="handleConfirm"
         >
         </t-input>
       </t-form-item>
@@ -143,8 +159,18 @@ const handleClose = () => {
         :label="$t('pages.user.password')"
         name="password"
         :rules="[
-          { required: !isEdit, message: $t('pages.form.requiredText', { field: $t('pages.user.password') }), type: 'error', trigger: 'change' },
-          { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.user.password') }), type: 'error', trigger: 'change' },
+          {
+            required: !isEdit,
+            message: $t('pages.form.requiredText', { field: $t('pages.user.password') }),
+            type: 'error',
+            trigger: 'change',
+          },
+          {
+            whitespace: true,
+            message: $t('pages.form.whitespaceText', { field: $t('pages.user.password') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-input
@@ -153,6 +179,7 @@ const handleClose = () => {
           :maxlength="40"
           type="password"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.user.password') })"
+          @enter="handleConfirm"
         >
         </t-input>
       </t-form-item>
@@ -160,15 +187,26 @@ const handleClose = () => {
         :label="$t('pages.user.realName')"
         name="realName"
         :rules="[
-          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.user.realName') }), type: 'error', trigger: 'change' },
-          { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.user.realName') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.requiredText', { field: $t('pages.user.realName') }),
+            type: 'error',
+            trigger: 'change',
+          },
+          {
+            whitespace: true,
+            message: $t('pages.form.whitespaceText', { field: $t('pages.user.realName') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-input
           v-model="formData.realName"
           clearable
-          :maxlength="255"
+          :maxlength="100"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.user.realName') })"
+          @enter="handleConfirm"
         >
         </t-input>
       </t-form-item>
@@ -176,7 +214,12 @@ const handleClose = () => {
         :label="$t('pages.user.organization')"
         name="organizationIds"
         :rules="[
-          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.user.organization') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.requiredText', { field: $t('pages.user.organization') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-cascader
@@ -195,7 +238,12 @@ const handleClose = () => {
         :label="$t('pages.user.role')"
         name="roleIds"
         :rules="[
-          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.user.role') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.requiredText', { field: $t('pages.user.role') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-select
@@ -209,24 +257,42 @@ const handleClose = () => {
       <t-form-item
         :label="$t('pages.user.email')"
         name="email"
+        :rules="[
+          {
+            email: true,
+            message: $t('pages.form.errorText', { field: $t('pages.user.email') }),
+            type: 'error',
+            trigger: 'change',
+          },
+        ]"
       >
         <t-input
           v-model="formData.email"
           clearable
-          :maxlength="255"
+          :maxlength="100"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.user.email') })"
+          @enter="handleConfirm"
         >
         </t-input>
       </t-form-item>
       <t-form-item
         :label="$t('pages.user.tel')"
         name="tel"
+        :rules="[
+          {
+            telnumber: true,
+            message: $t('pages.form.errorText', { field: $t('pages.user.tel') }),
+            type: 'error',
+            trigger: 'change',
+          },
+        ]"
       >
         <t-input
           v-model="formData.tel"
           clearable
-          :maxlength="255"
+          :maxlength="100"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.user.tel') })"
+          @enter="handleConfirm"
         >
         </t-input>
       </t-form-item>

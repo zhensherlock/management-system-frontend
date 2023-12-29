@@ -18,37 +18,40 @@ const props = defineProps({
         person: '',
         contact: '',
         address: '',
-      }
-    }
-  }
-})
-const emits = defineEmits(['update:modelValue', 'refresh-list'])
-
-const form = ref<FormInstanceFunctions>()
-
-let { cloned: formData } = useCloned(props.mdl)
-
-watch(() => props.modelValue, () => {
-  if (!props.modelValue) {
-    return
-  }
-  formData = useCloned(props.mdl).cloned
+      };
+    },
+  },
 });
+const emits = defineEmits(['update:modelValue', 'refresh-list']);
+
+const form = ref<FormInstanceFunctions>();
+
+let { cloned: formData } = useCloned(props.mdl);
+
+watch(
+  () => props.modelValue,
+  () => {
+    if (!props.modelValue) {
+      return;
+    }
+    formData = useCloned(props.mdl).cloned;
+  },
+);
 
 const handleConfirm = () => {
   form.value.submit();
-}
+};
 
 const handleSubmit = ({ validateResult }: SubmitContext) => {
   if (validateResult !== true) {
-    return
+    return;
   }
   if (props.isEdit) {
-    handleEditSubmit()
+    handleEditSubmit();
   } else {
-    handleCreateSubmit()
+    handleCreateSubmit();
   }
-}
+};
 
 const handleEditSubmit = () => {
   const params = {
@@ -56,13 +59,13 @@ const handleEditSubmit = () => {
     person: formData.value.person,
     contact: formData.value.contact,
     address: formData.value.address,
-  }
+  };
   updateCompany(formData.value.id, params).then(() => {
     _.merge(props.mdl, params);
     handleClose();
     MessagePlugin.success(t('pages.message.update'));
-  })
-}
+  });
+};
 
 const handleCreateSubmit = () => {
   const params = {
@@ -70,21 +73,21 @@ const handleCreateSubmit = () => {
     person: formData.value.person,
     contact: formData.value.contact,
     address: formData.value.address,
-  }
+  };
   createCompany(params).then(() => {
     emits('refresh-list');
     handleClose();
     MessagePlugin.success(t('pages.message.create'));
-  })
-}
+  });
+};
 
 const handleClose = () => {
-  emits('update:modelValue', false)
-}
+  emits('update:modelValue', false);
+};
 </script>
 
 <template>
-	<t-dialog
+  <t-dialog
     class="dialog"
     :visible="props.modelValue"
     v-bind="$attrs"
@@ -102,15 +105,25 @@ const handleClose = () => {
         :label="$t('pages.company.name')"
         name="name"
         :rules="[
-          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.company.name') }), type: 'error', trigger: 'change' },
-          { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.company.name') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.requiredText', { field: $t('pages.company.name') }),
+            type: 'error',
+            trigger: 'change',
+          },
+          {
+            whitespace: true,
+            message: $t('pages.form.whitespaceText', { field: $t('pages.company.name') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-input
           autofocus
           v-model="formData.name"
           clearable
-          :maxlength="255"
+          :maxlength="150"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.company.name') })"
           @enter="handleConfirm"
         >
@@ -120,8 +133,18 @@ const handleClose = () => {
         :label="$t('pages.company.person')"
         name="person"
         :rules="[
-          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.company.person') }), type: 'error', trigger: 'change' },
-          { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.company.person') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.requiredText', { field: $t('pages.company.person') }),
+            type: 'error',
+            trigger: 'change',
+          },
+          {
+            whitespace: true,
+            message: $t('pages.form.whitespaceText', { field: $t('pages.company.person') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-input
@@ -137,8 +160,18 @@ const handleClose = () => {
         :label="$t('pages.company.contact')"
         name="contact"
         :rules="[
-          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.company.contact') }), type: 'error', trigger: 'change' },
-          { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.company.contact') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.requiredText', { field: $t('pages.company.contact') }),
+            type: 'error',
+            trigger: 'change',
+          },
+          {
+            whitespace: true,
+            message: $t('pages.form.whitespaceText', { field: $t('pages.company.contact') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-input
@@ -154,20 +187,30 @@ const handleClose = () => {
         :label="$t('pages.company.address')"
         name="address"
         :rules="[
-          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.company.address') }), type: 'error', trigger: 'change' },
-          { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.company.address') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.requiredText', { field: $t('pages.company.address') }),
+            type: 'error',
+            trigger: 'change',
+          },
+          {
+            whitespace: true,
+            message: $t('pages.form.whitespaceText', { field: $t('pages.company.address') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-textarea
           v-model="formData.address"
           clearable
-          :maxlength="255"
+          :maxlength="150"
           :autosize="{ minRows: 2, maxRows: 4 }"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.company.address') })"
         />
       </t-form-item>
     </t-form>
-	</t-dialog>
+  </t-dialog>
 </template>
 
 <style scoped lang="less">

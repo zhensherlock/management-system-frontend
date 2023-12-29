@@ -14,11 +14,11 @@ const props = defineProps({
   isEdit: Boolean,
   schoolList: {
     type: Array,
-    default: () => ([]),
+    default: () => [],
   },
   companyList: {
     type: Array,
-    default: () => ([]),
+    default: () => [],
   },
   mdl: {
     type: Object,
@@ -46,16 +46,19 @@ const form = ref<FormInstanceFunctions>();
 
 let { cloned: formData } = useCloned(props.mdl);
 
-watch(() => props.modelValue, () => {
-  if (!props.modelValue) {
-    return;
-  }
-  formData = useCloned(props.mdl).cloned;
-});
+watch(
+  () => props.modelValue,
+  () => {
+    if (!props.modelValue) {
+      return;
+    }
+    formData = useCloned(props.mdl).cloned;
+  },
+);
 
 const handleConfirm = () => {
   form.value.submit();
-}
+};
 
 const handleSubmit = ({ validateResult }: SubmitContext) => {
   if (validateResult !== true) {
@@ -66,7 +69,7 @@ const handleSubmit = ({ validateResult }: SubmitContext) => {
   } else {
     handleCreateSubmit();
   }
-}
+};
 
 const handleEditSubmit = () => {
   const params = {
@@ -116,7 +119,7 @@ const handleClose = () => {
 </script>
 
 <template>
-	<t-dialog
+  <t-dialog
     class="dialog"
     :visible="props.modelValue"
     v-bind="$attrs"
@@ -135,15 +138,25 @@ const handleClose = () => {
         :label="$t('pages.employee.jobNumber')"
         name="jobNumber"
         :rules="[
-          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.employee.jobNumber') }), type: 'error', trigger: 'change' },
-          { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.employee.jobNumber') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.requiredText', { field: $t('pages.employee.jobNumber') }),
+            type: 'error',
+            trigger: 'change',
+          },
+          {
+            whitespace: true,
+            message: $t('pages.form.whitespaceText', { field: $t('pages.employee.jobNumber') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-input
           autofocus
           v-model="formData.jobNumber"
           clearable
-          :maxlength="255"
+          :maxlength="100"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.employee.jobNumber') })"
           @enter="handleConfirm"
         >
@@ -153,8 +166,18 @@ const handleClose = () => {
         :label="$t('pages.employee.name')"
         name="name"
         :rules="[
-          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.employee.name') }), type: 'error', trigger: 'change' },
-          { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.employee.name') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.requiredText', { field: $t('pages.employee.name') }),
+            type: 'error',
+            trigger: 'change',
+          },
+          {
+            whitespace: true,
+            message: $t('pages.form.whitespaceText', { field: $t('pages.employee.name') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-input
@@ -170,8 +193,18 @@ const handleClose = () => {
         :label="$t('pages.employee.birthday')"
         name="birthday"
         :rules="[
-          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.employee.birthday') }), type: 'error', trigger: 'change' },
-          { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.employee.birthday') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.requiredText', { field: $t('pages.employee.birthday') }),
+            type: 'error',
+            trigger: 'change',
+          },
+          {
+            whitespace: true,
+            message: $t('pages.form.whitespaceText', { field: $t('pages.employee.birthday') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-date-picker
@@ -185,7 +218,12 @@ const handleClose = () => {
         :label="$t('pages.employee.company')"
         name="companyOrganizationId"
         :rules="[
-          { required: true, message: $t('pages.form.selectPlaceholder', { field: $t('pages.employee.company') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.selectPlaceholder', { field: $t('pages.employee.company') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-cascader
@@ -197,10 +235,7 @@ const handleClose = () => {
           :placeholder="$t('pages.form.selectPlaceholder', { field: $t('pages.employee.company') })"
         />
       </t-form-item>
-      <t-form-item
-        :label="$t('pages.employee.school')"
-        name="schoolOrganizationId"
-      >
+      <t-form-item :label="$t('pages.employee.school')" name="schoolOrganizationId">
         <t-cascader
           :options="schoolList"
           :showAllLevels="true"
@@ -214,7 +249,12 @@ const handleClose = () => {
         :label="$t('pages.employee.sex')"
         name="sex"
         :rules="[
-          { required: true, message: $t('pages.form.selectPlaceholder', { field: $t('pages.employee.sex') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.selectPlaceholder', { field: $t('pages.employee.sex') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-select
@@ -228,8 +268,18 @@ const handleClose = () => {
         :label="$t('pages.employee.certificateNumber')"
         name="certificateNumber"
         :rules="[
-          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.employee.certificateNumber') }), type: 'error', trigger: 'change' },
-          { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.employee.certificateNumber') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.requiredText', { field: $t('pages.employee.certificateNumber') }),
+            type: 'error',
+            trigger: 'change',
+          },
+          {
+            whitespace: true,
+            message: $t('pages.form.whitespaceText', { field: $t('pages.employee.certificateNumber') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-input
@@ -245,8 +295,18 @@ const handleClose = () => {
         :label="$t('pages.employee.contact')"
         name="contact"
         :rules="[
-          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.employee.contact') }), type: 'error', trigger: 'change' },
-          { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.employee.contact') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.requiredText', { field: $t('pages.employee.contact') }),
+            type: 'error',
+            trigger: 'change',
+          },
+          {
+            whitespace: true,
+            message: $t('pages.form.whitespaceText', { field: $t('pages.employee.contact') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-input
@@ -262,8 +322,18 @@ const handleClose = () => {
         :label="$t('pages.employee.idCard')"
         name="idCard"
         :rules="[
-          { required: true, message: $t('pages.form.requiredText', { field: $t('pages.employee.idCard') }), type: 'error', trigger: 'change' },
-          { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.employee.idCard') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.requiredText', { field: $t('pages.employee.idCard') }),
+            type: 'error',
+            trigger: 'change',
+          },
+          {
+            whitespace: true,
+            message: $t('pages.form.whitespaceText', { field: $t('pages.employee.idCard') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-input
@@ -279,7 +349,12 @@ const handleClose = () => {
         :label="$t('pages.employee.status')"
         name="status"
         :rules="[
-          { required: true, message: $t('pages.form.selectPlaceholder', { field: $t('pages.employee.status') }), type: 'error', trigger: 'change' },
+          {
+            required: true,
+            message: $t('pages.form.selectPlaceholder', { field: $t('pages.employee.status') }),
+            type: 'error',
+            trigger: 'change',
+          },
         ]"
       >
         <t-select
@@ -289,20 +364,17 @@ const handleClose = () => {
           <t-option v-for="item in EmployeeStatusList" :key="item.value" :label="$t(item.label)" :value="item.value" />
         </t-select>
       </t-form-item>
-      <t-form-item
-        :label="$t('pages.employee.description')"
-        name="description"
-      >
+      <t-form-item :label="$t('pages.employee.description')" name="description">
         <t-textarea
           v-model="formData.description"
           clearable
-          :maxlength="255"
+          :maxlength="150"
           :autosize="{ minRows: 2, maxRows: 4 }"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.employee.description') })"
         />
       </t-form-item>
     </t-form>
-	</t-dialog>
+  </t-dialog>
 </template>
 
 <style scoped lang="less">
