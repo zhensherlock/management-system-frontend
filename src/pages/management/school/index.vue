@@ -131,14 +131,16 @@ const fetchData = async () => {
 
     await nextTick(() => {
       setTimeout(() => {
-        debugger;
+        if (searchData.keyword) {
+          tableElement.value.expandAll();
+          return;
+        }
         const firstId = list?.[0]?.id;
         if (!firstId) {
           return;
         }
         const rowData = tableElement.value.getData(firstId);
         tableElement.value.toggleExpandData(rowData);
-        // tableElement.value.expandAll();
       });
     });
   } catch {
