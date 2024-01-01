@@ -12,10 +12,18 @@ export interface UseTableOptions {
   table?: Ref;
   parent: MaybeComputedElementRef;
   excludeHeightElements?: string[];
+  hiddenPage?: boolean;
 }
 
 export function useTable(options: UseTableOptions) {
-  const { loading = false, total = 0, pageSize = 20, parent, excludeHeightElements = [] } = options;
+  const {
+    loading = false,
+    total = 0,
+    pageSize = 10,
+    parent,
+    excludeHeightElements = [],
+    hiddenPage = false,
+  } = options;
 
   const currentTotal = ref(0);
 
@@ -30,7 +38,7 @@ export function useTable(options: UseTableOptions) {
   });
 
   const pagination = computed(() => {
-    return toValue(total) > toValue(pageSize)
+    return (toValue(total) > toValue(pageSize) && !hiddenPage)
       ? {
           pageSize: toValue(pageSize),
           total: toValue(total),
@@ -50,7 +58,7 @@ export function useTable(options: UseTableOptions) {
 
   const calculateTableHeight = () => {
     const _excludeHeightElements = [...excludeHeightElements];
-    if (currentTotal.value > toValue(pageSize)) {
+    if (currentTotal.value > toValue(pageSize) && !hiddenPage) {
       _excludeHeightElements.push('.t-table__pagination-wrap');
     }
     const excludeHeight = _excludeHeightElements.reduce((prev, className) => {

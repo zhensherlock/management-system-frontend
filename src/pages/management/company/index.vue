@@ -96,7 +96,7 @@ export default {
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useTable } from '@/composeable /useTable';
+import { useTable } from '@/composeable/useTable';
 import { OperationCompany, ImportCompany } from './components';
 import { getList, deleteCompany } from '@/api/company';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';

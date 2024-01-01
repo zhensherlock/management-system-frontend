@@ -122,7 +122,7 @@ export default {
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { useTable } from '@/composeable /useTable';
+import { useTable } from '@/composeable/useTable';
 import { OperationUser } from './components';
 import { getUserList, deleteUser } from '@/api/user';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';

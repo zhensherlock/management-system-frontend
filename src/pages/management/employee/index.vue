@@ -113,7 +113,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
-import { useTable } from '@/composeable /useTable';
+import { useTable } from '@/composeable/useTable';
 import { OperationEmployee, ImportEmployee } from './components';
 import { getList, deleteEmployee } from '@/api/employee';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';

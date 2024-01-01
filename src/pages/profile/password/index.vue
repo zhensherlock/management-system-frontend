@@ -26,6 +26,7 @@ const handleSubmit = ({ validateResult }: SubmitContext) => {
     repeat_new_password: formData.repeat_new_password,
   }).then(_ => {
     MessagePlugin.success(t('pages.message.update'));
+    form.value.reset();
   });
 }
 
