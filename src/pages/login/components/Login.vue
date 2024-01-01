@@ -1,7 +1,7 @@
 <template>
   <t-form
     ref="form"
-    :class="['item-container']"
+    class="item-container"
     :data="formData"
     label-width="0"
     @submit="handleSubmit"
@@ -68,9 +68,9 @@
       <t-image v-if="userStore.captchaInfo" :src="userStore.captchaInfo.imageBase64" @click="fetchCaptcha" />
     </t-form-item>
 
-	  <div class="check-container remember-pwd">
-		  <t-checkbox>{{ $t('pages.login.remember') }}</t-checkbox>
-	  </div>
+<!--	  <div class="check-container remember-pwd">-->
+<!--		  <t-checkbox>{{ $t('pages.login.remember') }}</t-checkbox>-->
+<!--	  </div>-->
 
     <t-form-item class="btn-container">
       <t-button block size="large" type="submit" :loading="loading"> {{ $t('pages.login.signIn') }} </t-button>
@@ -139,7 +139,6 @@ const handleSubmit = async ({ validateResult }: SubmitContext) => {
         captchaInput.value.focus();
       })
     }
-		MessagePlugin.error(cause?.message);
 	}
 	loading.value = false
 };
