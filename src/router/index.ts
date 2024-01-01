@@ -17,6 +17,11 @@ const defaultRouterList: Array<RouteRecordRaw> = [
     component: () => import('@/pages/login/index.vue'),
   },
   {
+    path: '/admin/login',
+    name: 'AdminLogin',
+    component: () => import('@/pages/admin/login/index.vue'),
+  },
+  {
     path: '/',
     redirect: '/management',
   },

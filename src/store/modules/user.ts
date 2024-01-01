@@ -73,6 +73,12 @@ export const useUserStore = defineStore('user', {
         this.loginInfo = loginResult;
       }
     },
+    async adminLogin(userInfo: LoginData) {
+      const loginResult = await passportApi.adminLogin(userInfo);
+      if (loginResult) {
+        this.loginInfo = loginResult;
+      }
+    },
     async getUserInfo() {
       // const mockRemoteUserInfo = async (token: string) => {
       //   if (token === 'main_token') {
@@ -100,6 +106,9 @@ export const useUserStore = defineStore('user', {
     },
     async getCaptcha() {
       this.captchaInfo = await passportApi.captcha();
+    },
+    async getAdminCaptcha() {
+      this.captchaInfo = await passportApi.adminCaptcha();
     },
   },
   persist: {

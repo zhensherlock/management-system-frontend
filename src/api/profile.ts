@@ -2,9 +2,9 @@ import type { CommonResponse } from '@/types/api';
 import { request } from '@/utils/request';
 
 const Api = {
-  GetProfileUrl: '/user/profile/basic',
-  UpdateProfileUrl: '/user/profile/basic',
-  UpdatePasswordUrl: '/user/profile/password',
+  GetProfileUrl: '/profile/basic',
+  UpdateProfileUrl: '/profile/basic',
+  UpdatePasswordUrl: '/profile/password',
 };
 
 export function getProfile() {
