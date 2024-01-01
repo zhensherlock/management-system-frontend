@@ -5,7 +5,8 @@ import { request } from '@/utils/request';
 const Api = {
   LoginUrl: '/user/passport/login',
   CaptchaUrl: '/user/passport/captcha',
-  UserInfoUrl: '/user/info/',
+  AdminLoginUrl: '/admin/passport/login',
+  AdminCaptchaUrl: '/admin/passport/captcha',
 };
 
 export function login(data: LoginData) {
@@ -21,8 +22,15 @@ export function captcha() {
   });
 }
 
-export function getUserInfo() {
-  return request.get<UserInfoResult>({
-    url: Api.UserInfoUrl,
+export function adminLogin(data: LoginData) {
+  return request.post<LoginResult>({
+    url: Api.AdminLoginUrl,
+    data,
+  });
+}
+
+export function adminCaptcha() {
+  return request.get<CommonResponse<CaptchaResult>>({
+    url: Api.AdminCaptchaUrl,
   });
 }

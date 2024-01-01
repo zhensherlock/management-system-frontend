@@ -1,0 +1,18 @@
+export default {
+  create: '新增模块',
+  update: '编辑模块',
+  name: '模块名称',
+  code: '模块编号',
+  icon: '图标',
+  url: '链接',
+  sequence: '顺序',
+  enabled: '状态',
+  target: '目标',
+  component: '组件路径',
+  createdDate: '新增时间',
+  updatedDate: '修改时间',
+  description: '描述',
+  parent: '父级模块',
+  addChild: '添加子模块',
+  buttonList: '按钮列表',
+};
