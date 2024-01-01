@@ -74,18 +74,30 @@ export default [
           icon: 'tree-list',
         },
       },
-      // {
-      //   path: 'assessment',
-      //   name: 'AssessmentManage',
-      //   component: () => import('@/pages/management/assessment/index.vue'),
-      //   meta: {
-      //     title: {
-      //       zh_CN: '考核管理',
-      //       en_US: 'Assessment',
-      //     },
-      //     icon: 'tree-list',
-      //   },
-      // },
+      {
+        path: 'module',
+        name: 'ModuleManage',
+        component: () => import('@/pages/management/module/index.vue'),
+        meta: {
+          title: {
+            zh_CN: '模块管理',
+            en_US: 'Module',
+          },
+          icon: 'module',
+        },
+      },
+      {
+        path: 'role',
+        name: 'RoleManage',
+        component: () => import('@/pages/management/module/index.vue'),
+        meta: {
+          title: {
+            zh_CN: '角色管理',
+            en_US: 'Role',
+          },
+          icon: 'usergroup',
+        },
+      },
     ],
   },
 ];
