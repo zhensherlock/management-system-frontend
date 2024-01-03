@@ -4,7 +4,14 @@
       <component :is="dynamicComponent"></component>
     </div>
     <div class="result-title">{{ title }}</div>
-    <div class="result-tip">{{ tip }}</div>
+    <div class="result-tip">
+      <template v-if="$slots.tip">
+        <slot name="tip"></slot>
+      </template>
+      <template v-else>
+        {{ tip }}
+      </template>
+    </div>
     <slot />
   </div>
 </template>

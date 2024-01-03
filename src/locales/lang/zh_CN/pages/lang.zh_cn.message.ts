@@ -8,5 +8,9 @@ export default {
   },
   permission: {
     success: '权限设置成功！',
+    operations: {
+      default: `请点击模块左侧 {icon} 按钮获取按钮列表`,
+      empty: `该模块下（{moduleName}）暂无按钮列表`,
+    },
   }
 };

@@ -44,6 +44,7 @@ watch(
       module.checked = [];
       operation.selectedRowKeys = [];
       operation.dataSource = [];
+      operation.currentModule = null;
       return;
     }
     props.role?.moduleRoleMappings.forEach((item: any) => {
@@ -74,7 +75,7 @@ const tableElement = ref(null);
 const operation = reactive({
   loading: false,
   total: 0,
-  currentModuleId: null,
+  currentModule: null,
   dataSource: [],
   selectedRowKeys: [],
   columns: [
@@ -113,14 +114,14 @@ const handleChangeModuleChecked = (_: any, context: any) => {
 }
 
 const handleShowOperationTable = (node: any) => {
-  operation.currentModuleId = node.value;
+  operation.currentModule = node;
   operation.dataSource = node.data.operations;
   operation.total = node.data.operations.length;
   operation.selectedRowKeys = selectedModuleMap[node.value].map((item: any) => item.id);
 }
 
 const handleOperationSelectChange = (_: string[], options: any) => {
-  selectedModuleMap[operation.currentModuleId] = options.selectedRowData.map((item: any) => {
+  selectedModuleMap[operation.currentModule.value] = options.selectedRowData.map((item: any) => {
     return {
       id: item.id,
       code: item.code,
@@ -181,7 +182,17 @@ const handleOperationSelectChange = (_: string[], options: any) => {
           </perfect-scrollbar>
         </t-col>
         <t-col :flex="3" ref="tableParentElement">
+          <Result type="empty" v-if="!operation.currentModule">
+            <template #tip>
+              <i18n-t keypath="pages.message.permission.operations.default">
+                <template #icon>
+                  <span class="t-icon i-mdi-format-list-checks text-18px"></span>
+                </template>
+              </i18n-t>
+            </template>
+          </Result>
           <t-table
+            v-else
             ref="tableElement"
             row-key="id"
             v-model:selected-row-keys="operation.selectedRowKeys"
@@ -194,6 +205,9 @@ const handleOperationSelectChange = (_: string[], options: any) => {
             :max-height="500"
             @select-change="handleOperationSelectChange"
           >
+            <template #empty>
+              {{ $t('pages.message.permission.operations.empty', {  moduleName: operation.currentModule.label }) }}
+            </template>
           </t-table>
         </t-col>
       </t-row>
@@ -222,5 +236,14 @@ const handleOperationSelectChange = (_: string[], options: any) => {
 
 .icon-operation {
   height: var(--td-comp-size-xxs);
+}
+
+.result-container {
+  min-height: 500px;
+  height: 100%;
+
+  .t-icon {
+    color: var(--td-brand-color-hover);
+  }
 }
 </style>
