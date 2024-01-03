@@ -8,8 +8,8 @@
           type: 'input',
           name: 'keyword',
           value: '',
-          label: $t('pages.module.name'),
-          placeholder: $t('pages.form.placeholder', { field: $t('pages.module.name') }),
+          label: $t('pages.school.name'),
+          placeholder: $t('pages.form.placeholder', { field: $t('pages.school.name') }),
         },
       ]"
       @submit="handleSearchSubmit"
@@ -17,11 +17,11 @@
       <template #actions>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
           <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>
-          {{ $t('pages.module.import') }}
+          {{ $t('pages.school.import') }}
         </t-button>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowCreate">
           <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>
-          {{ $t('pages.module.create') }}
+          {{ $t('pages.school.create') }}
         </t-button>
       </template>
     </FilterCard>
@@ -58,10 +58,10 @@
           <template #operation="{ row }">
             <t-space align="center" :size="0">
               <t-link hover="color" theme="primary" @click="handleShowAddDialog(row)">
-                {{ $t('pages.module.addSchool') }}
+                {{ $t('pages.school.addSchool') }}
               </t-link>
               <t-link hover="color" theme="primary" @click="handleRedirectUserList(row)">
-                {{ $t('pages.module.userList') }}
+                {{ $t('pages.school.userList') }}
               </t-link>
               <t-link hover="color" theme="primary" @click="handleShowUpdate(row)" :disabled="row.level === 1">
                 {{ $t('pages.record.operation.update') }}
@@ -149,16 +149,16 @@ const fetchData = async () => {
   }
 };
 const columns = ref<PrimaryTableCol[]>([
-  { colKey: 'name', title: t('pages.module.name'), minWidth: 300, fixed: 'left' },
-  { colKey: 'person', title: t('pages.module.person'), minWidth: 70 },
-  { colKey: 'contact', title: t('pages.module.contact'), minWidth: 110 },
+  { colKey: 'name', title: t('pages.school.name'), minWidth: 300, fixed: 'left' },
+  { colKey: 'person', title: t('pages.school.person'), minWidth: 70 },
+  { colKey: 'contact', title: t('pages.school.contact'), minWidth: 110 },
   ...(user.userInfo.type === AccountType.SuperAdmin
     ? [
         { colKey: 'createdDate', title: t('pages.employee.createdDate'), width: 160 },
         { colKey: 'updatedDate', title: t('pages.employee.updatedDate'), width: 160 },
       ]
     : []),
-  { colKey: 'sequence', title: t('pages.module.sequence'), width: 60 },
+  { colKey: 'sequence', title: t('pages.school.sequence'), width: 60 },
   { colKey: 'operation', title: t('pages.record.operation.label'), width: 260, fixed: 'right' },
 ]);
 const rowKey = 'id';

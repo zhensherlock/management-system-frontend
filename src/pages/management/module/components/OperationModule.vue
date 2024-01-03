@@ -278,7 +278,7 @@ const handleClose = () => {
       </t-form-item>
       <t-form-item
         :label="$t('pages.module.description')"
-        name="address"
+        name="description"
         :rules="$rules.inputRules('pages.module.description', false)"
       >
         <t-textarea
