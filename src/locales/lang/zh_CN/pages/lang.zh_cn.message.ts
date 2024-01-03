@@ -6,4 +6,7 @@ export default {
     success: '导入成功！',
     error: `导入失败，原因：{reason}`,
   },
+  permission: {
+    success: '权限设置成功！',
+  }
 };

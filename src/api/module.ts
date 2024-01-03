@@ -8,7 +8,7 @@ const Api = {
   DeleteUrl: '/admin/module/',
 };
 
-export function getModuleTree(data: any) {
+export function getModuleTree(data: any = {}) {
   return request.get<CommonResponse<any>>({
     url: Api.TreeUrl,
     params: data,

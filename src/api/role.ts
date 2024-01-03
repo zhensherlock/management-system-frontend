@@ -4,8 +4,9 @@ import { request } from '@/utils/request';
 const Api = {
   ListUrl: '/admin/role/list',
   CreateUrl: '/admin/role/create',
-  UpdateUrl: '/admin/role/',
-  DeleteUrl: '/admin/role/',
+  UpdateUrl: '/admin/role',
+  DeleteUrl: '/admin/role',
+  UpdatePermissionUrl: '/admin/role/permission',
 };
 
 export function getRoleList(data: any = {}) {
@@ -24,13 +25,20 @@ export function createRole(data: any) {
 
 export function updateRole(id: string, data: any) {
   return request.put<CommonResponse<any>>({
-    url: `${Api.UpdateUrl}${id}/`,
+    url: `${Api.UpdateUrl}/${id}/`,
     data,
   });
 }
 
 export function deleteRole(id: string) {
   return request.delete<CommonResponse<any>>({
-    url: `${Api.DeleteUrl}${id}/`,
+    url: `${Api.DeleteUrl}/${id}/`,
+  });
+}
+
+export function updatePermission(id: string, data: any) {
+  return request.post<CommonResponse<any>>({
+    url: `${Api.UpdatePermissionUrl}/${id}/`,
+    data,
   });
 }

@@ -89,7 +89,7 @@ export default [
       {
         path: 'role',
         name: 'RoleManage',
-        component: () => import('@/pages/management/module/index.vue'),
+        component: () => import('@/pages/management/role/index.vue'),
         meta: {
           title: {
             zh_CN: '角色管理',
