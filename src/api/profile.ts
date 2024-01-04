@@ -5,11 +5,18 @@ const Api = {
   GetProfileUrl: '/profile/basic',
   UpdateProfileUrl: '/profile/basic',
   UpdatePasswordUrl: '/profile/password',
+  MenuList: '/profile/getMenuList',
 };
 
 export function getProfile() {
   return request.get<CommonResponse<any>>({
     url: Api.GetProfileUrl,
+  });
+}
+
+export function getMenuList() {
+  return request.get<CommonResponse<any>>({
+    url: Api.MenuList,
   });
 }
 

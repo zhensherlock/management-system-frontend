@@ -25,13 +25,13 @@ router.beforeEach(async (to, from, next) => {
     try {
       await userStore.getUserInfo();
 
-      // const { asyncRoutes } = permissionStore;
+      const { asyncRoutes } = permissionStore;
 
-      // if (asyncRoutes && asyncRoutes.length === 0) {
-      //   const routeList = await permissionStore.buildAsyncRoutes();
-      //   routeList.forEach((item: RouteRecordRaw) => {
-      //     router.addRoute(item);
-      //   });
+      if (asyncRoutes && asyncRoutes.length === 0) {
+        const routeList = await permissionStore.buildAsyncRoutes();
+        routeList.forEach((item: RouteRecordRaw) => {
+          router.addRoute(item);
+        });
       //
       //   if (to.name === PAGE_NOT_FOUND_ROUTE.name) {
       //     // 动态添加路由后，此处应当重定向到fullPath，否则会加载404页面内容
@@ -41,7 +41,7 @@ router.beforeEach(async (to, from, next) => {
       //     next(to.path === redirect ? { ...to, replace: true } : { path: redirect });
       //     return;
       //   }
-      // }
+      }
       if (router.hasRoute(to.name)) {
         next();
       } else {
