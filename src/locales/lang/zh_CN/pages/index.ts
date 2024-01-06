@@ -26,6 +26,7 @@ import assessment from './lang.zh_cn.assessment';
 import module from './lang.zh_cn.module';
 import operation from './lang.zh_cn.operation';
 import role from './lang.zh_cn.role';
+import system from './lang.zh_cn.system';
 
 export default {
   dashboardBase,
@@ -55,4 +56,5 @@ export default {
   module,
   operation,
   role,
+  system,
 };

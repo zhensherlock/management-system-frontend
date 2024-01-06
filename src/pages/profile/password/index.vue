@@ -45,7 +45,7 @@ const validatorRePassword = (value: string) => {
         </t-button>
       </template>
       <t-form
-        class="w-50% mt-20px"
+        class="w-500px mt-20px mx-auto my-0"
         labelWidth="90px"
         ref="form"
         :data="formData"
