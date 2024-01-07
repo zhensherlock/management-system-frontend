@@ -141,7 +141,7 @@ const fetchData = async () => {
 };
 const columns = ref<PrimaryTableCol[]>([
   { colKey: 'name', title: t('pages.module.name'), width: 200, fixed: 'left' },
-  { colKey: 'code', title: t('pages.module.code'), width: 200 },
+  { colKey: 'code', title: t('pages.module.code'), width: 220 },
   { colKey: 'icon', title: t('pages.module.icon'), width: 60 },
   { colKey: 'enabled', title: t('pages.module.enabled'), width: 60 },
   { colKey: 'url', title: t('pages.module.url'), width: 200 },

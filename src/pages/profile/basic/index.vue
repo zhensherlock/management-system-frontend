@@ -76,7 +76,7 @@ const handleCancel = () => {
           </t-button>
         </template>
       </template>
-      <t-form class="w-500px mt-20px mx-auto my-0" labelWidth="90px" ref="form" :data="formData" @submit="handleSubmit">
+      <t-form class="w-500px mt-20px" labelWidth="90px" ref="form" :data="formData" @submit="handleSubmit">
         <t-form-item
           :requiredMark="status === 'edit'"
           :label="$t('pages.user.name')"

@@ -68,6 +68,25 @@ p {
   box-sizing: border-box;
 }
 
+.ps__rail-y {
+  width: 8px;
+
+  &:hover > .ps__thumb-y {
+    background-color: #999;
+    width: 4px;
+  }
+
+  &:focus > .ps__thumb-y {
+    background-color: #999;
+    width: 4px;
+  }
+
+  &.ps--clicking .ps__thumb-y {
+    background-color: #999;
+    width: 4px;
+  }
+}
+
 .ps__thumb-x {
   background-color: var(--scrollbar-background-color);
 }
