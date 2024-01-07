@@ -1,7 +1,7 @@
 <template>
   <div class="record-page">
     <FilterCard
-      title="考核管理"
+      :title="$t('pages.assessment.page.title')"
       v-model="searchData"
       :options="[
         {
@@ -35,7 +35,6 @@
       </template>
       <div v-else class="data-card-table" ref="tableParentElement">
         <t-enhanced-table
-          drag-sort="row"
           ref="tableElement"
           bordered
           hover
@@ -58,7 +57,7 @@
               <t-link hover="color" theme="primary" @click="handleShowCreateChildrenDialog(row)">
                 {{ $t('pages.assessment.addAssessment') }}
               </t-link>
-              <t-link hover="color" theme="primary" @click="handleShowUpdateDialog(row)" :disabled="row.level === 1">
+              <t-link hover="color" theme="primary" @click="handleShowUpdateDialog(row)">
                 {{ $t('pages.record.operation.update') }}
               </t-link>
               <t-popconfirm
@@ -174,6 +173,7 @@ const handleShowCreateChildrenDialog = (row: any) => {
     parentId: row.id,
     scoreType: row.scoreType,
     maximumScore: row.maximumScore,
+    sequence: (row?.children?.length || 0) + 1,
   };
   operationModel.isEdit = false;
   operationModel.visible = true;

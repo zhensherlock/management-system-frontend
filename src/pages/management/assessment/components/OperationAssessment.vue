@@ -52,9 +52,6 @@ watch(
     }
     formData = useCloned(props.mdl).cloned;
     if (!props.isEdit && props.list.length > 0) {
-      formData.value.sequence = props.list.length + 1;
-    }
-    if (_.isEmpty(formData.value.parentId)) {
       // 添加考核的初始事件
       formData.value.parentId = (props.list[0] as any)?.id;
     } else {
@@ -137,20 +134,7 @@ const handleParentChange = () => {
       <t-form-item
         :label="$t('pages.assessment.title')"
         name="title"
-        :rules="[
-          {
-            required: true,
-            message: $t('pages.form.requiredText', { field: $t('pages.assessment.title') }),
-            type: 'error',
-            trigger: 'change',
-          },
-          {
-            whitespace: true,
-            message: $t('pages.form.whitespaceText', { field: $t('pages.assessment.title') }),
-            type: 'error',
-            trigger: 'change',
-          },
-        ]"
+        :rules="$rules.inputRules('pages.assessment.title')"
       >
         <t-input
           autofocus
@@ -158,6 +142,7 @@ const handleParentChange = () => {
           clearable
           :maxlength="150"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.assessment.title') })"
+          @enter="handleConfirm"
         >
         </t-input>
       </t-form-item>
@@ -174,20 +159,7 @@ const handleParentChange = () => {
       <t-form-item
         :label="$t('pages.assessment.sequence')"
         name="sequence"
-        :rules="[
-          {
-            required: false,
-            message: $t('pages.form.requiredText', { field: $t('pages.assessment.sequence') }),
-            type: 'error',
-            trigger: 'change',
-          },
-          {
-            whitespace: true,
-            message: $t('pages.form.whitespaceText', { field: $t('pages.assessment.sequence') }),
-            type: 'error',
-            trigger: 'change',
-          },
-        ]"
+        :rules="$rules.inputRules('pages.assessment.sequence', false)"
       >
         <t-input-number
           v-model="formData.sequence"
@@ -195,26 +167,14 @@ const handleParentChange = () => {
           auto-width
           theme="column"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.assessment.sequence') })"
+          @enter="handleConfirm"
         >
         </t-input-number>
       </t-form-item>
       <t-form-item
         :label="$t('pages.assessment.score')"
         name="score"
-        :rules="[
-          {
-            required: false,
-            message: $t('pages.form.requiredText', { field: $t('pages.assessment.score') }),
-            type: 'error',
-            trigger: 'change',
-          },
-          {
-            whitespace: true,
-            message: $t('pages.form.whitespaceText', { field: $t('pages.assessment.score') }),
-            type: 'error',
-            trigger: 'change',
-          },
-        ]"
+        :rules="$rules.inputRules('pages.assessment.score', false)"
       >
         <t-input-adornment>
           <template #prepend>
@@ -241,6 +201,7 @@ const handleParentChange = () => {
                 ),
               })
             "
+            @enter="handleConfirm"
           >
           </t-input-number>
         </t-input-adornment>
@@ -248,20 +209,7 @@ const handleParentChange = () => {
       <t-form-item
         :label="$t('pages.assessment.description')"
         name="description"
-        :rules="[
-          {
-            required: false,
-            message: $t('pages.form.requiredText', { field: $t('pages.assessment.description') }),
-            type: 'error',
-            trigger: 'change',
-          },
-          {
-            whitespace: true,
-            message: $t('pages.form.whitespaceText', { field: $t('pages.assessment.description') }),
-            type: 'error',
-            trigger: 'change',
-          },
-        ]"
+        :rules="$rules.inputRules('pages.assessment.description', false)"
       >
         <t-textarea
           v-model="formData.description"

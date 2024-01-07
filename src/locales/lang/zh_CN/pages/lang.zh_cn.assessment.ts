@@ -1,5 +1,8 @@
 export default {
-  create: '新增考核',
+  page: {
+    title: '考核项管理',
+  },
+  create: '新增考核项',
   update: '编辑考核',
   title: '标题',
   sequence: '顺序',
