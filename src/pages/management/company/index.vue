@@ -174,7 +174,7 @@ const handleShowCreate = () => {
 
 const handleRedirectUserList = (row: any) => {
   router.push({
-    name: 'UserManage',
+    name: 'AccountManagement',
     query: {
       organizationIds: row.id,
     },

@@ -199,7 +199,7 @@ const handleShowAddDialog = (row: any) => {
 
 const handleRedirectUserList = (row: any) => {
   router.push({
-    name: 'UserManage',
+    name: 'AccountManagement',
     query: {
       organizationIds: row.id,
     },
