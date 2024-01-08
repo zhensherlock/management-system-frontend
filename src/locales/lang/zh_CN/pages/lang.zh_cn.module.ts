@@ -11,6 +11,7 @@ export default {
   component: '组件路径',
   createdDate: '新增时间',
   updatedDate: '修改时间',
+  meta: '元信息',
   description: '描述',
   parent: '父级模块',
   addChild: '添加子模块',

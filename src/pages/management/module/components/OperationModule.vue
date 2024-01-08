@@ -26,6 +26,7 @@ const props = defineProps({
         enabled: true,
         isLeaf: true,
         expand: true,
+        meta: JSON.stringify({}),
         description: '',
         sequence: 1,
       };
@@ -60,6 +61,7 @@ watch(
       return;
     }
     formData = useCloned(props.mdl).cloned;
+    formData.value.meta = JSON.stringify(formData.value.meta);
   },
 );
 
@@ -90,6 +92,7 @@ const handleEditSubmit = () => {
     enabled: formData.value.enabled,
     isLeaf: formData.value.isLeaf,
     expand: formData.value.expand,
+    meta: formData.value.meta,
     description: formData.value.description,
     sequence: formData.value.sequence,
   };
@@ -113,6 +116,7 @@ const handleCreateSubmit = () => {
     enabled: formData.value.enabled,
     isLeaf: formData.value.isLeaf,
     expand: formData.value.expand,
+    meta: JSON.parse(formData.value.meta),
     description: formData.value.description,
     sequence: formData.value.sequence,
   };
@@ -274,6 +278,18 @@ const handleClose = () => {
         <t-switch
           v-model="formData.enabled"
           :label="[$t('pages.common.status.enabled'), $t('pages.common.status.disabled')]"
+        />
+      </t-form-item>
+      <t-form-item
+        :label="$t('pages.module.meta')"
+        name="description"
+        :rules="$rules.inputRules('pages.module.meta', false)"
+      >
+        <t-textarea
+          v-model="formData.meta"
+          clearable
+          :autosize="{ minRows: 2, maxRows: 4 }"
+          :placeholder="$t('pages.form.placeholder', { field: $t('pages.module.meta') })"
         />
       </t-form-item>
       <t-form-item

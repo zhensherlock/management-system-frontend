@@ -1,6 +1,6 @@
 export default {
   "showFooter": false,
-  "isSidebarCompact": false,
+  "isSidebarCompact": true,
   "showBreadcrumb": false,
   "mode": "light",
   "layout": "mix",
