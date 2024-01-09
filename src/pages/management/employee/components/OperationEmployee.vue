@@ -5,12 +5,17 @@ import { ref, watch } from 'vue';
 import { useCloned } from '@vueuse/core';
 import _ from 'lodash';
 import { createEmployee, updateEmployee } from '@/api/employee';
+import { createWorkOrder } from '@/api/work_order';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
-import { EmployeeSexList, EmployeeStatus, EmployeeStatusList } from '@/constants';
+import { EmployeeSexList, EmployeeStatus, EmployeeStatusList, WorkOrderType } from '@/constants';
 
 const props = defineProps({
   modelValue: Boolean,
+  action: {
+    type: String,
+    default: 'modify',
+  },
   isEdit: Boolean,
   schoolList: {
     type: Array,
@@ -64,10 +69,20 @@ const handleSubmit = ({ validateResult }: SubmitContext) => {
   if (validateResult !== true) {
     return;
   }
-  if (props.isEdit) {
-    handleEditSubmit();
+  if (props.action === 'apply') {
+    // 保安公司提交员工信息变更工单
+    if (props.isEdit) {
+      handleCreateWorkOrderSubmit(WorkOrderType.ModifyEmployee);
+    } else {
+      handleCreateWorkOrderSubmit(WorkOrderType.AddEmployee);
+    }
   } else {
-    handleCreateSubmit();
+    // 正常维护员工信息
+    if (props.isEdit) {
+      handleEditSubmit();
+    } else {
+      handleCreateSubmit();
+    }
   }
 };
 
@@ -113,6 +128,28 @@ const handleCreateSubmit = () => {
   });
 };
 
+const handleCreateWorkOrderSubmit = (type: number) => {
+  const params = {
+    employeeId: formData.value.id,
+    content: {
+      type,
+      employee: {
+        id: formData.value.id,
+        details: [{
+          label: '',
+          originalValue: '',
+          newValue: '',
+        }],
+      },
+    },
+    type,
+    applyReason: '',
+  };
+  createWorkOrder(params).then(() => {
+    MessagePlugin.success(t('pages.work_order.apply.message'));
+  })
+}
+
 const handleClose = () => {
   emits('update:modelValue', false);
 };
@@ -131,7 +168,12 @@ const handleClose = () => {
     placement="center"
   >
     <template #header>
-      {{ isEdit ? $t('pages.employee.update') : $t('pages.employee.create') }}
+      <template v-if="action === 'modify'">
+        {{ isEdit ? $t('pages.employee.update') : $t('pages.employee.create') }}
+      </template>
+      <template v-else-if="action === 'apply'">
+        {{ isEdit ? $t('pages.employee.apply.dialog.update') : $t('pages.employee.apply.dialog.create') }}
+      </template>
     </template>
     <t-form ref="form" :data="formData" scroll-to-first-error="smooth" labelWidth="110px" @submit="handleSubmit">
       <t-form-item

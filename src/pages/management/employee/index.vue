@@ -1,7 +1,7 @@
 <template>
   <div class="record-page">
     <FilterCard
-      title="保安人员"
+      :title="pageTitle"
       v-model="searchData"
       :options="[
         {
@@ -28,14 +28,18 @@
       @submit="handleSearchSubmit"
     >
       <template #actions>
-        <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
-          <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>
-          {{ $t('pages.employee.import') }}
-        </t-button>
-        <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowCreate">
-          <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>
-          {{ $t('pages.employee.create') }}
-        </t-button>
+        <template v-if="hasOperationPermission('btn_import')">
+          <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
+            <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>
+            {{ $t('pages.employee.import') }}
+          </t-button>
+        </template>
+        <template v-if="hasOperationPermission('btn_add')">
+          <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowCreate">
+            <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>
+            {{ $t('pages.employee.create') }}
+          </t-button>
+        </template>
       </template>
     </FilterCard>
     <t-card header-bordered :bordered="false" class="data-card">
@@ -76,16 +80,25 @@
           </template>
           <template #operation="{ row }">
             <t-space align="center" :size="0">
-              <t-link hover="color" theme="primary" @click="handleShowUpdate(row)">
-                {{ $t('pages.record.operation.update') }}
-              </t-link>
-              <t-popconfirm
-                theme="danger"
-                :content="$t('pages.record.operation.deleteConfirm')"
-                @confirm="handleDeleteConfirm(row)"
-              >
-                <t-link hover="color" theme="danger">{{ $t('pages.record.operation.delete') }}</t-link>
-              </t-popconfirm>
+              <template v-if="hasOperationPermission('btn_edit')">
+                <t-link hover="color" theme="primary" @click="handleShowUpdate(row)">
+                  {{ $t('pages.record.operation.update') }}
+                </t-link>
+              </template>
+              <template v-if="hasOperationPermission('btn_apply_edit')">
+                <t-link hover="color" theme="primary" @click="handleShowApplyUpdate(row)">
+                  {{ $t('pages.employee.apply.update') }}
+                </t-link>
+              </template>
+              <template v-if="hasOperationPermission('btn_delete')">
+                <t-popconfirm
+                  theme="danger"
+                  :content="$t('pages.record.operation.deleteConfirm')"
+                  @confirm="handleDeleteConfirm(row)"
+                >
+                  <t-link hover="color" theme="danger">{{ $t('pages.record.operation.delete') }}</t-link>
+                </t-popconfirm>
+              </template>
               <template #separator>
                 <t-divider layout="vertical" />
               </template>
@@ -98,6 +111,7 @@
       v-model="operationEmployee.visible"
       :is-edit="operationEmployee.isEdit"
       :school-list="schoolList"
+      :action="operationEmployee.action"
       :company-list="companyList"
       v-model:mdl="operationEmployee.mdl"
       @refresh-list="handleRefreshList"
@@ -113,7 +127,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
-import { useTable } from '@/composeable/useTable';
+import { useTable, usePage } from '@/composeable';
 import { OperationEmployee, ImportEmployee } from './components';
 import { getList, deleteEmployee } from '@/api/employee';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
@@ -128,6 +142,8 @@ import { OrganizationType } from '@/constants';
 const tableParentElement = ref(null);
 const tableElement = ref(null);
 const dataSource = ref([]);
+
+const { pageTitle, hasOperationPermission } = usePage();
 
 const searchData = reactive({
   organizationIds: [],
@@ -199,22 +215,32 @@ const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({
 });
 
 const operationEmployee = reactive({
+  action: 'modify',
   visible: false,
   isEdit: false,
   mdl: undefined,
 });
 
 const handleShowCreate = () => {
+  operationEmployee.action = 'modify';
   operationEmployee.mdl = undefined;
   operationEmployee.isEdit = false;
   operationEmployee.visible = true;
 };
 
 const handleShowUpdate = (company: any) => {
+  operationEmployee.action = 'modify';
   operationEmployee.mdl = company;
   operationEmployee.isEdit = true;
   operationEmployee.visible = true;
 };
+
+const handleShowApplyUpdate = (company: any) => {
+  operationEmployee.action = 'apply';
+  operationEmployee.mdl = company;
+  operationEmployee.isEdit = true;
+  operationEmployee.visible = true;
+}
 
 const importVisible = ref(false);
 const handleShowImport = () => {

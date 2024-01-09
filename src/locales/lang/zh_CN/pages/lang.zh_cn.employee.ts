@@ -20,6 +20,14 @@ export default {
     leave: '离职',
     other: '其他',
   },
+  apply: {
+    create: '申请新增保安',
+    update: '申请编辑',
+    dialog: {
+      create: '申请新增保安',
+      update: '申请编辑保安',
+    },
+  },
   createdDate: '新增时间',
   updatedDate: '修改时间',
 };
