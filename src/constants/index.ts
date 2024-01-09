@@ -1,6 +1,7 @@
 export * from './employee.constant';
 export * from './organization.constant';
 export * from './assessment.constant';
+export * from './work_order.constant';
 
 // 合同状态枚举
 export const CONTRACT_STATUS = {

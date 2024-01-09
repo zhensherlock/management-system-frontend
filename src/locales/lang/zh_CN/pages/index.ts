@@ -27,6 +27,7 @@ import module from './lang.zh_cn.module';
 import operation from './lang.zh_cn.operation';
 import role from './lang.zh_cn.role';
 import system from './lang.zh_cn.system';
+import workOrder from './lang.zh_cn.work_order';
 
 export default {
   dashboardBase,
@@ -57,4 +58,5 @@ export default {
   operation,
   role,
   system,
+  workOrder,
 };
