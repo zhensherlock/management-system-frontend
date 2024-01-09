@@ -121,22 +121,22 @@ const handleClose = () => {
     width="600px"
   >
     <template #header>
-      {{ isEdit ? $t('pages.module.update') : $t('pages.module.create') }}
+      {{ isEdit ? $t('pages.school.update') : $t('pages.school.create') }}
     </template>
     <t-form ref="form" :data="formData" scroll-to-first-error="smooth" labelWidth="90px" @submit="handleSubmit">
       <t-form-item
-        :label="$t('pages.module.name')"
+        :label="$t('pages.school.name')"
         name="name"
         :rules="[
           {
             required: true,
-            message: $t('pages.form.requiredText', { field: $t('pages.module.name') }),
+            message: $t('pages.form.requiredText', { field: $t('pages.school.name') }),
             type: 'error',
             trigger: 'change',
           },
           {
             whitespace: true,
-            message: $t('pages.form.whitespaceText', { field: $t('pages.module.name') }),
+            message: $t('pages.form.whitespaceText', { field: $t('pages.school.name') }),
             type: 'error',
             trigger: 'change',
           },
@@ -147,19 +147,19 @@ const handleClose = () => {
           v-model="formData.name"
           clearable
           :maxlength="100"
-          :placeholder="$t('pages.form.placeholder', { field: $t('pages.module.name') })"
+          :placeholder="$t('pages.form.placeholder', { field: $t('pages.school.name') })"
           @enter="handleConfirm"
         >
         </t-input>
       </t-form-item>
       <t-form-item
         v-if="!(isEdit && formData.level === 1)"
-        :label="$t('pages.module.parentSchool')"
+        :label="$t('pages.school.parentSchool')"
         name="parentId"
         :rules="[
           {
             required: true,
-            message: $t('pages.form.selectPlaceholder', { field: $t('pages.module.parentSchool') }),
+            message: $t('pages.form.selectPlaceholder', { field: $t('pages.school.parentSchool') }),
             type: 'error',
             trigger: 'change',
           },
@@ -168,18 +168,18 @@ const handleClose = () => {
         <t-cascader v-model="formData.parentId" :options="schoolTreeData" check-strictly />
       </t-form-item>
       <t-form-item
-        :label="$t('pages.module.person')"
+        :label="$t('pages.school.person')"
         name="person"
         :rules="[
           {
             required: false,
-            message: $t('pages.form.requiredText', { field: $t('pages.module.person') }),
+            message: $t('pages.form.requiredText', { field: $t('pages.school.person') }),
             type: 'error',
             trigger: 'change',
           },
           {
             whitespace: true,
-            message: $t('pages.form.whitespaceText', { field: $t('pages.module.person') }),
+            message: $t('pages.form.whitespaceText', { field: $t('pages.school.person') }),
             type: 'error',
             trigger: 'change',
           },
@@ -189,24 +189,24 @@ const handleClose = () => {
           v-model="formData.person"
           clearable
           :maxlength="40"
-          :placeholder="$t('pages.form.placeholder', { field: $t('pages.module.person') })"
+          :placeholder="$t('pages.form.placeholder', { field: $t('pages.school.person') })"
           @enter="handleConfirm"
         >
         </t-input>
       </t-form-item>
       <t-form-item
-        :label="$t('pages.module.contact')"
+        :label="$t('pages.school.contact')"
         name="contact"
         :rules="[
           {
             required: false,
-            message: $t('pages.form.requiredText', { field: $t('pages.module.contact') }),
+            message: $t('pages.form.requiredText', { field: $t('pages.school.contact') }),
             type: 'error',
             trigger: 'change',
           },
           {
             whitespace: true,
-            message: $t('pages.form.whitespaceText', { field: $t('pages.module.contact') }),
+            message: $t('pages.form.whitespaceText', { field: $t('pages.school.contact') }),
             type: 'error',
             trigger: 'change',
           },
@@ -216,18 +216,18 @@ const handleClose = () => {
           v-model="formData.contact"
           clearable
           :maxlength="40"
-          :placeholder="$t('pages.form.placeholder', { field: $t('pages.module.contact') })"
+          :placeholder="$t('pages.form.placeholder', { field: $t('pages.school.contact') })"
           @enter="handleConfirm"
         >
         </t-input>
       </t-form-item>
       <t-form-item
-        :label="$t('pages.module.sequence')"
+        :label="$t('pages.school.sequence')"
         name="sequence"
         :rules="[
           {
             number: true,
-            message: $t('pages.form.errorText', { field: $t('pages.module.sequence') }),
+            message: $t('pages.form.errorText', { field: $t('pages.school.sequence') }),
             type: 'error',
             trigger: 'change',
           },
@@ -238,24 +238,24 @@ const handleClose = () => {
           clearable
           auto-width
           theme="column"
-          :placeholder="$t('pages.form.placeholder', { field: $t('pages.module.sequence') })"
+          :placeholder="$t('pages.form.placeholder', { field: $t('pages.school.sequence') })"
           @enter="handleConfirm"
         >
         </t-input-number>
       </t-form-item>
       <t-form-item
-        :label="$t('pages.module.address')"
+        :label="$t('pages.school.address')"
         name="address"
         :rules="[
           {
             required: false,
-            message: $t('pages.form.requiredText', { field: $t('pages.module.address') }),
+            message: $t('pages.form.requiredText', { field: $t('pages.school.address') }),
             type: 'error',
             trigger: 'change',
           },
           {
             whitespace: true,
-            message: $t('pages.form.whitespaceText', { field: $t('pages.module.address') }),
+            message: $t('pages.form.whitespaceText', { field: $t('pages.school.address') }),
             type: 'error',
             trigger: 'change',
           },
@@ -266,7 +266,7 @@ const handleClose = () => {
           clearable
           :maxlength="150"
           :autosize="{ minRows: 2, maxRows: 4 }"
-          :placeholder="$t('pages.form.placeholder', { field: $t('pages.module.address') })"
+          :placeholder="$t('pages.form.placeholder', { field: $t('pages.school.address') })"
         />
       </t-form-item>
     </t-form>
