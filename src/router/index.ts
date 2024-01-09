@@ -23,7 +23,7 @@ const defaultRouterList: Array<RouteRecordRaw> = [
   },
   {
     path: '/',
-    redirect: '/management',
+    redirect: '/dashboard/workplace',
   },
 ];
 // 存放固定路由

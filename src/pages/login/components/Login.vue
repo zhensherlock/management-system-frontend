@@ -8,10 +8,7 @@
   >
 	  <t-form-item
 		  name="account"
-		  :rules="[
-        { required: true, message: $t('pages.form.requiredText', { field: $t('pages.login.account') }), type: 'error', trigger: 'change' },
-        { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.login.account') }), type: 'error', trigger: 'change' },
-      ]"
+      :rules="$rules.inputRules('pages.login.account')"
 	  >
 		  <t-input
 			  v-model="formData.account"
@@ -26,10 +23,7 @@
 
 	  <t-form-item
 		  name="password"
-		  :rules="[
-        { required: true, message: $t('pages.form.requiredText', { field: $t('pages.login.password') }), type: 'error', trigger: 'change' },
-        { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.login.password') }), type: 'error', trigger: 'change' },
-      ]"
+      :rules="$rules.inputRules('pages.login.password')"
 	  >
 		  <t-input
 			  v-model="formData.password"
@@ -50,10 +44,7 @@
       v-if="userStore.showCaptcha"
       class="captcha-form-item"
       name="captcha"
-      :rules="[
-        { required: userStore.showCaptcha, message: $t('pages.form.requiredText', { field: $t('pages.login.captcha') }), type: 'error', trigger: 'change' },
-        { whitespace: true, message: $t('pages.form.whitespaceText', { field: $t('pages.login.captcha') }), type: 'error', trigger: 'change' },
-      ]"
+      :rules="$rules.inputRules('pages.login.captcha', userStore.showCaptcha)"
     >
       <t-input
         v-model="formData.captcha"

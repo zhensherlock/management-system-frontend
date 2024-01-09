@@ -14,6 +14,7 @@ export interface RouteMeta {
   keepAlive?: boolean;
   frameSrc?: string;
   frameBlank?: boolean;
+  operations?: any[];
 }
 
 export interface MenuRoute {

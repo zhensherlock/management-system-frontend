@@ -26,7 +26,7 @@ const props = defineProps({
         enabled: true,
         isLeaf: true,
         expand: true,
-        meta: JSON.stringify({}),
+        meta: '{}',
         description: '',
         sequence: 1,
       };
@@ -92,7 +92,7 @@ const handleEditSubmit = () => {
     enabled: formData.value.enabled,
     isLeaf: formData.value.isLeaf,
     expand: formData.value.expand,
-    meta: formData.value.meta,
+    meta: JSON.parse(formData.value.meta),
     description: formData.value.description,
     sequence: formData.value.sequence,
   };
