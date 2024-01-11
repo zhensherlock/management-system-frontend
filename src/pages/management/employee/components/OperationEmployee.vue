@@ -65,16 +65,38 @@ const handleConfirm = () => {
   form.value.submit();
 };
 
+const getDifferentFields = (originalObj: Record<string, any>, newObj: Record<string, any>) => {
+  const fields: any[] = [];
+  const originalObjKeys: string[] = Object.keys(originalObj);
+  // const keys2: string[] = Object.keys(obj2);
+  originalObjKeys.forEach((key: string) => {
+    if (!_.isEqual(originalObj[key], newObj[key])) {
+      fields.push({
+        label: t(`pages.employee.${key}`),
+        originalValue: originalObj[key],
+        newValue: newObj[key],
+      });
+    }
+  })
+  console.log(fields);
+  return fields;
+}
+
 const handleSubmit = ({ validateResult }: SubmitContext) => {
   if (validateResult !== true) {
     return;
   }
   if (props.action === 'apply') {
+    const fields = getDifferentFields(props.mdl, formData.value);
+    if (fields.length <= 0) {
+      MessagePlugin.warning(t('pages.employee.apply.noChange'));
+      return;
+    }
     // 保安公司提交员工信息变更工单
     if (props.isEdit) {
-      handleCreateWorkOrderSubmit(WorkOrderType.ModifyEmployee);
+      handleCreateWorkOrderSubmit(WorkOrderType.ModifyEmployee, fields);
     } else {
-      handleCreateWorkOrderSubmit(WorkOrderType.AddEmployee);
+      handleCreateWorkOrderSubmit(WorkOrderType.AddEmployee, fields);
     }
   } else {
     // 正常维护员工信息
@@ -128,25 +150,21 @@ const handleCreateSubmit = () => {
   });
 };
 
-const handleCreateWorkOrderSubmit = (type: number) => {
+const handleCreateWorkOrderSubmit = (type: number, details: any[]) => {
   const params = {
     employeeId: formData.value.id,
     content: {
       type,
       employee: {
         id: formData.value.id,
-        details: [{
-          label: '',
-          originalValue: '',
-          newValue: '',
-        }],
+        details,
       },
     },
     type,
     applyReason: '',
   };
   createWorkOrder(params).then(() => {
-    MessagePlugin.success(t('pages.work_order.apply.message'));
+    MessagePlugin.success(t('pages.workOrder.apply.message'));
   })
 }
 
@@ -214,6 +232,7 @@ const handleClose = () => {
         />
       </t-form-item>
       <t-form-item
+        v-if="action === 'modify'"
         :label="$t('pages.employee.company')"
         name="companyOrganizationId"
         :rules="$rules.selectRules('pages.employee.company')"

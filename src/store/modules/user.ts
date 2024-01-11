@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 
 import * as passportApi from '@/api/passport';
 import * as profileApi from '@/api/profile';
+import { RoleType } from '@/constants';
 import { usePermissionStore } from '@/store';
 import type { LoginData } from '@/types/api/passport';
 import type { CaptchaInfo, LoginInfo, UserInfo } from '@/types/interface';
@@ -37,6 +38,15 @@ export const useUserStore = defineStore('user', {
     roles: (state) => {
       return state.userInfo?.roles;
     },
+    hasSchoolRole() {
+      return this.roles.filter((item: any) => item.code === RoleType.School).length > 0;
+    },
+    hasSecurityRole() {
+      return this.roles.filter((item: any) => item.code === RoleType.Security).length > 0;
+    },
+    hasEducationRole() {
+      return this.roles.filter((item: any) => item.code === RoleType.Education).length > 0;
+    }
   },
   actions: {
     async login(userInfo: LoginData) {
@@ -117,6 +127,6 @@ export const useUserStore = defineStore('user', {
       permissionStore.initRoutes();
     },
     key: 'user',
-    paths: ['loginInfo', 'showCaptcha'],
+    paths: ['loginInfo', 'showCaptcha', 'userInfo'],
   },
 });

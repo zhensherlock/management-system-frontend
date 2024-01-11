@@ -27,6 +27,7 @@ export default {
       create: '申请新增保安',
       update: '申请编辑保安',
     },
+    noChange: '保安信息无变更，无需提交',
   },
   createdDate: '新增时间',
   updatedDate: '修改时间',

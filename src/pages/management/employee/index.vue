@@ -138,13 +138,13 @@ import { getSex } from '@/utils/string';
 import { getOrganizationTree } from '@/api/organization';
 import { recursiveMap } from '@/utils/array';
 import { OrganizationType } from '@/constants';
+import { useUserStore } from '@/store';
 
+const user = useUserStore();
+const { pageTitle, hasOperationPermission } = usePage();
 const tableParentElement = ref(null);
 const tableElement = ref(null);
 const dataSource = ref([]);
-
-const { pageTitle, hasOperationPermission } = usePage();
-
 const searchData = reactive({
   organizationIds: [],
   keyword: '',
@@ -190,7 +190,17 @@ const companyList = ref([]);
 
 onMounted(() => {
   fetchData();
-  getOrganizationTree({}).then((res: any) => {
+  if (user.hasSecurityRole) {
+    // 保安用户只能选择所属学校
+    handleGetOrganizationListForSecurity();
+  } else {
+    // 教育局用户能选择所属学校和所属公司
+    handleGetOrganizationListForManager();
+  }
+});
+
+const handleGetOrganizationListForManager = () => {
+  getOrganizationTree().then((res: any) => {
     organizationList.value = recursiveMap(res.list, (item: any) => ({
       type: item.type,
       label: item.name,
@@ -205,7 +215,22 @@ onMounted(() => {
       }
     })
   });
-});
+};
+
+const handleGetOrganizationListForSecurity = () => {
+  getOrganizationTree({
+    type: OrganizationType.School,
+    minLevel: 2
+  }).then((res: any) => {
+    organizationList.value = recursiveMap(res.list, (item: any) => ({
+      type: item.type,
+      label: item.name,
+      title: item.name,
+      value: item.id,
+    }));
+    schoolList.value = organizationList.value
+  });
+};
 
 const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({
   total,
