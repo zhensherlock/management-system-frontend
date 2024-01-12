@@ -6,8 +6,8 @@ import { computed, isRef, Ref, ref, watch } from 'vue';
 import { nanoid } from 'nanoid';
 
 export interface UseTableOptions {
-  loading: MaybeRefOrGetter<boolean>;
-  total: MaybeRefOrGetter<number>;
+  loading?: MaybeRefOrGetter<boolean>;
+  total?: MaybeRefOrGetter<number>;
   pageSize?: MaybeRefOrGetter<number>;
   table?: Ref;
   parent: MaybeComputedElementRef;

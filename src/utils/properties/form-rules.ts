@@ -44,6 +44,28 @@ export default function registerProperties(app: App) {
           trigger: 'change',
         },
       ]
+    },
+    idCardInputRules(field: string, required = true) {
+      return [
+        {
+          required,
+          message: $t('pages.form.requiredText', { field: $t(field) }),
+          type: 'error',
+          trigger: 'change',
+        },
+        {
+          whitespace: true,
+          message: $t('pages.form.whitespaceText', { field: $t(field) }),
+          type: 'error',
+          trigger: 'change',
+        },
+        {
+          idcard: true,
+          message: $t('pages.form.errorText', { field: $t(field) }),
+          type: 'error',
+          trigger: 'change',
+        },
+      ];
     }
   }
 }

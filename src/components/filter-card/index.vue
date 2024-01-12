@@ -1,5 +1,11 @@
 <template>
   <t-card :title="title" header-bordered :bordered="false" class="filter-card">
+    <template #title v-if="$slots.title">
+      <slot name="title"></slot>
+    </template>
+    <template #actions>
+      <slot name="actions"></slot>
+    </template>
     <div class="filter-body">
       <div class="filter-body-label">{{ $t('pages.record.filter.label') }}</div>
       <div class="filter-body-content">
@@ -70,9 +76,6 @@
         </t-link>
       </div>
     </div>
-    <template #actions>
-      <slot name="actions"></slot>
-    </template>
   </t-card>
 </template>
 <script lang="ts">

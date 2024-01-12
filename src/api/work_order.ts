@@ -23,14 +23,14 @@ export function createWorkOrder(data: any) {
 }
 
 export function auditWorkOrder(id: string, data: any) {
-  return request.put<CommonResponse<any>>({
-    url: `${Api.AuditUrl}${id}/`,
+  return request.post<CommonResponse<any>>({
+    url: `${Api.AuditUrl}/${id}/`,
     data,
   });
 }
 
 export function cancelWorkOrder(id: string) {
   return request.delete<CommonResponse<any>>({
-    url: `${Api.CancelUrl}${id}/`,
+    url: `${Api.CancelUrl}/${id}/`,
   });
 }

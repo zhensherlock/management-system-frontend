@@ -16,6 +16,7 @@ export default {
     delete: '删除',
     save: '保存',
     cancel: '取消',
+    detail: '查看详情',
     deleteConfirm: '确定要删除吗？',
   },
 };

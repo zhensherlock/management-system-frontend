@@ -12,7 +12,7 @@ export function usePage(options: UsePageOptions = {}) {
   const route = useRoute();
 
   const pageTitle = computed(() => {
-    const { title } = route.meta;
+    const title: any = route.meta.title;
     if (typeof title === 'string') {
       return title;
     }

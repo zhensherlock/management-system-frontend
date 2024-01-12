@@ -2,7 +2,7 @@
   <div class="record-page">
     <FilterCard
       v-model="searchData"
-      title="保安人员"
+      :title="pageTitle"
       :options="[
         {
           type: 'cascader',
@@ -17,25 +17,18 @@
             'min-collapsed-num': 1,
           },
         },
-        {
-          type: 'input',
-          name: 'keyword',
-          value: '',
-          label: $t('pages.employee.name'),
-          placeholder: $t('pages.form.placeholder', { field: $t('pages.employee.name') }),
-        },
       ]"
       @submit="handleSearchSubmit"
     >
-      <template #actions>
-        <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
-          <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>
-          {{ $t('pages.employee.import') }}
-        </t-button>
-        <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowCreate">
-          <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>
-          {{ $t('pages.employee.create') }}
-        </t-button>
+      <template #title>
+        <t-tabs v-model="status">
+          <t-tab-panel value="pending" label="待审批">
+          </t-tab-panel>
+          <t-tab-panel value="operated" label="已审批">
+          </t-tab-panel>
+          <t-tab-panel value="" label="全部审批">
+          </t-tab-panel>
+        </t-tabs>
       </template>
     </FilterCard>
     <t-card header-bordered :bordered="false" class="data-card">
@@ -68,24 +61,29 @@
           :max-height="tableHeight"
           @page-change="handleChangePage"
         >
-          <template #sex="{ row }">
-            {{ getSex(row.sex) }}
+          <template #applyUser="{ row }">
+            {{ row.apply.realName }}({{ row.apply.organization }})
           </template>
-          <template #age="{ row }">
-            {{ getAge(row.birthday) }}
+          <template #auditResult="{ row }">
+            <t-tag :theme="getWorkOrderStatusTheme(row.status)" variant="light-outline">
+              {{ getWorkOrderStatusLabel(row.status) }}
+            </t-tag>
+          </template>
+          <template #operationContent="{ row }">
+            {{ getWorkOrderOperationContent(row.content) }}
           </template>
           <template #operation="{ row }">
             <t-space align="center" :size="0">
-              <t-link hover="color" theme="primary" @click="handleShowUpdate(row)">
-                {{ $t('pages.record.operation.update') }}
+              <t-link hover="color" theme="primary" @click="handleShowDetail(row)">
+                {{ $t('pages.record.operation.detail') }}
               </t-link>
-              <t-popconfirm
-                theme="danger"
-                :content="$t('pages.record.operation.deleteConfirm')"
-                @confirm="handleDeleteConfirm(row)"
-              >
-                <t-link hover="color" theme="danger">{{ $t('pages.record.operation.delete') }}</t-link>
-              </t-popconfirm>
+<!--              <t-popconfirm-->
+<!--                theme="danger"-->
+<!--                :content="$t('pages.record.operation.deleteConfirm')"-->
+<!--                @confirm="handleDeleteConfirm(row)"-->
+<!--              >-->
+<!--                <t-link hover="color" theme="danger">{{ $t('pages.record.operation.cancel') }}</t-link>-->
+<!--              </t-popconfirm>-->
               <template #separator>
                 <t-divider layout="vertical" />
               </template>
@@ -94,16 +92,12 @@
         </t-table>
       </div>
     </t-card>
-    <operation-employee
-      v-model="operationEmployee.visible"
-      v-model:mdl="operationEmployee.mdl"
-      :is-edit="operationEmployee.isEdit"
-      :school-list="schoolList"
-      :company-list="companyList"
+    <OperationWorkOrder
+      v-model="operationWorkOrder.visible"
+      v-model:mdl="operationWorkOrder.mdl"
       @refresh-list="handleRefreshList"
     >
-    </operation-employee>
-    <import-employee v-model="importVisible" @refresh-list="handleRefreshList"></import-employee>
+    </OperationWorkOrder>
   </div>
 </template>
 <script lang="ts">
@@ -115,36 +109,32 @@ export default {
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { onMounted, reactive, ref } from 'vue';
-
-import { deleteEmployee, getList } from '@/api/employee';
+import { usePage } from '@/composeable';
+import { getWorkOrderList } from '@/api/work_order';
 import { getOrganizationTree } from '@/api/organization';
 import { useTable } from '@/composeable/useTable';
 import { OrganizationType } from '@/constants';
 import { t } from '@/locales';
 import { recursiveMap } from '@/utils/array';
-import { getAge } from '@/utils/date';
-import { getSex } from '@/utils/string';
+import { getWorkOrderStatusLabel, getWorkOrderStatusTheme, getWorkOrderOperationContent } from '@/utils/string';
+import { OperationWorkOrder } from './components';
 
-import { ImportEmployee, OperationEmployee } from './components';
-
+const { pageTitle } = usePage();
 const tableParentElement = ref(null);
 const tableElement = ref(null);
 const dataSource = ref([]);
-
+const status = ref('pending');
 const searchData = reactive({
   organizationIds: [],
-  keyword: '',
 });
 
 const fetchData = async () => {
   loading.value = true;
   try {
     // @ts-ignore
-    const { list, count } = await getList({
+    const { list, count } = await getWorkOrderList({
       currentPage: pagination.value?.current || 1,
       pageSize: pagination.value?.pageSize || 20,
-      keyword: searchData.keyword,
-      organizationIds: searchData.organizationIds,
     });
     dataSource.value = list;
     total.value = count;
@@ -154,15 +144,10 @@ const fetchData = async () => {
   }
 };
 const columns = ref<PrimaryTableCol[]>([
-  { colKey: 'name', title: t('pages.employee.name'), width: 100, fixed: 'left' },
-  { colKey: 'jobNumber', title: t('pages.employee.jobNumber'), width: 100 },
-  { colKey: 'sex', title: t('pages.employee.sex'), width: 50 },
-  { colKey: 'age', title: t('pages.employee.age'), width: 50 },
-  { colKey: 'idCard', title: t('pages.employee.idCard'), width: 160 },
-  { colKey: 'certificateNumber', title: t('pages.employee.certificateNumber'), width: 100 },
-  { colKey: 'contact', title: t('pages.employee.contact'), width: 120 },
-  { colKey: 'createdDate', title: t('pages.employee.createdDate'), width: 160 },
-  { colKey: 'updatedDate', title: t('pages.employee.updatedDate'), width: 160 },
+  { colKey: 'applyUser', title: t('pages.workOrder.applyUser'), width: 300, fixed: 'left' },
+  { colKey: 'createdDate', title: t('pages.workOrder.applyTime'), width: 200 },
+  { colKey: 'operationContent', title: t('pages.workOrder.operationContent'), width: 200 },
+  { colKey: 'auditResult', title: t('pages.workOrder.auditResult'), width: 120 },
   { colKey: 'operation', title: t('pages.record.operation.label'), width: 100, fixed: 'right' },
 ]);
 const rowKey = 'id';
@@ -200,27 +185,14 @@ const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({
   loading,
 });
 
-const operationEmployee = reactive({
+const operationWorkOrder = reactive({
   visible: false,
-  isEdit: false,
   mdl: undefined,
 });
 
-const handleShowCreate = () => {
-  operationEmployee.mdl = undefined;
-  operationEmployee.isEdit = false;
-  operationEmployee.visible = true;
-};
-
-const handleShowUpdate = (company: any) => {
-  operationEmployee.mdl = company;
-  operationEmployee.isEdit = true;
-  operationEmployee.visible = true;
-};
-
-const importVisible = ref(false);
-const handleShowImport = () => {
-  importVisible.value = true;
+const handleShowDetail = (mdl: any) => {
+  operationWorkOrder.mdl = mdl;
+  operationWorkOrder.visible = true;
 };
 
 const handleSearchSubmit = (params: any) => {
@@ -238,15 +210,33 @@ const handleChangePage = (pageInfo: PageInfo) => {
   fetchData();
 };
 
-const handleDeleteConfirm = (row: any) => {
-  deleteEmployee(row.id).then(() => {
-    fetchData();
-    MessagePlugin.success(t('pages.message.delete'));
-  });
-};
+// const handleDeleteConfirm = (row: any) => {
+//   deleteEmployee(row.id).then(() => {
+//     fetchData();
+//     MessagePlugin.success(t('pages.message.delete'));
+//   });
+// };
 
 const handleRefreshList = () => {
   fetchData();
 };
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+:deep(.filter-card) {
+  .t-card__header-wrapper {
+    height: 24px;
+  }
+}
+
+:deep(.t-tabs) {
+  .t-tabs__nav-item {
+    height: calc(24px + var(--td-comp-paddingTB) * 2);
+    font: var(--td-font-title-medium);
+    color: var(--td-text-color-primary);
+  }
+
+  .t-tabs__nav-container.t-is-top::after {
+    display: none;
+  }
+}
+</style>

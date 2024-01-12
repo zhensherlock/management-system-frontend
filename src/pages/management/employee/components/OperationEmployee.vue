@@ -72,6 +72,7 @@ const getDifferentFields = (originalObj: Record<string, any>, newObj: Record<str
   originalObjKeys.forEach((key: string) => {
     if (!_.isEqual(originalObj[key], newObj[key])) {
       fields.push({
+        path: key,
         label: t(`pages.employee.${key}`),
         originalValue: originalObj[key],
         newValue: newObj[key],
@@ -157,6 +158,7 @@ const handleCreateWorkOrderSubmit = (type: number, details: any[]) => {
       type,
       employee: {
         id: formData.value.id,
+        name: formData.value.name,
         details,
       },
     },
@@ -165,6 +167,7 @@ const handleCreateWorkOrderSubmit = (type: number, details: any[]) => {
   };
   createWorkOrder(params).then(() => {
     MessagePlugin.success(t('pages.workOrder.apply.message'));
+    handleClose();
   })
 }
 
@@ -295,7 +298,7 @@ const handleClose = () => {
       <t-form-item
         :label="$t('pages.employee.idCard')"
         name="idCard"
-        :rules="$rules.inputRules('pages.employee.idCard')"
+        :rules="$rules.idCardInputRules('pages.employee.idCard')"
       >
         <t-input
           v-model="formData.idCard"

@@ -36,7 +36,7 @@ export const useUserStore = defineStore('user', {
   }),
   getters: {
     roles: (state) => {
-      return state.userInfo?.roles;
+      return state.userInfo?.roles || [];
     },
     hasSchoolRole() {
       return this.roles.filter((item: any) => item.code === RoleType.School).length > 0;

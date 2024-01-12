@@ -5,6 +5,6 @@ export const WorkOrderType = {
 
 export const WorkOrderStatus = {
   Pending: 'pending',
-  Completed: 'completed',
-  Rejected: 'rejected',
+  Completed: 'operated-completed',
+  Rejected: 'operated-rejected',
 };
