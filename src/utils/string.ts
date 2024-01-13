@@ -19,6 +19,8 @@ export const getWorkOrderStatusLabel = (status: string) => {
       return '已通过';
     case WorkOrderStatus.Rejected:
       return '已拒绝';
+    case WorkOrderStatus.Cancellation:
+      return '已作废';
     default:
       return '-';
   }
@@ -27,11 +29,13 @@ export const getWorkOrderStatusLabel = (status: string) => {
 export const getWorkOrderStatusTheme = (status: string) => {
   switch (status) {
     case WorkOrderStatus.Pending:
-      return 'warning';
+      return 'primary';
     case WorkOrderStatus.Completed:
       return 'success';
     case WorkOrderStatus.Rejected:
       return 'danger';
+    case WorkOrderStatus.Cancellation:
+      return 'warning';
     default:
       return 'default';
   }

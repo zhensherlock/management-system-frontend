@@ -229,9 +229,11 @@ const handleClose = () => {
       >
         <t-date-picker
           allowInput
+          valueType="YYYY-MM-DD"
           v-model="formData.birthday"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.employee.birthday') })"
           @enter="handleConfirm"
+          style="width: 100%;"
         />
       </t-form-item>
       <t-form-item

@@ -14,3 +14,7 @@ export const LAST_30_DAYS = [
 export const getAge = (birthday: string) => {
   return dayjs().diff(dayjs(birthday), 'year');
 };
+
+export const getDateString = (date: dayjs.ConfigType) => {
+  return dayjs(date).format('YYYY-MM-DD');
+}

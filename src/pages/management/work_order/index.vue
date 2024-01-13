@@ -5,28 +5,22 @@
       :title="pageTitle"
       :options="[
         {
-          type: 'cascader',
-          name: 'organizationIds',
+          type: 'date-range-picker',
+          name: 'date',
           value: [],
-          label: $t('pages.employee.organization'),
-          placeholder: $t('pages.form.selectPlaceholder', { field: $t('pages.employee.organization') }),
-          children: organizationList,
-          props: {
-            multiple: true,
-            valueMode: 'parentFirst',
-            'min-collapsed-num': 1,
-          },
-        },
+          label: $t('pages.workOrder.applyDate'),
+          placeholder: $t('pages.form.selectPlaceholder', { field: $t('pages.workOrder.applyDate') }),
+        }
       ]"
       @submit="handleSearchSubmit"
     >
       <template #title>
-        <t-tabs v-model="status">
-          <t-tab-panel value="pending" label="待审批">
+        <t-tabs v-model="status" @change="handleTabChange">
+          <t-tab-panel value="pending" :label="$t('pages.workOrder.tabs.pending')">
           </t-tab-panel>
-          <t-tab-panel value="operated" label="已审批">
+          <t-tab-panel value="operated" :label="$t('pages.workOrder.tabs.operated')">
           </t-tab-panel>
-          <t-tab-panel value="" label="全部审批">
+          <t-tab-panel value="" :label="$t('pages.workOrder.tabs.all')">
           </t-tab-panel>
         </t-tabs>
       </template>
@@ -77,13 +71,6 @@
               <t-link hover="color" theme="primary" @click="handleShowDetail(row)">
                 {{ $t('pages.record.operation.detail') }}
               </t-link>
-<!--              <t-popconfirm-->
-<!--                theme="danger"-->
-<!--                :content="$t('pages.record.operation.deleteConfirm')"-->
-<!--                @confirm="handleDeleteConfirm(row)"-->
-<!--              >-->
-<!--                <t-link hover="color" theme="danger">{{ $t('pages.record.operation.cancel') }}</t-link>-->
-<!--              </t-popconfirm>-->
               <template #separator>
                 <t-divider layout="vertical" />
               </template>
@@ -107,15 +94,14 @@ export default {
 </script>
 <script setup lang="ts">
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
-import { MessagePlugin } from 'tdesign-vue-next';
 import { onMounted, reactive, ref } from 'vue';
 import { usePage } from '@/composeable';
 import { getWorkOrderList } from '@/api/work_order';
-import { getOrganizationTree } from '@/api/organization';
+// import { getOrganizationTree } from '@/api/organization';
 import { useTable } from '@/composeable/useTable';
-import { OrganizationType } from '@/constants';
+// import { OrganizationType } from '@/constants';
 import { t } from '@/locales';
-import { recursiveMap } from '@/utils/array';
+// import { recursiveMap } from '@/utils/array';
 import { getWorkOrderStatusLabel, getWorkOrderStatusTheme, getWorkOrderOperationContent } from '@/utils/string';
 import { OperationWorkOrder } from './components';
 
@@ -125,16 +111,21 @@ const tableElement = ref(null);
 const dataSource = ref([]);
 const status = ref('pending');
 const searchData = reactive({
-  organizationIds: [],
+  employeeIds: [],
+  date: [],
 });
 
 const fetchData = async () => {
   loading.value = true;
+  const [searchApplyStartTime, searchApplyEndTime] = searchData.date;
   try {
     // @ts-ignore
     const { list, count } = await getWorkOrderList({
+      status: status.value,
       currentPage: pagination.value?.current || 1,
       pageSize: pagination.value?.pageSize || 20,
+      searchApplyStartTime,
+      searchApplyEndTime,
     });
     dataSource.value = list;
     total.value = count;
@@ -144,11 +135,11 @@ const fetchData = async () => {
   }
 };
 const columns = ref<PrimaryTableCol[]>([
-  { colKey: 'applyUser', title: t('pages.workOrder.applyUser'), width: 300, fixed: 'left' },
-  { colKey: 'createdDate', title: t('pages.workOrder.applyTime'), width: 200 },
-  { colKey: 'operationContent', title: t('pages.workOrder.operationContent'), width: 200 },
-  { colKey: 'auditResult', title: t('pages.workOrder.auditResult'), width: 120 },
-  { colKey: 'operation', title: t('pages.record.operation.label'), width: 100, fixed: 'right' },
+  { colKey: 'applyUser', title: t('pages.workOrder.applyUser'), minWidth: 300, fixed: 'left' },
+  { colKey: 'operationContent', title: t('pages.workOrder.operationContent'), minWidth: 200 },
+  { colKey: 'createdDate', title: t('pages.workOrder.applyTime'), minWidth: 200 },
+  { colKey: 'auditResult', title: t('pages.workOrder.auditResult'), width: 100, align: 'center' },
+  { colKey: 'operation', title: t('pages.record.operation.label'), width: 90, fixed: 'right', align: 'center' },
 ]);
 const rowKey = 'id';
 const verticalAlign = 'top' as const;
@@ -156,27 +147,33 @@ const total = ref(0);
 const loading = ref(true);
 
 const organizationList = ref([]);
-const schoolList = ref([]);
-const companyList = ref([]);
+// const schoolList = ref([]);
+// const companyList = ref([]);
 
 onMounted(() => {
   fetchData();
-  getOrganizationTree({}).then((res: any) => {
-    organizationList.value = recursiveMap(res.list, (item: any) => ({
-      type: item.type,
-      label: item.name,
-      title: item.name,
-      value: item.id,
-    }));
-    organizationList.value.forEach((item) => {
-      if (item.type === OrganizationType.School) {
-        schoolList.value = item.children;
-      } else {
-        companyList.value = item.children;
-      }
-    });
-  });
+  // getOrganizationTree({}).then((res: any) => {
+  //   organizationList.value = recursiveMap(res.list, (item: any) => ({
+  //     type: item.type,
+  //     label: item.name,
+  //     title: item.name,
+  //     value: item.id,
+  //   }));
+  //   organizationList.value.forEach((item) => {
+  //     if (item.type === OrganizationType.School) {
+  //       schoolList.value = item.children;
+  //     } else {
+  //       companyList.value = item.children;
+  //     }
+  //   });
+  // });
 });
+
+const handleTabChange = (value: string) => {
+  status.value = value;
+
+  fetchData();
+};
 
 const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({
   total,
@@ -209,13 +206,6 @@ const handleChangePage = (pageInfo: PageInfo) => {
   pagination.value.pageSize = pageInfo.pageSize;
   fetchData();
 };
-
-// const handleDeleteConfirm = (row: any) => {
-//   deleteEmployee(row.id).then(() => {
-//     fetchData();
-//     MessagePlugin.success(t('pages.message.delete'));
-//   });
-// };
 
 const handleRefreshList = () => {
   fetchData();

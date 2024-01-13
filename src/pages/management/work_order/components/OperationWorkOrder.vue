@@ -4,9 +4,10 @@ import { t } from '@/locales';
 import { MessagePlugin, PrimaryTableCol } from 'tdesign-vue-next';
 import { useTable } from '@/composeable/useTable';
 import {getEmployeeStatus, getSex, getWorkOrderOperationContent} from '@/utils/string';
-import { auditWorkOrder } from '@/api/work_order';
+import {auditWorkOrder, cancelWorkOrder} from '@/api/work_order';
 import { WorkOrderStatus } from '@/constants';
 import { useUserStore } from '@/store';
+import { getDateString } from '@/utils/date';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -73,6 +74,10 @@ const { tableHeight } = useTable({
   hiddenPage: true,
 });
 
+const cancellation = reactive({
+  loading: false,
+})
+
 const agree = reactive({
   loading: false,
 });
@@ -104,6 +109,18 @@ const handleReject = () => {
     reject.loading = false;
   });
 }
+
+const handleCancellation = () => {
+  cancellation.loading = true;
+  cancelWorkOrder(props.mdl.id).then(() => {
+    emits('refresh-list');
+    MessagePlugin.success(t('pages.workOrder.cancellation.submitMessage'));
+    cancellation.loading = false;
+    handleClose();
+  }).catch(() => {
+    cancellation.loading = false;
+  });
+}
 </script>
 <template>
   <t-drawer
@@ -120,24 +137,37 @@ const handleReject = () => {
     @close="handleClose"
   >
     <div class="flex flex-col h-100%">
-      <t-space class="mb-10px" v-if="props.mdl.status === WorkOrderStatus.Pending && user.hasEducationRole">
-        <t-popconfirm
-          showArrow
-          placement="bottom"
-          :content="$t('pages.workOrder.agree.popConfirm')"
-          @confirm="handleAgree"
-        >
-          <t-button theme="primary" :loading="agree.loading">{{ $t('pages.workOrder.agree.button') }}</t-button>
-        </t-popconfirm>
-        <t-popconfirm
-          showArrow
-          placement="bottom"
-          theme="danger"
-          :content="$t('pages.workOrder.reject.popConfirm')"
-          @confirm="handleReject"
-        >
-          <t-button theme="danger" :loading="reject.loading">{{ $t('pages.workOrder.reject.button') }}</t-button>
-        </t-popconfirm>
+      <t-space class="mb-10px" v-if="props.mdl.status === WorkOrderStatus.Pending">
+        <template v-if="user.hasEducationRole">
+          <t-popconfirm
+            showArrow
+            placement="bottom"
+            :content="$t('pages.workOrder.agree.popConfirm')"
+            @confirm="handleAgree"
+          >
+            <t-button theme="primary" :loading="agree.loading">{{ $t('pages.workOrder.agree.button') }}</t-button>
+          </t-popconfirm>
+          <t-popconfirm
+            showArrow
+            placement="bottom"
+            theme="danger"
+            :content="$t('pages.workOrder.reject.popConfirm')"
+            @confirm="handleReject"
+          >
+            <t-button theme="danger" :loading="reject.loading">{{ $t('pages.workOrder.reject.button') }}</t-button>
+          </t-popconfirm>
+        </template>
+        <template v-else-if="user.hasSecurityRole">
+          <t-popconfirm
+            showArrow
+            placement="bottom"
+            theme="danger"
+            :content="$t('pages.workOrder.cancellation.popConfirm')"
+            @confirm="handleCancellation"
+          >
+            <t-button theme="danger" :loading="cancellation.loading">{{ $t('pages.workOrder.cancellation.button') }}</t-button>
+          </t-popconfirm>
+        </template>
       </t-space>
       <template v-else-if="props.mdl.status === WorkOrderStatus.Completed">
         <div class="mb-10px">
@@ -147,6 +177,11 @@ const handleReject = () => {
       <template v-else-if="props.mdl.status === WorkOrderStatus.Rejected">
         <div class="mb-10px">
           <t-alert theme="error" :message="$t('pages.workOrder.reject.alertMessage')" />
+        </div>
+      </template>
+      <template v-else-if="props.mdl.status === WorkOrderStatus.Cancellation">
+        <div class="mb-10px">
+          <t-alert theme="warning" :message="$t('pages.workOrder.cancellation.alertMessage')" />
         </div>
       </template>
       <div class="flex-1 overflow-hidden" ref="tableParentElement">
@@ -168,6 +203,9 @@ const handleReject = () => {
             <template v-else-if="row.path === 'status'">
               {{ getEmployeeStatus(row.originalValue) }}
             </template>
+            <template v-else-if="row.path === 'birthday'">
+              {{ getDateString(row.originalValue) }}
+            </template>
             <template v-else>
               {{ row.originalValue }}
             </template>
@@ -178,6 +216,9 @@ const handleReject = () => {
             </template>
             <template v-else-if="row.path === 'status'">
               {{ getEmployeeStatus(row.newValue) }}
+            </template>
+            <template v-else-if="row.path === 'birthday'">
+              {{ getDateString(row.newValue) }}
             </template>
             <template v-else>
               {{ row.newValue }}

@@ -63,6 +63,16 @@
               v-bind="item.props"
               @change="handleChangeItem(item)"
             />
+            <t-date-range-picker
+              v-else-if="item.type === 'date-range-picker'"
+              v-model="inputData[item.name]"
+              :placeholder="item.placeholder"
+              allow-input
+              clearable
+              style="width: 300px;"
+              v-bind="item.props"
+              @change="handleChangeItem(item)"
+            />
           </t-form-item>
           <!--          </perfect-scrollbar>-->
         </t-form>

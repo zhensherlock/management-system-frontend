@@ -30,7 +30,7 @@ export function auditWorkOrder(id: string, data: any) {
 }
 
 export function cancelWorkOrder(id: string) {
-  return request.delete<CommonResponse<any>>({
+  return request.post<CommonResponse<any>>({
     url: `${Api.CancelUrl}/${id}/`,
   });
 }
