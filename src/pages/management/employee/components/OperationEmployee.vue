@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
 import type { FormInstanceFunctions, SubmitContext } from 'tdesign-vue-next';
-import { ref, watch } from 'vue';
+import {computed, ref, watch} from 'vue';
 import { useCloned } from '@vueuse/core';
 import _ from 'lodash';
 import { createEmployee, updateEmployee } from '@/api/employee';
@@ -9,6 +9,7 @@ import { createWorkOrder } from '@/api/work_order';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
 import { EmployeeSexList, EmployeeStatus, EmployeeStatusList, WorkOrderType } from '@/constants';
+import {getDateString, getEmployeeStatus, getSchoolById, getSex} from '@/utils';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -29,15 +30,15 @@ const props = defineProps({
     type: Object,
     default() {
       return {
-        jobNumber: '001',
-        name: '覃欢',
+        jobNumber: '',
+        name: '',
         sex: '',
         avatar: '',
-        certificateNumber: 'B001',
-        contact: '14597229740',
+        certificateNumber: '',
+        contact: '',
         description: '',
-        birthday: dayjs().subtract(40, 'year'),
-        idCard: '3518784210555247',
+        birthday: dayjs().subtract(60, 'year'),
+        idCard: '',
         status: EmployeeStatus.Normal,
         companyOrganizationId: '',
         schoolOrganizationId: '',
@@ -50,6 +51,10 @@ const emits = defineEmits(['update:modelValue', 'refresh-list']);
 const form = ref<FormInstanceFunctions>();
 
 let { cloned: formData } = useCloned(props.mdl);
+
+const flatSchoolList = computed(() => {
+  return _.flatMapDeep(props.schoolList, (item: any) => [item, ...(item.children || [])]);
+})
 
 watch(
   () => props.modelValue,
@@ -65,6 +70,21 @@ const handleConfirm = () => {
   form.value.submit();
 };
 
+const getValueText = (key: string, value: string) => {
+  switch (key) {
+    case 'birthday':
+      return getDateString(value);
+    case 'sex':
+      return getSex(value);
+    case 'status':
+      return getEmployeeStatus(value);
+    case 'schoolOrganizationId':
+      return getSchoolById(value, flatSchoolList.value)?.title || '';
+    default:
+      return value;
+  }
+}
+
 const getDifferentFields = (originalObj: Record<string, any>, newObj: Record<string, any>) => {
   const fields: any[] = [];
   const originalObjKeys: string[] = Object.keys(originalObj);
@@ -75,11 +95,12 @@ const getDifferentFields = (originalObj: Record<string, any>, newObj: Record<str
         path: key,
         label: t(`pages.employee.${key}`),
         originalValue: originalObj[key],
+        originalValueText: getValueText(key, originalObj[key]),
         newValue: newObj[key],
+        newValueText: getValueText(key, newObj[key]),
       });
     }
   })
-  console.log(fields);
   return fields;
 }
 
@@ -183,7 +204,7 @@ const handleClose = () => {
     v-bind="$attrs"
     :closeOnOverlayClick="false"
     @close="handleClose"
-    :destroyOnClose="true"
+    :destroy-on-close="true"
     @confirm="handleConfirm"
     width="600px"
     placement="center"

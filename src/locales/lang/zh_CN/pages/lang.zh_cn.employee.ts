@@ -15,6 +15,7 @@ export default {
   description: '介绍',
   organization: '所属组织',
   status: '状态',
+  schoolOrganizationId: '所属学校',
   statusMap: {
     normal: '正常',
     leave: '离职',

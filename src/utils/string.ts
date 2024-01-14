@@ -1,5 +1,6 @@
-import { EmployeeSex, EmployeeStatus, WorkOrderStatus } from '@/constants';
-import { t } from '@/locales';
+import {EmployeeSex, EmployeeStatus, WorkOrderStatus} from '@/constants';
+import {t} from '@/locales';
+import _ from 'lodash';
 
 export const getSex = (sex: string) => {
   if (sex === EmployeeSex.Male) {
@@ -63,4 +64,8 @@ export const getEmployeeStatus = (status: string) => {
     case EmployeeStatus.Other:
       return t('pages.employee.statusMap.other');
   }
+}
+
+export const getSchoolById = (id: string, schoolList: any[]) => {
+  return _.find(schoolList, { 'value': id });
 }

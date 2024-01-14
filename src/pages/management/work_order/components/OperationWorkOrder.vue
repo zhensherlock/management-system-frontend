@@ -3,11 +3,10 @@ import {computed, reactive, ref, watch} from 'vue';
 import { t } from '@/locales';
 import { MessagePlugin, PrimaryTableCol } from 'tdesign-vue-next';
 import { useTable } from '@/composeable/useTable';
-import {getEmployeeStatus, getSex, getWorkOrderOperationContent} from '@/utils/string';
+import { getWorkOrderOperationContent } from '@/utils';
 import {auditWorkOrder, cancelWorkOrder} from '@/api/work_order';
-import { WorkOrderStatus } from '@/constants';
+import { WorkOrderStatus, WorkOrderType } from '@/constants';
 import { useUserStore } from '@/store';
-import { getDateString } from '@/utils/date';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -29,12 +28,7 @@ watch(
       return;
     }
     props.mdl.content.employee.details.forEach((item: any) => {
-      dataSource.value.push({
-        path: item.path,
-        label: item.label,
-        originalValue: item.originalValue,
-        newValue: item.newValue,
-      });
+      dataSource.value.push(item);
     })
   },
 );
@@ -57,13 +51,14 @@ const columns = ref<PrimaryTableCol[]>([
   {
     colKey: 'label',
     title: t('pages.workOrder.field'),
+    width: ''
   },
   {
-    colKey: 'originalValue',
+    colKey: 'originalValueText',
     title: t('pages.workOrder.originalValue'),
   },
   {
-    colKey: 'newValue',
+    colKey: 'newValueText',
     title: t('pages.workOrder.newValue'),
   },
 ]);
@@ -190,38 +185,18 @@ const handleCancellation = () => {
           row-key="id"
           :columns="columns"
           :data="dataSource"
-          table-layout="auto"
+          table-layout="fixed"
           bordered
           cell-empty-content="-"
           size="small"
           :max-height="tableHeight"
         >
-          <template #originalValue="{ row }">
-            <template v-if="row.path === 'sex'">
-              {{ getSex(row.originalValue) }}
-            </template>
-            <template v-else-if="row.path === 'status'">
-              {{ getEmployeeStatus(row.originalValue) }}
-            </template>
-            <template v-else-if="row.path === 'birthday'">
-              {{ getDateString(row.originalValue) }}
+          <template #originalValueText="{ row }">
+            <template v-if="props.mdl.type === WorkOrderType.AddEmployee">
+              -
             </template>
             <template v-else>
-              {{ row.originalValue }}
-            </template>
-          </template>
-          <template #newValue="{ row }">
-            <template v-if="row.path === 'sex'">
-              {{ getSex(row.newValue) }}
-            </template>
-            <template v-else-if="row.path === 'status'">
-              {{ getEmployeeStatus(row.newValue) }}
-            </template>
-            <template v-else-if="row.path === 'birthday'">
-              {{ getDateString(row.newValue) }}
-            </template>
-            <template v-else>
-              {{ row.newValue }}
+              {{ row.originalValueText || '-' }}
             </template>
           </template>
         </t-table>

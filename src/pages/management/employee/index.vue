@@ -40,6 +40,12 @@
             {{ $t('pages.employee.create') }}
           </t-button>
         </template>
+        <template v-if="hasOperationPermission('btn_apply_edit')">
+          <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowApplyCreate">
+            <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>
+            {{ $t('pages.employee.apply.create') }}
+          </t-button>
+        </template>
       </template>
     </FilterCard>
     <t-card header-bordered :bordered="false" class="data-card">
@@ -139,6 +145,7 @@ import { getOrganizationTree } from '@/api/organization';
 import { recursiveMap } from '@/utils/array';
 import { OrganizationType } from '@/constants';
 import { useUserStore } from '@/store';
+import dayjs from 'dayjs';
 
 const user = useUserStore();
 const { pageTitle, hasOperationPermission } = usePage();
@@ -160,7 +167,10 @@ const fetchData = async () => {
       keyword: searchData.keyword,
       organizationIds: searchData.organizationIds,
     });
-    dataSource.value = list;
+    dataSource.value = list.map((item: any) => ({
+      ...item,
+      birthday: dayjs(item.birthday).format('YYYY-MM-DD'),
+    }));
     total.value = count;
   } catch {
   } finally {
@@ -264,6 +274,13 @@ const handleShowApplyUpdate = (company: any) => {
   operationEmployee.action = 'apply';
   operationEmployee.mdl = company;
   operationEmployee.isEdit = true;
+  operationEmployee.visible = true;
+}
+
+const handleShowApplyCreate = () => {
+  operationEmployee.action = 'apply';
+  operationEmployee.mdl = undefined;
+  operationEmployee.isEdit = false;
   operationEmployee.visible = true;
 }
 
