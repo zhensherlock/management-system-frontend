@@ -73,10 +73,12 @@
             </t-space>
           </template>
           <template #score="{ row }">
-            <span :class="{
-              't-link--theme-danger': row.scoreType === AssessmentScoreType.Add,
-              't-link--theme-success': row.scoreType === AssessmentScoreType.Subtract
-            }">
+            <span
+              :class="{
+                't-link--theme-danger': row.scoreType === AssessmentScoreType.Add,
+                't-link--theme-success': row.scoreType === AssessmentScoreType.Subtract,
+              }"
+            >
               {{ row.scoreType === AssessmentScoreType.Add ? '加分' : '扣分' }}
             </span>
             <span>上限</span>
@@ -97,7 +99,7 @@
 </template>
 <script lang="ts">
 export default {
-  name: 'SchoolList',
+  name: 'AssessmentList',
 };
 </script>
 <script setup lang="ts">
@@ -123,7 +125,7 @@ const fetchData = async () => {
   try {
     // @ts-ignore
     const { list, count } = await getAssessmentTree({
-      keyword: searchData.keyword
+      keyword: searchData.keyword,
     });
     dataSource.value = list;
     total.value = count;

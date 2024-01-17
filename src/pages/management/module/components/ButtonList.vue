@@ -102,7 +102,7 @@ const columns = ref<PrimaryTableCol[]>([
 
 const inputData = reactive({
   keyword: '',
-})
+});
 
 const { isEmpty, loadingProps, tableHeight } = useTable({
   total,
@@ -117,29 +117,29 @@ const handleAddButton = () => {
     id: `${newIdPrefix}${nanoid(6)}`,
     name: '',
     code: 'btn_',
-  }
+  };
   dataSource.value.push(newRow);
   handleShowUpdate(newRow);
-}
+};
 
 const handleShowUpdate = (row: any) => {
   if (!editableRowKeys.value.includes(row.id)) {
     editableRowKeys.value.push(row.id);
   }
   tableEditMap[row.id] = toRaw(row);
-}
+};
 
 const handleDeleteConfirm = (row: any) => {
   deleteOperation(row.id).then(() => {
     fetchData();
     MessagePlugin.success(t('pages.message.delete'));
   });
-}
+};
 
 const handleRowEdit = (params: any) => {
   const { row, editedRow } = params;
   tableEditMap[row.id] = editedRow;
-}
+};
 
 const handleRowSave = (row: any, rowIndex: number) => {
   tableElement.value.validateRowData(row.id).then((params: any) => {
@@ -147,13 +147,13 @@ const handleRowSave = (row: any, rowIndex: number) => {
       return;
     }
     const data = tableEditMap[row.id];
-    if (data.id.includes(`${newIdPrefix}`)) {
+    if (data.id.includes(newIdPrefix)) {
       handleCreateSubmit(data, rowIndex);
     } else {
       handleEditSubmit(data, rowIndex);
     }
-  })
-}
+  });
+};
 
 const handleCreateSubmit = (data: any, rowIndex: number) => {
   createOperation({
@@ -165,10 +165,10 @@ const handleCreateSubmit = (data: any, rowIndex: number) => {
     const editableRowKeyIndex = editableRowKeys.value.findIndex((id) => id === data.id);
     editableRowKeys.value.splice(editableRowKeyIndex, 1);
     dataSource.value.splice(rowIndex, 1, res);
-  })
-}
+  });
+};
 
-const handleEditSubmit =  (data: any, rowIndex: any) => {
+const handleEditSubmit = (data: any, rowIndex: any) => {
   updateOperation(data.id, {
     name: data.name,
     code: data.code,
@@ -178,8 +178,8 @@ const handleEditSubmit =  (data: any, rowIndex: any) => {
     const editableRowKeyIndex = editableRowKeys.value.findIndex((id) => id === data.id);
     editableRowKeys.value.splice(editableRowKeyIndex, 1);
     dataSource.value.splice(rowIndex, 1, res);
-  })
-}
+  });
+};
 
 const handleRowCancel = (row: any, rowIndex: number) => {
   const editableRowKeyIndex = editableRowKeys.value.findIndex((id) => id === row.id);
@@ -188,7 +188,7 @@ const handleRowCancel = (row: any, rowIndex: number) => {
   if (row.id.includes(newIdPrefix)) {
     dataSource.value.splice(rowIndex, 1);
   }
-}
+};
 </script>
 <template>
   <t-drawer

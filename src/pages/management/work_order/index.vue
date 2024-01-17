@@ -10,18 +10,15 @@
           value: [],
           label: $t('pages.workOrder.applyDate'),
           placeholder: $t('pages.form.selectPlaceholder', { field: $t('pages.workOrder.applyDate') }),
-        }
+        },
       ]"
       @submit="handleSearchSubmit"
     >
       <template #title>
         <t-tabs v-model="status" @change="handleTabChange">
-          <t-tab-panel value="pending" :label="$t('pages.workOrder.tabs.pending')">
-          </t-tab-panel>
-          <t-tab-panel value="operated" :label="$t('pages.workOrder.tabs.operated')">
-          </t-tab-panel>
-          <t-tab-panel value="" :label="$t('pages.workOrder.tabs.all')">
-          </t-tab-panel>
+          <t-tab-panel value="pending" :label="$t('pages.workOrder.tabs.pending')"> </t-tab-panel>
+          <t-tab-panel value="operated" :label="$t('pages.workOrder.tabs.operated')"> </t-tab-panel>
+          <t-tab-panel value="" :label="$t('pages.workOrder.tabs.all')"> </t-tab-panel>
         </t-tabs>
       </template>
     </FilterCard>
@@ -55,9 +52,7 @@
           :max-height="tableHeight"
           @page-change="handleChangePage"
         >
-          <template #applyUser="{ row }">
-            {{ row.apply.realName }}({{ row.apply.organization }})
-          </template>
+          <template #applyUser="{ row }"> {{ row.apply.realName }}({{ row.apply.organization }}) </template>
           <template #auditResult="{ row }">
             <t-tag :theme="getWorkOrderStatusTheme(row.status)" variant="light-outline">
               {{ getWorkOrderStatusLabel(row.status) }}
@@ -89,7 +84,7 @@
 </template>
 <script lang="ts">
 export default {
-  name: 'EmployeeList',
+  name: 'WorkOrderList',
 };
 </script>
 <script setup lang="ts">
