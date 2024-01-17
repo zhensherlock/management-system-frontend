@@ -1,9 +1,10 @@
 import { App } from 'vue'
+import type { CustomValidator } from 'tdesign-vue-next';
 
 export default function registerProperties(app: App) {
   const { $t } = app.config.globalProperties;
   app.config.globalProperties.$rules = {
-    inputRules(field: string, required = true) {
+    inputRules(field: string, required = true, validator: CustomValidator = null) {
       return [
         {
           required,
@@ -17,9 +18,15 @@ export default function registerProperties(app: App) {
           type: 'error',
           trigger: 'change',
         },
+        ...(validator ? [{
+          validator,
+          message: $t('pages.form.errorText', { field: $t(field) }),
+          type: 'error',
+          trigger: 'change',
+        }] : []),
       ];
     },
-    selectRules(field: string, required = true) {
+    selectRules(field: string, required = true, validator: CustomValidator = null) {
       return [
         {
           required,
@@ -27,9 +34,15 @@ export default function registerProperties(app: App) {
           type: 'error',
           trigger: 'change',
         },
+        ...(validator ? [{
+          validator,
+          message: $t('pages.form.errorText', { field: $t(field) }),
+          type: 'error',
+          trigger: 'change',
+        }] : []),
       ];
     },
-    inputNumberRules(field: string, required = true) {
+    inputNumberRules(field: string, required = true, validator: CustomValidator = null) {
       return [
         {
           required,
@@ -43,6 +56,12 @@ export default function registerProperties(app: App) {
           type: 'error',
           trigger: 'change',
         },
+        ...(validator ? [{
+          validator,
+          message: $t('pages.form.errorText', { field: $t(field) }),
+          type: 'error',
+          trigger: 'change',
+        }] : []),
       ]
     },
     idCardInputRules(field: string, required = true) {
@@ -61,6 +80,16 @@ export default function registerProperties(app: App) {
         },
         {
           idcard: true,
+          message: $t('pages.form.errorText', { field: $t(field) }),
+          type: 'error',
+          trigger: 'change',
+        },
+      ];
+    },
+    customValidatorRules(field: string, validator: CustomValidator = null) {
+      return [
+        {
+          validator,
           message: $t('pages.form.errorText', { field: $t(field) }),
           type: 'error',
           trigger: 'change',

@@ -23,6 +23,7 @@ import form from './lang.zh_cn.form';
 import message from './lang.zh_cn.message';
 import user from './lang.zh_cn.user';
 import assessment from './lang.zh_cn.assessment';
+import assessment_task from './lang.zh_cn.assessment_task';
 import module from './lang.zh_cn.module';
 import operation from './lang.zh_cn.operation';
 import role from './lang.zh_cn.role';
@@ -54,6 +55,7 @@ export default {
   message,
   school,
   assessment,
+  assessment_task,
   module,
   operation,
   role,
