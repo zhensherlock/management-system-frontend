@@ -1,6 +1,6 @@
 <template>
   <t-config-provider :global-config="getComponentsLocale">
-    <router-view :key="locale" :class="[mode]"/>
+    <router-view :key="locale" :class="[mode]" />
   </t-config-provider>
 </template>
 <script setup lang="ts">
