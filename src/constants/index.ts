@@ -2,6 +2,7 @@ export * from './account.constant';
 export * from './employee.constant';
 export * from './organization.constant';
 export * from './assessment.constant';
+export * from './assessment_task.constant';
 export * from './work_order.constant';
 export * from './role.constant';
 

@@ -9,13 +9,11 @@ import {
   RangeInput,
   type SubmitContext
 } from 'tdesign-vue-next';
-import { getWorkOrderOperationContent } from '@/utils';
-import {auditWorkOrder, cancelWorkOrder} from '@/api/work_order';
-import { WorkOrderStatus, WorkOrderType } from '@/constants';
-import { useUserStore } from '@/store';
+import { AssessmentTaskStatus } from '@/constants';
 import { useCloned } from '@vueuse/core';
 import { nanoid } from 'nanoid';
 import _ from 'lodash';
+import { createAssessmentTask, updateAssessmentTask } from "@/api/assessment_task.api";
 
 const props = defineProps({
   modelValue: Boolean,
@@ -28,6 +26,10 @@ const props = defineProps({
       basicScore: null,
       startDate: null,
       endDate: null,
+      status: AssessmentTaskStatus.Draft,
+      gradeSetting: {
+        list: [],
+      },
     }),
   },
 });
@@ -38,7 +40,8 @@ const { appContext } = getCurrentInstance();
 const $rules = appContext.config.globalProperties.$rules;
 const tableElement = ref(null);
 const form = ref<FormInstanceFunctions>();
-const user = useUserStore();
+
+let { cloned: formData } = useCloned(props.mdl);
 
 watch(
   () => props.modelValue,
@@ -46,21 +49,41 @@ watch(
     if (!props.modelValue) {
       return;
     }
+    formData = useCloned(props.mdl).cloned;
+    if (props.isEdit) {
+      gradeSetting.dataSource = formData.value.gradeSetting?.list || [];
+    }
   },
 );
-
-let { cloned: formData } = useCloned(props.mdl);
 
 const handleClose = () => {
   emits('update:modelValue', false);
 };
 
-const handleSave = () => {
+const saveDraft = reactive({
+  loading: false,
+});
+
+const saveAndPublic = reactive({
+  loading: false,
+});
+
+const handleSaveDraft = () => {
+  saveDraft.loading = true;
+  formData.value.status = AssessmentTaskStatus.Draft;
+  form.value.submit();
+}
+
+const handleSavePublic = () => {
+  saveAndPublic.loading = true;
+  formData.value.status = AssessmentTaskStatus.Draft;
   form.value.submit();
 };
 
 const handleSubmit = ({ validateResult }: SubmitContext) => {
   if (validateResult !== true) {
+    saveDraft.loading = false;
+    saveAndPublic.loading = false;
     return;
   }
   if (props.isEdit) {
@@ -70,9 +93,49 @@ const handleSubmit = ({ validateResult }: SubmitContext) => {
   }
 };
 
-const handleEditSubmit = () => {};
+const handleEditSubmit = () => {
+  const params = {
+    title: formData.value.title,
+    startDate: formData.value.startDate,
+    endDate: formData.value.endDate,
+    status: formData.value.status,
+    description: formData.value.description,
+    basicScore: formData.value.basicScore,
+    gradeSetting: {
+      list: toRaw(gradeSetting.dataSource),
+    },
+  };
+  updateAssessmentTask(formData.value.id, params).then(() => {
+    emits('refresh-list');
+    handleClose();
+    MessagePlugin.success(t('pages.message.update'));
+  }).finally(() => {
+    saveDraft.loading = false;
+    saveAndPublic.loading = false;
+  });
+};
 
-const handleCreateSubmit = () => {};
+const handleCreateSubmit = () => {
+  const params = {
+    title: formData.value.title,
+    startDate: formData.value.startDate,
+    endDate: formData.value.endDate,
+    status: formData.value.status,
+    description: formData.value.description,
+    basicScore: formData.value.basicScore,
+    gradeSetting: {
+      list: toRaw(gradeSetting.dataSource),
+    },
+  };
+  createAssessmentTask(params).then(() => {
+    emits('refresh-list');
+    handleClose();
+    MessagePlugin.success(t('pages.message.create'));
+  }).finally(() => {
+    saveDraft.loading = false;
+    saveAndPublic.loading = false;
+  });
+};
 
 const gradeSettingValidator = () => {
   return gradeSetting.dataSource.filter(item => !item.id.includes(gradeSetting.newIdPrefix)).length > 0;
@@ -106,10 +169,7 @@ const gradeSettingScoreValidator = (val: [number, number]) => {
     ;
   });
 
-  if (isInOtherRange) {
-    return false;
-  }
-  return true;
+  return !isInOtherRange;
 }
 
 const gradeSetting = reactive({
@@ -239,22 +299,6 @@ const handleShowGradeUpdate = (row: any) => {
   }
   gradeSetting.tableEditMap[row.id] = toRaw(row);
 }
-
-const agree = reactive({
-  loading: false,
-});
-
-const handleAgree = () => {
-  agree.loading = true;
-  auditWorkOrder(props.mdl.id, { status: WorkOrderStatus.Completed, auditReason: '' }).then(() => {
-    emits('refresh-list');
-    MessagePlugin.success(t('pages.workOrder.agree.submitMessage'));
-    agree.loading = false;
-    handleClose();
-  }).catch(() => {
-    agree.loading = false;
-  });
-}
 </script>
 <template>
   <t-drawer
@@ -284,7 +328,7 @@ const handleAgree = () => {
           clearable
           :maxlength="150"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.assessment_task.title') })"
-          @enter="handleSave"
+          @enter="handleSaveDraft"
         >
         </t-input>
       </t-form-item>
@@ -298,7 +342,6 @@ const handleAgree = () => {
           valueType="YYYY-MM-DD"
           v-model="formData.startDate"
           :placeholder="$t('pages.form.selectPlaceholder', { field: $t('pages.assessment_task.startDate') })"
-          @enter="handleSave"
           style="width: 100%;"
         />
       </t-form-item>
@@ -312,7 +355,6 @@ const handleAgree = () => {
           valueType="YYYY-MM-DD"
           v-model="formData.endDate"
           :placeholder="$t('pages.form.selectPlaceholder', { field: $t('pages.assessment_task.endDate') })"
-          @enter="handleSave"
           style="width: 100%;"
         />
       </t-form-item>
@@ -341,7 +383,7 @@ const handleAgree = () => {
           theme="column"
           style="width: 200px;"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.assessment_task.basicScore') })"
-          @enter="handleSave"
+          @enter="handleSaveDraft"
         >
         </t-input-number>
       </t-form-item>
@@ -415,8 +457,16 @@ const handleAgree = () => {
       </t-form-item>
     </t-form>
     <template #footer>
-      <t-button variant="outline" @click="handleSave">保存草稿</t-button>
-      <t-button @click="handleSave">保存并发布</t-button>
+      <t-button variant="outline" @click="handleSaveDraft" :loading="saveDraft.loading">
+        {{ $t('pages.assessment_task.save.draft') }}
+      </t-button>
+      <t-popconfirm
+        theme="danger"
+        :content="$t('pages.assessment_task.save.publicConfirm')"
+        @confirm="handleSavePublic"
+      >
+        <t-button :loading="saveAndPublic.loading">{{ $t('pages.assessment_task.save.public') }}</t-button>
+      </t-popconfirm>
     </template>
   </t-drawer>
 </template>

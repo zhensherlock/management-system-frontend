@@ -15,6 +15,6 @@ export const getAge = (birthday: string) => {
   return dayjs().diff(dayjs(birthday), 'year');
 };
 
-export const getDateString = (date: dayjs.ConfigType) => {
-  return dayjs(date).format('YYYY-MM-DD');
+export const getDateString = (date: dayjs.ConfigType, format = 'YYYY-MM-DD') => {
+  return dayjs(date).format(format);
 }

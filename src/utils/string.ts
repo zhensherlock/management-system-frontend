@@ -1,5 +1,5 @@
-import {EmployeeSex, EmployeeStatus, WorkOrderStatus} from '@/constants';
-import {t} from '@/locales';
+import { AssessmentTaskStatus, EmployeeSex, EmployeeStatus, WorkOrderStatus } from '@/constants';
+import { t } from '@/locales';
 import _ from 'lodash';
 
 export const getSex = (sex: string) => {
@@ -68,4 +68,32 @@ export const getEmployeeStatus = (status: string) => {
 
 export const getSchoolById = (id: string, schoolList: any[]) => {
   return _.find(schoolList, { 'value': id });
+}
+
+export const getAssessmentTaskStatus = (status: string) => {
+  switch (status) {
+    case AssessmentTaskStatus.Draft:
+      return t('pages.assessment_task.statusMap.draft');
+    case AssessmentTaskStatus.Official:
+      return t('pages.assessment_task.statusMap.official');
+    case AssessmentTaskStatus.Completed:
+      return t('pages.assessment_task.statusMap.completed');
+    case AssessmentTaskStatus.Cancellation:
+      return t('pages.assessment_task.statusMap.cancellation');
+  }
+}
+
+export const getAssessmentTaskStatusTheme = (status: string) => {
+  switch (status) {
+    case AssessmentTaskStatus.Draft:
+      return 'default';
+    case AssessmentTaskStatus.Official:
+      return 'primary';
+    case AssessmentTaskStatus.Completed:
+      return 'success';
+    case AssessmentTaskStatus.Cancellation:
+      return 'warning';
+    default:
+      return 'default';
+  }
 }

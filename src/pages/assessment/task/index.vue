@@ -51,11 +51,19 @@
           :key="tableKey"
           @page-change="handleChangePage"
         >
+          <template #date="{ row }">
+            {{ getDateString(row.startDate) }} 至 {{ getDateString(row.endDate) }}
+          </template>
+          <template #status="{ row }">
+            <t-tag :theme="getAssessmentTaskStatusTheme(row.status)" variant="light-outline">
+              {{ getAssessmentTaskStatus(row.status) }}
+            </t-tag>
+          </template>
           <template #operation="{ row }">
             <t-space align="center" :size="0">
-              <t-link hover="color" theme="primary" @click="handleRedirectUserList(row)">
-                {{ $t('pages.company.userList') }}
-              </t-link>
+<!--              <t-link hover="color" theme="primary" @click="handleRedirectUserList(row)">-->
+<!--                {{ $t('pages.assessment_task.userList') }}-->
+<!--              </t-link>-->
               <t-link hover="color" theme="primary" @click="handleShowUpdate(row)">
                 {{ $t('pages.record.operation.update') }}
               </t-link>
@@ -93,11 +101,12 @@ import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useTable } from '@/composeable/useTable';
 import { OperationTask } from '../components';
-import { getAssessmentTaskList } from '@/api/assessment_task';
+import { getAssessmentTaskList } from '@/api/assessment_task.api';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
 import { useUserStore } from '@/store';
+import {getAssessmentTaskStatus, getAssessmentTaskStatusTheme, getDateString} from '@/utils';
 
 const tableParentElement = ref(null);
 const tableElement = ref(null);
@@ -125,10 +134,10 @@ const fetchData = async () => {
   }
 };
 const columns = ref<PrimaryTableCol[]>([
-  { colKey: 'name', title: t('pages.company.name'), minWidth: 200, fixed: 'left' },
-  { colKey: 'person', title: t('pages.company.person'), minWidth: 70 },
-  { colKey: 'contact', title: t('pages.company.contact'), minWidth: 110 },
-  { colKey: 'address', title: t('pages.company.address'), minWidth: 220 },
+  { colKey: 'title', title: t('pages.assessment_task.title'), minWidth: 200, fixed: 'left' },
+  { colKey: 'date', title: t('pages.assessment_task.date'), minWidth: 70 },
+  { colKey: 'status', title: t('pages.assessment_task.status'), width: 110 },
+  { colKey: 'basicScore', title: t('pages.assessment_task.basicScore'), width: 100 },
   { colKey: 'operation', title: t('pages.record.operation.label'), width: 180, fixed: 'right' },
 ]);
 const rowKey = 'index';
@@ -168,8 +177,8 @@ const handleRedirectUserList = (row: any) => {
   });
 };
 
-const handleShowUpdate = (company: any) => {
-  operationTask.mdl = company;
+const handleShowUpdate = (mdl: any) => {
+  operationTask.mdl = mdl;
   operationTask.isEdit = true;
   operationTask.visible = true;
 };
