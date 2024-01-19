@@ -76,7 +76,7 @@ const handleSaveDraft = () => {
 
 const handleSavePublic = () => {
   saveAndPublic.loading = true;
-  formData.value.status = AssessmentTaskStatus.Draft;
+  formData.value.status = AssessmentTaskStatus.Official;
   form.value.submit();
 };
 

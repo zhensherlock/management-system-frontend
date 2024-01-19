@@ -64,16 +64,25 @@
 <!--              <t-link hover="color" theme="primary" @click="handleRedirectUserList(row)">-->
 <!--                {{ $t('pages.assessment_task.userList') }}-->
 <!--              </t-link>-->
-              <t-link hover="color" theme="primary" @click="handleShowUpdate(row)">
-                {{ $t('pages.record.operation.update') }}
-              </t-link>
-              <t-popconfirm
-                theme="danger"
-                :content="$t('pages.record.operation.deleteConfirm')"
-                @confirm="handleDeleteConfirm(row)"
-              >
-                <t-link hover="color" theme="danger">{{ $t('pages.record.operation.delete') }}</t-link>
-              </t-popconfirm>
+              <template v-if="row.status === AssessmentTaskStatus.Draft">
+                <t-link
+                  hover="color"
+                  theme="primary"
+                  @click="handleShowUpdate(row)"
+                >
+                  {{ $t('pages.record.operation.update') }}
+                </t-link>
+                <t-popconfirm
+                  theme="danger"
+                  :content="$t('pages.record.operation.deleteConfirm')"
+                  @confirm="handleDeleteConfirm(row)"
+                >
+                  <t-link hover="color" theme="danger">{{ $t('pages.record.operation.delete') }}</t-link>
+                </t-popconfirm>
+              </template>
+              <template v-else-if="row.status === AssessmentTaskStatus.Official">
+
+              </template>
               <template #separator>
                 <t-divider layout="vertical" />
               </template>
@@ -101,12 +110,13 @@ import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useTable } from '@/composeable/useTable';
 import { OperationTask } from '../components';
-import { getAssessmentTaskList } from '@/api/assessment_task.api';
+import { getAssessmentTaskList, deleteAssessmentTask } from '@/api/assessment_task.api';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
 import { useUserStore } from '@/store';
-import {getAssessmentTaskStatus, getAssessmentTaskStatusTheme, getDateString} from '@/utils';
+import { getAssessmentTaskStatus, getAssessmentTaskStatusTheme, getDateString } from '@/utils';
+import { AssessmentTaskStatus } from '@/constants';
 
 const tableParentElement = ref(null);
 const tableElement = ref(null);
@@ -201,5 +211,12 @@ const handleChangePage = (pageInfo: PageInfo) => {
 const handleRefreshList = () => {
   fetchData();
 };
+
+const handleDeleteConfirm = (row: any) => {
+  deleteAssessmentTask(row.id).then(() => {
+    fetchData();
+    MessagePlugin.success(t('pages.message.delete'));
+  });
+}
 </script>
 <style lang="less" scoped></style>
