@@ -7,6 +7,7 @@ import { createSchool, updateSchool } from '@/api/school';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
 import { recursiveMap } from '@/utils/array';
+import { OrganizationCategory, SchoolCategoryTreeData } from '@/constants';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -17,6 +18,7 @@ const props = defineProps({
       return {
         name: '',
         parentId: null,
+        category: OrganizationCategory.VirtualOrganization,
         person: '',
         contact: '',
         address: '',
@@ -31,6 +33,7 @@ const props = defineProps({
 });
 const emits = defineEmits(['update:modelValue', 'refresh-list']);
 
+const schoolCategoryTreeData = _.clone(SchoolCategoryTreeData);
 const form = ref<FormInstanceFunctions>();
 
 const schoolTreeData = computed(() => {
@@ -78,6 +81,7 @@ const handleEditSubmit = () => {
     contact: formData.value.contact,
     address: formData.value.address,
     parentId: formData.value.parentId,
+    category: formData.value.category,
     sequence: formData.value.sequence,
   };
   updateSchool(formData.value.id, params).then(() => {
@@ -95,6 +99,7 @@ const handleCreateSubmit = () => {
     contact: formData.value.contact,
     address: formData.value.address,
     parentId: formData.value.parentId,
+    category: formData.value.category,
     sequence: formData.value.sequence,
   };
   createSchool(params).then(() => {
@@ -127,20 +132,7 @@ const handleClose = () => {
       <t-form-item
         :label="$t('pages.school.name')"
         name="name"
-        :rules="[
-          {
-            required: true,
-            message: $t('pages.form.requiredText', { field: $t('pages.school.name') }),
-            type: 'error',
-            trigger: 'change',
-          },
-          {
-            whitespace: true,
-            message: $t('pages.form.whitespaceText', { field: $t('pages.school.name') }),
-            type: 'error',
-            trigger: 'change',
-          },
-        ]"
+        :rules="$rules.inputRules('pages.school.name')"
       >
         <t-input
           autofocus
@@ -156,34 +148,25 @@ const handleClose = () => {
         v-if="!(isEdit && formData.level === 1)"
         :label="$t('pages.school.parentSchool')"
         name="parentId"
-        :rules="[
-          {
-            required: true,
-            message: $t('pages.form.selectPlaceholder', { field: $t('pages.school.parentSchool') }),
-            type: 'error',
-            trigger: 'change',
-          },
-        ]"
+        :rules="$rules.selectRules('pages.school.parentSchool')"
       >
         <t-cascader v-model="formData.parentId" :options="schoolTreeData" check-strictly />
       </t-form-item>
       <t-form-item
+        :label="$t('pages.school.category')"
+        name="category"
+        :rules="$rules.selectRules('pages.school.category')"
+      >
+        <t-cascader
+          v-model="formData.category"
+          :options="schoolCategoryTreeData"
+          :placeholder="$t('pages.form.selectPlaceholder', { field: $t('pages.school.category') })"
+        />
+      </t-form-item>
+      <t-form-item
         :label="$t('pages.school.person')"
         name="person"
-        :rules="[
-          {
-            required: false,
-            message: $t('pages.form.requiredText', { field: $t('pages.school.person') }),
-            type: 'error',
-            trigger: 'change',
-          },
-          {
-            whitespace: true,
-            message: $t('pages.form.whitespaceText', { field: $t('pages.school.person') }),
-            type: 'error',
-            trigger: 'change',
-          },
-        ]"
+        :rules="$rules.inputRules('pages.school.person', false)"
       >
         <t-input
           v-model="formData.person"
@@ -197,20 +180,7 @@ const handleClose = () => {
       <t-form-item
         :label="$t('pages.school.contact')"
         name="contact"
-        :rules="[
-          {
-            required: false,
-            message: $t('pages.form.requiredText', { field: $t('pages.school.contact') }),
-            type: 'error',
-            trigger: 'change',
-          },
-          {
-            whitespace: true,
-            message: $t('pages.form.whitespaceText', { field: $t('pages.school.contact') }),
-            type: 'error',
-            trigger: 'change',
-          },
-        ]"
+        :rules="$rules.inputRules('pages.school.contact', false)"
       >
         <t-input
           v-model="formData.contact"
@@ -224,14 +194,7 @@ const handleClose = () => {
       <t-form-item
         :label="$t('pages.school.sequence')"
         name="sequence"
-        :rules="[
-          {
-            number: true,
-            message: $t('pages.form.errorText', { field: $t('pages.school.sequence') }),
-            type: 'error',
-            trigger: 'change',
-          },
-        ]"
+        :rules="$rules.inputNumberRules('pages.school.sequence', false)"
       >
         <t-input-number
           v-model="formData.sequence"
@@ -246,20 +209,7 @@ const handleClose = () => {
       <t-form-item
         :label="$t('pages.school.address')"
         name="address"
-        :rules="[
-          {
-            required: false,
-            message: $t('pages.form.requiredText', { field: $t('pages.school.address') }),
-            type: 'error',
-            trigger: 'change',
-          },
-          {
-            whitespace: true,
-            message: $t('pages.form.whitespaceText', { field: $t('pages.school.address') }),
-            type: 'error',
-            trigger: 'change',
-          },
-        ]"
+        :rules="$rules.inputRules('pages.school.address', false)"
       >
         <t-textarea
           v-model="formData.address"

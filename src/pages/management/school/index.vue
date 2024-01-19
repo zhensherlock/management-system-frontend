@@ -175,6 +175,7 @@ const { pagination, isEmpty, loadingProps, tableHeight } = useTable({
   table: tableElement,
   parent: tableParentElement,
   loading,
+  hiddenPage: true,
 });
 
 const operationModel = reactive({
