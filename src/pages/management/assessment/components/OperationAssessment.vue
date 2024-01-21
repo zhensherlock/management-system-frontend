@@ -51,7 +51,7 @@ watch(
       return;
     }
     formData = useCloned(props.mdl).cloned;
-    if (!props.isEdit && props.list.length > 0) {
+    if (!formData.value.parentId) {
       // 添加考核的初始事件
       formData.value.parentId = (props.list[0] as any)?.id;
     } else {

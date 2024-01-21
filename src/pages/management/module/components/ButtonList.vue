@@ -64,7 +64,7 @@ const total = ref(0);
 const loading = ref(true);
 const dataSource = ref([]);
 const editableRowKeys = ref([]);
-const tableEditMap: { [key: string]: any } = {};
+const tableEditMap: Record<string, any> = {};
 const columns = ref<PrimaryTableCol[]>([
   {
     colKey: 'name',

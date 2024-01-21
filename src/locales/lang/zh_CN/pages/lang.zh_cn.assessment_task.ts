@@ -9,6 +9,7 @@ export default {
   startDate: '考核开始时间',
   endDate: '考核结束时间',
   description: '考核任务简介',
+  content: '考核内容',
   status: '状态',
   statusMap: {
     draft: '未发布',
@@ -37,5 +38,14 @@ export default {
     draft: '保存草稿',
     public: '保存并发布',
     publicConfirm: '确定要发布吗？发布后考核任务内容将无法修改。',
-  }
+  },
+  process: {
+    title: '考核进度',
+  },
+  contentTable: {
+    title: '考核项目',
+    desc: '考核内容',
+    score: '分数',
+    operationScore: '打分',
+  },
 };
