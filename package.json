@@ -21,6 +21,7 @@
   "dependencies": {
     "@vueuse/core": "^10.7.2",
     "axios": "^1.6.5",
+    "big.js": "^6.2.1",
     "dayjs": "^1.11.10",
     "echarts": "5.4.3",
     "lodash": "^4.17.21",
@@ -44,6 +45,7 @@
     "@iconify-json/ic": "^1.1.17",
     "@iconify-json/material-symbols": "^1.1.70",
     "@iconify-json/mdi": "^1.1.64",
+    "@types/big.js": "^6.2.2",
     "@types/echarts": "^4.9.22",
     "@types/lodash": "^4.14.202",
     "@types/nprogress": "^0.2.3",
