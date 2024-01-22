@@ -76,8 +76,8 @@ export const getAssessmentTaskStatus = (status: string) => {
       return t('pages.assessment_task.statusMap.draft');
     case AssessmentTaskStatus.Official:
       return t('pages.assessment_task.statusMap.official');
-    case AssessmentTaskStatus.Completed:
-      return t('pages.assessment_task.statusMap.completed');
+    case AssessmentTaskStatus.Done:
+      return t('pages.assessment_task.statusMap.done');
     case AssessmentTaskStatus.Cancellation:
       return t('pages.assessment_task.statusMap.cancellation');
   }
@@ -89,7 +89,7 @@ export const getAssessmentTaskStatusTheme = (status: string) => {
       return 'default';
     case AssessmentTaskStatus.Official:
       return 'primary';
-    case AssessmentTaskStatus.Completed:
+    case AssessmentTaskStatus.Done:
       return 'success';
     case AssessmentTaskStatus.Cancellation:
       return 'warning';

@@ -24,6 +24,7 @@ import message from './lang.zh_cn.message';
 import user from './lang.zh_cn.user';
 import assessment from './lang.zh_cn.assessment';
 import assessment_task from './lang.zh_cn.assessment_task';
+import assessment_task_detail from './lang.zh_cn.assessment_task_detail';
 import module from './lang.zh_cn.module';
 import operation from './lang.zh_cn.operation';
 import role from './lang.zh_cn.role';
@@ -56,6 +57,7 @@ export default {
   school,
   assessment,
   assessment_task,
+  assessment_task_detail,
   module,
   operation,
   role,

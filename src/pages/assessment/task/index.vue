@@ -78,7 +78,7 @@
                 </t-popconfirm>
               </template>
               <template v-else-if="row.status === AssessmentTaskStatus.Official">
-                <t-link hover="color" theme="primary" @click="handleShowTaskDetail(row)">
+                <t-link hover="color" theme="primary" @click="handleShowAssessmentTaskDrawer(row)">
                   {{ $t('pages.record.operation.detail') }}
                 </t-link>
               </template>
@@ -97,9 +97,9 @@
       @refresh-list="handleRefreshList"
     >
     </OperationTask>
-    <TaskDetail
-      v-model="taskDetail.visible"
-      :mdl="taskDetail.mdl"
+    <AssessmentTaskDrawer
+      v-model="assessmentTaskDrawer.visible"
+      :mdl="assessmentTaskDrawer.mdl"
     />
   </div>
 </template>
@@ -112,7 +112,7 @@ export default {
 import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useTable } from '@/composeable/useTable';
-import { OperationTask, TaskDetail } from '../components';
+import { OperationTask, AssessmentTaskDrawer } from '../components';
 import { getAssessmentTaskList, deleteAssessmentTask } from '@/api/assessment_task.api';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
@@ -147,10 +147,10 @@ const fetchData = async () => {
 };
 const columns = ref<PrimaryTableCol[]>([
   { colKey: 'title', title: t('pages.assessment_task.title'), minWidth: 200, fixed: 'left' },
-  { colKey: 'date', title: t('pages.assessment_task.date'), minWidth: 70 },
-  { colKey: 'status', title: t('pages.assessment_task.status'), width: 110 },
-  { colKey: 'basicScore', title: t('pages.assessment_task.basicScore'), width: 100 },
-  { colKey: 'operation', title: t('pages.record.operation.label'), width: 180, fixed: 'right' },
+  { colKey: 'date', title: t('pages.assessment_task.date'), minWidth: 220, align: 'center' },
+  { colKey: 'status', title: t('pages.assessment_task.status'), minWidth: 90, align: 'center' },
+  { colKey: 'basicScore', title: t('pages.assessment_task.basicScore'), minWidth: 100, align: 'center' },
+  { colKey: 'operation', title: t('pages.record.operation.label'), width: 100, align: 'center', fixed: 'right' },
 ]);
 const rowKey = 'index';
 const verticalAlign = 'top' as const;
@@ -212,14 +212,14 @@ const handleDeleteConfirm = (row: any) => {
   });
 }
 
-const taskDetail = reactive({
+const assessmentTaskDrawer = reactive({
   visible: false,
   mdl: undefined,
 });
 
-const handleShowTaskDetail = (row: any) => {
-  taskDetail.mdl = row;
-  taskDetail.visible = true;
+const handleShowAssessmentTaskDrawer = (row: any) => {
+  assessmentTaskDrawer.mdl = row;
+  assessmentTaskDrawer.visible = true;
 };
 </script>
 <style lang="less" scoped></style>

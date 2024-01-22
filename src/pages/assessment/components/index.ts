@@ -1,5 +1,11 @@
 import OperationTask from './OperationTask.vue';
-import TaskDetail from './TaskDetail.vue';
+import AssessmentTaskDrawer from './AssessmentTaskDrawer.vue';
 import AssessmentTable from './AssessmentTable.vue';
+import AssessmentTaskDetailDrawer from './AssessmentTaskDetailDrawer.vue';
 
-export { OperationTask, TaskDetail, AssessmentTable };
+export {
+  OperationTask,
+  AssessmentTaskDrawer,
+  AssessmentTable,
+  AssessmentTaskDetailDrawer
+};

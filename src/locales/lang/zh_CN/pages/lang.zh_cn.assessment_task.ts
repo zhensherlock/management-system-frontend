@@ -14,7 +14,7 @@ export default {
   statusMap: {
     draft: '未发布',
     official: '已发布',
-    completed: '已完成',
+    done: '已完成',
     cancellation: '已作废',
   },
   basicScore: '考核基础分',
@@ -47,5 +47,19 @@ export default {
     desc: '考核内容',
     score: '分数',
     operationScore: '打分',
+  },
+  statistic: {
+    header: {
+      total: '参与考核学校总数',
+      submitted: '已提交数量',
+      pending: '未提交数量',
+      returned: '已退回数量',
+      donePercentage: '完成率',
+      schoolUnit: '所',
+      detailButton: '考核任务明细',
+    },
+  },
+  done: {
+    button: '完成考核',
   },
 };

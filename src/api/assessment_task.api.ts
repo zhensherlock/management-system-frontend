@@ -6,6 +6,8 @@ const Api = {
   CreateUrl: '/user/assessment_task/create',
   UpdateUrl: '/user/assessment_task/',
   DeleteUrl: '/user/assessment_task/',
+  StatisticUrl: '/user/assessment_task/statistic/',
+  DetailsUrl: '/user/assessment_task/details/',
 };
 
 export function getAssessmentTaskList(data: any) {
@@ -32,5 +34,17 @@ export function updateAssessmentTask(id: string, data: any) {
 export function deleteAssessmentTask(id: string) {
   return request.delete<CommonResponse<any>>({
     url: `${Api.DeleteUrl}${id}/`,
+  });
+}
+
+export function getAssessmentTaskStatistic(id: string) {
+  return request.get<CommonResponse<any>>({
+    url: `${Api.StatisticUrl}${id}/`,
+  });
+}
+
+export function getAssessmentTaskDetails(id: string) {
+  return request.get<CommonResponse<any>>({
+    url: `${Api.DetailsUrl}${id}/`,
   });
 }
