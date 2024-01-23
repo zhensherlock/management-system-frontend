@@ -68,8 +68,8 @@
           </template>
           <template #operation="{ row }">
             <t-space align="center" :size="0">
-              <t-link hover="color" theme="primary" @click="handleShowDetail(row)">
-                {{ $t('pages.record.operation.detail') }}
+              <t-link hover="color" theme="primary" @click="handleShowEvaluationScore(row)">
+                {{ $t('pages.assessmentTaskDetail.table.operation.evaluation') }}
               </t-link>
               <template #separator>
                 <t-divider layout="vertical" />
@@ -79,6 +79,10 @@
         </t-table>
       </div>
     </t-card>
+    <EvaluationScoreDrawer
+      v-model="evaluationScoreDrawer.visible"
+      :mdl="evaluationScoreDrawer.mdl"
+    />
   </div>
 </template>
 <script lang="ts">
@@ -94,6 +98,7 @@ import { getMyAssessmentTaskDetailList } from '@/api/assessment_task_detail.api'
 import { useTable } from '@/composeable/useTable';
 import { t } from '@/locales';
 import { getAssessmentTaskDetailStatus, getAssessmentTaskDetailStatusTheme, getDateString } from '@/utils';
+import { EvaluationScoreDrawer } from '../components';
 
 const { pageTitle } = usePage();
 const tableParentElement = ref(null);
@@ -149,14 +154,14 @@ const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({
   loading,
 });
 
-const operationWorkOrder = reactive({
+const evaluationScoreDrawer = reactive({
   visible: false,
   mdl: undefined,
 });
 
-const handleShowDetail = (mdl: any) => {
-  operationWorkOrder.mdl = mdl;
-  operationWorkOrder.visible = true;
+const handleShowEvaluationScore = (mdl: any) => {
+  evaluationScoreDrawer.mdl = mdl;
+  evaluationScoreDrawer.visible = true;
 };
 
 const handleSearchSubmit = (params: any) => {

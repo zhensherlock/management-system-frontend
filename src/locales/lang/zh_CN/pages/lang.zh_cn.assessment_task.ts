@@ -46,7 +46,9 @@ export default {
     title: '考核项目',
     desc: '考核内容',
     score: '分数',
-    operationScore: '打分',
+    operation: {
+      evaluation: '评分',
+    },
   },
   statistic: {
     header: {

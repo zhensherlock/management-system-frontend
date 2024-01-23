@@ -30,6 +30,7 @@ import operation from './lang.zh_cn.operation';
 import role from './lang.zh_cn.role';
 import system from './lang.zh_cn.system';
 import workOrder from './lang.zh_cn.work_order';
+import evaluationScoreDrawer from './lang.zh_cn.evaluationScoreDrawer';
 
 export default {
   dashboardBase,
@@ -63,4 +64,5 @@ export default {
   role,
   system,
   workOrder,
+  evaluationScoreDrawer,
 };
