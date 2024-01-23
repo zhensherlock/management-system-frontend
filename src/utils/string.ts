@@ -1,4 +1,10 @@
-import { AssessmentTaskStatus, EmployeeSex, EmployeeStatus, WorkOrderStatus } from '@/constants';
+import {
+  AssessmentTaskDetailStatus,
+  AssessmentTaskStatus,
+  EmployeeSex,
+  EmployeeStatus,
+  WorkOrderStatus
+} from '@/constants';
 import { t } from '@/locales';
 import _ from 'lodash';
 
@@ -86,13 +92,41 @@ export const getAssessmentTaskStatus = (status: string) => {
 export const getAssessmentTaskStatusTheme = (status: string) => {
   switch (status) {
     case AssessmentTaskStatus.Draft:
-      return 'default';
+      return 'warning';
     case AssessmentTaskStatus.Official:
       return 'primary';
     case AssessmentTaskStatus.Done:
       return 'success';
-    case AssessmentTaskStatus.Cancellation:
+    // case AssessmentTaskStatus.Cancellation:
+    //   return 'warning';
+    default:
+      return 'default';
+  }
+}
+
+export const getAssessmentTaskDetailStatus = (status: string) => {
+  switch (status) {
+    case AssessmentTaskDetailStatus.Pending:
+      return t('pages.assessmentTaskDetail.statusMap.pending');
+    case AssessmentTaskDetailStatus.Submitted:
+      return t('pages.assessmentTaskDetail.statusMap.submitted');
+    case AssessmentTaskDetailStatus.Returned:
+      return t('pages.assessmentTaskDetail.statusMap.returned');
+    case AssessmentTaskDetailStatus.Done:
+      return t('pages.assessmentTaskDetail.statusMap.done');
+  }
+}
+
+export const getAssessmentTaskDetailStatusTheme = (status: string) => {
+  switch (status) {
+    case AssessmentTaskDetailStatus.Pending:
       return 'warning';
+    case AssessmentTaskDetailStatus.Submitted:
+      return 'primary';
+    case AssessmentTaskDetailStatus.Returned:
+      return 'danger';
+    case AssessmentTaskDetailStatus.Done:
+      return 'success';
     default:
       return 'default';
   }

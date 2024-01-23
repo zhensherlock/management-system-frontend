@@ -26,7 +26,7 @@ const props = defineProps({
         enabled: true,
         isLeaf: true,
         expand: true,
-        meta: '{}',
+        meta: {},
         description: '',
         sequence: 1,
       };

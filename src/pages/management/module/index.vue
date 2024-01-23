@@ -186,6 +186,7 @@ const handleShowAddDialog = (row: any) => {
     icon: 'activity',
     enabled: true,
     sequence: (row?.children?.length || 0) + 1,
+    meta: {},
   };
   operationModel.isEdit = false;
   operationModel.visible = true;

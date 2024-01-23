@@ -3,6 +3,7 @@ import {ref, watch} from 'vue';
 import {getAssessmentTaskDetails} from '@/api/assessment_task.api';
 import type {PrimaryTableCol} from 'tdesign-vue-next';
 import {t} from '@/locales';
+import {getAssessmentTaskDetailStatus, getAssessmentTaskDetailStatusTheme} from '@/utils';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -25,10 +26,11 @@ watch(
 );
 
 const columns = ref<PrimaryTableCol[]>([
-  { colKey: 'school', title: t('pages.assessment_task_detail.table.school'), minWidth: 200 },
-  { colKey: 'status', title: t('pages.assessment_task_detail.table.status'), width: 100 },
-  { colKey: 'score', title: t('pages.assessment_task_detail.table.score'), width: 100 },
-  { colKey: 'submitDate', title: t('pages.assessment_task_detail.table.submitDate'), width: 160 },
+  { colKey: 'school', title: t('pages.assessmentTaskDetail.table.school'), minWidth: 200 },
+  { colKey: 'status', title: t('pages.assessmentTaskDetail.table.status'), minWidth: 90, align: 'center' },
+  { colKey: 'score', title: t('pages.assessmentTaskDetail.table.score'), minWidth: 100, align: 'center' },
+  { colKey: 'submitDate', title: t('pages.assessmentTaskDetail.table.submitDate'), minWidth: 160, align: 'center' },
+  { colKey: 'operation', title: t('pages.record.operation.label'), width: 100, align: 'center' },
 ]);
 const dataSource = ref([]);
 const total = ref(0);
@@ -78,7 +80,16 @@ const handleClose = () => {
       :loading="loading"
       :filter-value="filterValue"
       @filter-change="onFilterChange"
-    />
+    >
+      <template #school="{ row }">
+        {{ row.receiveSchoolOrganization.name }}
+      </template>
+      <template #status="{ row }">
+        <t-tag :theme="getAssessmentTaskDetailStatusTheme(row.status)" variant="light-outline">
+          {{ getAssessmentTaskDetailStatus(row.status) }}
+        </t-tag>
+      </template>
+    </t-table>
   </t-drawer>
 </template>
 
