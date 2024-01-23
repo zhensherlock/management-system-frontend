@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, ref} from 'vue';
+import {computed, nextTick, ref} from 'vue';
 import type { PrimaryTableCol } from 'tdesign-vue-next';
 import { t } from '@/locales';
 import _ from 'lodash';
@@ -83,6 +83,23 @@ const footerAffixedBottomProps = computed(() => {
     container: '.task-detail-drawer .t-drawer__body',
   };
 });
+
+const handleShowEvaluation = (row: any) => {
+  const index = expandedRowKeys.value.indexOf(row.id)
+  if (index > -1) {
+    expandedRowKeys.value.splice(index, 1);
+  } else {
+    expandedRowKeys.value.push(row.id);
+  }
+
+  nextTick(() => {})
+};
+
+const expandedRowKeys = ref([]);
+const handleExpandChange = (value, params) => {
+  expandedRowKeys.value = value;
+  console.log('handleExpandChange', value, params);
+};
 </script>
 
 <template>
@@ -120,15 +137,23 @@ const footerAffixedBottomProps = computed(() => {
       size="small"
       :data="dataSource"
       :columns="columns"
+      :expand-on-row-click="true"
       :rowspan-and-colspan="rowspanAndColspan"
       :foot-data="summaryFootDataSource"
       :header-affixed-top="headerAffixedTopProps"
       :footer-affixed-bottom="footerAffixedBottomProps"
+      :expanded-row-keys="expandedRowKeys"
+      :expand-icon="false"
     >
-      <template #operation="{ row }" v-if="props.mode === 'assessment'">
+      <template #expandedRow="{ row }">
+        <div class="more-detail">
+          <p class="title"><b>集群名称:</b></p>
+        </div>
+      </template>
+      <template #operation="{ row }" v-if="props.mode === 'evaluation'">
         <t-space align="center" :size="0">
-          <t-link hover="color" theme="primary" @click="handleShowUpdate(row)">
-            {{ $t('pages.assessment_task.contentTable.operationScore') }}
+          <t-link hover="color" theme="primary" @click="handleShowEvaluation(row)">
+            {{ $t('pages.assessment_task.contentTable.operation.evaluation') }}
           </t-link>
           <template #separator>
             <t-divider layout="vertical" />
