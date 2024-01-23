@@ -7,7 +7,7 @@ import {
   getAssessmentTaskStatusTheme,
   getDateString
 } from '@/utils';
-import AssessmentTable from './AssessmentTable.vue';
+import { AssessmentTaskContentTable } from './index';
 import { getAssessmentTaskStatistic } from '@/api/assessment_task.api';
 import { AssessmentTaskDetailDrawer } from './index';
 
@@ -194,7 +194,7 @@ const handleShowAssessmentTaskDetail = () => {
       size="small"
       :title="$t('pages.assessment_task.content')"
     />
-    <AssessmentTable :assessment="props.mdl" />
+    <AssessmentTaskContentTable :assessment="props.mdl" />
     <AssessmentTaskDetailDrawer
       v-model="assessmentTaskDetailDrawer.visible"
       :mdl="props.mdl"

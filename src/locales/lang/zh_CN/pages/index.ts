@@ -30,7 +30,8 @@ import operation from './lang.zh_cn.operation';
 import role from './lang.zh_cn.role';
 import system from './lang.zh_cn.system';
 import workOrder from './lang.zh_cn.work_order';
-import evaluationScoreDrawer from './lang.zh_cn.evaluationScoreDrawer';
+import evaluationScoreDrawer from './lang.zh_cn.evaluation-score-drawer';
+import assessmentTaskContentTable from './lang.zh_cn.assessment-task-content-table';
 
 export default {
   dashboardBase,
@@ -65,4 +66,5 @@ export default {
   system,
   workOrder,
   evaluationScoreDrawer,
+  assessmentTaskContentTable,
 };

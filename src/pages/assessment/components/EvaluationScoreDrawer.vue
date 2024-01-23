@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue';
 import { getDateString } from '@/utils';
-import { AssessmentTable } from './index';
+import { AssessmentTaskContentTable } from './index';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -75,7 +75,7 @@ const handleSaveAndSubmit = () => {};
       size="small"
       :title="$t('pages.evaluationScoreDrawer.content.title')"
     />
-    <AssessmentTable
+    <AssessmentTaskContentTable
       :assessment="props.mdl.assessmentTask"
       mode="evaluation"
     />
