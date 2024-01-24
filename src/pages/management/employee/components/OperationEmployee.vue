@@ -9,7 +9,7 @@ import { createWorkOrder } from '@/api/work_order';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
 import { EmployeeSexList, EmployeeStatus, EmployeeStatusList, WorkOrderType } from '@/constants';
-import {getDateString, getEmployeeStatus, getSchoolById, getSex} from '@/utils';
+import { getDateString, getEmployeeStatus, getSchoolById, getSex, recursiveFlat } from '@/utils';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -53,7 +53,7 @@ const form = ref<FormInstanceFunctions>();
 let { cloned: formData } = useCloned(props.mdl);
 
 const flatSchoolList = computed(() => {
-  return _.flatMapDeep(props.schoolList, (item: any) => [item, ...(item.children || [])]);
+  return recursiveFlat(props.schoolList);
 })
 
 watch(

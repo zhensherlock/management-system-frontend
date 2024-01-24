@@ -3,7 +3,8 @@ import { computed, nextTick, ref } from 'vue';
 import type { PrimaryTableCol } from 'tdesign-vue-next';
 import { t } from '@/locales';
 import _ from 'lodash';
-import {AssessmentScoreType} from '@/constants';
+import { AssessmentScoreType } from '@/constants';
+import { useCloned } from '@vueuse/core';
 
 const props = defineProps({
   assessment: {
@@ -14,11 +15,21 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  scoreContent: {
+    type: Object,
+    default: () => ({
+      totalScore: 0,
+      grade: null,
+      detail: {},
+    }),
+  },
   mode: {
     type: String,
     default: 'preview',
-  }
+  },
 });
+
+const { cloned: editScoreContent } = useCloned(props.scoreContent);
 
 const columns = ref<PrimaryTableCol[]>([
   { colKey: 'title', title: t('pages.assessmentTaskContentTable.table.title'), width: '20%' },
@@ -28,7 +39,7 @@ const columns = ref<PrimaryTableCol[]>([
 ]);
 
 const dataSource = computed(() => {
-  const content: any = props.assessment.content;
+  const content: { list: any[] } = props.assessment.content;
   if (!_.isObject(content)) {
     return [];
   }
@@ -69,7 +80,7 @@ const dataSource = computed(() => {
 
 const summaryFootDataSource = computed(() => {
   return [{
-    score: props.assessment.basicScore,
+    // score: props.assessment.basicScore,
   }];
 });
 
@@ -123,6 +134,28 @@ const handleShowEvaluation = (row: any) => {
 };
 
 const expandedRowKeys = ref([]);
+
+const totalScore = computed(() => {
+  return props.assessment.basicScore - totalSubtractScore.value + totalAddScore.value;
+});
+
+const totalSubtractScore = computed(() => {
+  return Object.values(editScoreContent.value.detail).reduce((pre: number, cur: any) => {
+    return pre + (cur.scoreType === AssessmentScoreType.Subtract ? cur.score : 0)
+  }, 0) as number;
+});
+
+const totalAddScore = computed(() => {
+  return Object.values(editScoreContent.value.detail).reduce((pre: number, cur: any) => {
+    return pre + (cur.scoreType === AssessmentScoreType.Add ? cur.score : 0)
+  }, 0) as number;
+});
+
+defineExpose({
+  getNewScoreContent: () => {
+    return editScoreContent.value;
+  },
+})
 </script>
 
 <template>
@@ -168,10 +201,6 @@ const expandedRowKeys = ref([]);
       :expanded-row-keys="expandedRowKeys"
       :expand-icon="false"
     >
-      <template #title="{ row }">
-        <div :id="`level-two-${row.parentId}`" v-if="row.level === 3">{{ row.title }}</div>
-        <template v-else>{{ row.title }}</template>
-      </template>
       <template #expandedRow="{ row }">
         <div class="evaluate-detail" :id="`evaluate-detail-${row.id}`" :data-level-two="row.parentId">
           <t-row :gutter="16">
@@ -180,7 +209,8 @@ const expandedRowKeys = ref([]);
                 class="m-b-8px"
                 size="small"
                 placeholder=""
-                :label="$t(`pages.assessmentTaskContentTable.table.scoreType.${row.scoreType === AssessmentScoreType.Add ? 'add' : 'subtract'}`)"
+                v-model="editScoreContent.detail[row.id].score"
+                :label="$t(`pages.assessmentTaskContentTable.scoreType.${row.scoreType === AssessmentScoreType.Add ? 'add' : 'subtract'}`)"
                 :max="row.maximumScore"
                 :min="0"
                 :inputProps="{
@@ -188,7 +218,8 @@ const expandedRowKeys = ref([]);
                 }"
               />
               <t-textarea
-                :placeholder="$t('pages.form.placeholder', { field: $t('pages.assessmentTaskContentTable.table.message') })"
+                v-model="editScoreContent.detail[row.id].message"
+                :placeholder="$t('pages.form.placeholder', { field: $t('pages.assessmentTaskContentTable.message') })"
                 :autosize="{ minRows: 3, maxRows: 5 }"
               />
             </t-col>
@@ -209,6 +240,26 @@ const expandedRowKeys = ref([]);
           </t-row>
         </div>
       </template>
+      <template #title="{ row }">
+        <div :id="`level-two-${row.parentId}`" v-if="row.level === 3">{{ row.title }}</div>
+        <template v-else>{{ row.title }}</template>
+      </template>
+      <template #score="{ row }">
+        <template v-if="props.mode === 'evaluation'">
+          <template v-if="editScoreContent.detail[row.id].score > 0">
+            <span class="t-link--theme-danger" v-if="row.scoreType === AssessmentScoreType.Add">
+              {{ $t('pages.assessmentTaskContentTable.score.add', { score: editScoreContent.detail[row.id].score }) }}
+            </span>
+            <span class="t-link--theme-success" v-if="row.scoreType === AssessmentScoreType.Subtract">
+              {{ $t('pages.assessmentTaskContentTable.score.subtract', { score: editScoreContent.detail[row.id].score }) }}
+            </span>
+          </template>
+          <template v-else>
+            {{ editScoreContent.detail[row.id].score }}
+          </template>
+        </template>
+        <tempalte v-else-if="props.mode === 'preview'">-</tempalte>
+      </template>
       <template #operation="{ row }" v-if="props.mode === 'evaluation'">
         <t-space align="center" :size="0">
           <t-link hover="color" theme="primary" @click="handleShowEvaluation(row)">
@@ -219,21 +270,51 @@ const expandedRowKeys = ref([]);
           </template>
         </t-space>
       </template>
+      <template #footerSummary v-if="['evaluation', 'check'].includes(props.mode)">
+        <div class="text-center">
+          <i18n-t keypath="pages.assessmentTaskContentTable.summary">
+            <template #totalScore>
+              <span class="t-link--theme-primary" v-if="props.mode === 'check'">{{ editScoreContent.totalScore }}</span>
+              <span class="t-link--theme-primary" v-else-if="props.mode === 'evaluation'">{{ totalScore }}</span>
+            </template>
+            <template #totalSubtractScore>
+              <span class="t-link--theme-success" v-if="props.mode === 'check'">{{ editScoreContent.totalSubtractScore }}</span>
+              <span class="t-link--theme-success" v-else-if="props.mode === 'evaluation'">{{ totalSubtractScore }}</span>
+            </template>
+            <template #totalAddScore>
+              <span class="t-link--theme-danger" v-if="props.mode === 'check'">{{ editScoreContent.totalAddScore }}</span>
+              <span class="t-link--theme-danger" v-else-if="props.mode === 'evaluation'">{{ totalAddScore }}</span>
+            </template>
+          </i18n-t>
+        </div>
+      </template>
     </t-table>
   </div>
 </template>
 
 <style scoped lang="less">
 .t-table {
-  :deep {
-    .t-table__expanded-row {
-      td[colspan="4"] {
-        border-left: none;
-      }
+  :deep(.t-table__expanded-row) {
+    td[colspan="4"] {
+      border-left: none;
+    }
 
-      .t-table__row-full-element {
-        padding: 0;
-      }
+    .t-table__row-full-element {
+      padding: 0;
+    }
+  }
+
+  :deep(.t-table__footer) {
+    tr:not(.t-table__row--full) {
+      display: none;
+    }
+
+    td {
+      padding: 0;
+    }
+
+    .t-table__row-full-element {
+      padding: var(--td-comp-paddingTB-s) var(--td-comp-paddingLR-s);
     }
   }
 }
@@ -253,6 +334,7 @@ const expandedRowKeys = ref([]);
 :deep(.t-table__affixed-footer-wrap) {
   td:first-child {
     border-left: none;
+    border-bottom: none;
   }
 }
 </style>

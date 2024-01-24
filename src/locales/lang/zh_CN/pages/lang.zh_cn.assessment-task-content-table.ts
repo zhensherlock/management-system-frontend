@@ -6,10 +6,15 @@ export default {
     operation: {
       evaluation: '评分',
     },
-    scoreType: {
-      add: '加',
-      subtract: '扣',
-    },
-    message: '说明',
+  },
+  scoreType: {
+    add: '加',
+    subtract: '扣',
+  },
+  message: '说明',
+  summary: '总分：{totalScore}，扣分：{totalSubtractScore}，加分：{totalAddScore}',
+  score: {
+    add: '加 {score} 分',
+    subtract: '扣 {score} 分',
   },
 };

@@ -1,4 +1,5 @@
 export default {
+  save: '保存成功！',
   create: '新建成功！',
   update: '修改成功！',
   delete: '删除成功！',

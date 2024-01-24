@@ -12,3 +12,13 @@ export const recursiveMap = <T, U>(array: T[], iteratee: (item: T) => U, childre
     }
   });
 }
+
+export const recursiveFlat = <T>(list: T[], childrenKey = 'children', result: T[] = []) => {
+  list.forEach(item => {
+    result.push(item);
+    if (_.isArray((item as any)[childrenKey])) {
+      recursiveFlat((item as any)[childrenKey], childrenKey, result);
+    }
+  });
+  return result;
+};

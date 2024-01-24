@@ -108,7 +108,7 @@ const handleEditSubmit = () => {
   updateAssessmentTask(formData.value.id, params).then(() => {
     emits('refresh-list');
     handleClose();
-    MessagePlugin.success(t('pages.message.update'));
+    MessagePlugin.success(t('pages.message.save'));
   }).finally(() => {
     saveDraft.loading = false;
     saveAndPublic.loading = false;
@@ -130,7 +130,7 @@ const handleCreateSubmit = () => {
   createAssessmentTask(params).then(() => {
     emits('refresh-list');
     handleClose();
-    MessagePlugin.success(t('pages.message.create'));
+    MessagePlugin.success(t('pages.message.save'));
   }).finally(() => {
     saveDraft.loading = false;
     saveAndPublic.loading = false;

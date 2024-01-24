@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { reactive, watch } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import { getDateString } from '@/utils';
 import { AssessmentTaskContentTable } from './index';
+import { evaluationScore } from '@/api/assessment_task_detail.api';
+import {MessagePlugin} from 'tdesign-vue-next';
+import {t} from '@/locales';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -22,6 +25,8 @@ watch(
   },
 );
 
+const assessmentTaskContentTableRef = ref();
+
 const handleClose = () => {
   emits('update:modelValue', false);
 };
@@ -34,7 +39,16 @@ const saveAndSubmit = reactive({
   loading: false,
 });
 
-const handleSaveDraft = () => {};
+const handleSaveDraft = () => {
+  saveDraft.loading = true;
+  evaluationScore(props.mdl.id, {
+    isDraft: true,
+    scoreContent: assessmentTaskContentTableRef.value.getNewScoreContent(),
+  }).finally(() => {
+    MessagePlugin.success(t('pages.message.save'));
+    saveDraft.loading = false;
+  });
+};
 
 const handleSaveAndSubmit = () => {};
 </script>
@@ -76,8 +90,11 @@ const handleSaveAndSubmit = () => {};
       :title="$t('pages.evaluationScoreDrawer.content.title')"
     />
     <AssessmentTaskContentTable
+      ref="assessmentTaskContentTableRef"
+      v-if="props.mdl.assessmentTask"
       :assessment="props.mdl.assessmentTask"
       :assessment-task-detail="props.mdl"
+      :score-content="props.mdl.scoreContent"
       mode="evaluation"
     />
     <template #footer>

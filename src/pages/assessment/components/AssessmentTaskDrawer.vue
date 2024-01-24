@@ -246,10 +246,8 @@ const handleShowAssessmentTaskDetail = () => {
 .progress {
   position: relative;
   bottom: -1px;
-  :deep {
-    .t-progress__bar {
-      border-radius: 0 0 var(--td-radius-medium) var(--td-radius-medium);
-    }
+  :deep(.t-progress__bar) {
+    border-radius: 0 0 var(--td-radius-medium) var(--td-radius-medium);
 
     .t-progress__inner {
       border-radius: 0 0 0 var(--td-radius-medium);
