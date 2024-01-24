@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import {computed, nextTick, ref} from 'vue';
+import { computed, nextTick, ref } from 'vue';
 import type { PrimaryTableCol } from 'tdesign-vue-next';
 import { t } from '@/locales';
 import _ from 'lodash';
+import {AssessmentScoreType} from '@/constants';
 
 const props = defineProps({
   assessment: {
+    type: Object,
+    default: () => ({}),
+  },
+  assessmentTaskDetail: {
     type: Object,
     default: () => ({}),
   },
@@ -16,9 +21,9 @@ const props = defineProps({
 });
 
 const columns = ref<PrimaryTableCol[]>([
-  { colKey: 'title', title: t('pages.assessment_task.contentTable.title'), width: '20%' },
-  { colKey: 'desc', title: t('pages.assessment_task.contentTable.desc') },
-  { colKey: 'score', title: t('pages.assessment_task.contentTable.score'), width: '8%', align: 'center' },
+  { colKey: 'title', title: t('pages.assessmentTaskContentTable.table.title'), width: '20%' },
+  { colKey: 'desc', title: t('pages.assessmentTaskContentTable.table.desc') },
+  { colKey: 'score', title: t('pages.assessmentTaskContentTable.table.score'), width: '8%', align: 'center' },
   { colKey: 'operation', title: t('pages.record.operation.label'), width: '8%', align: 'center' },
 ]);
 
@@ -44,7 +49,11 @@ const dataSource = computed(() => {
           title: levelTwoItem.title,
           desc: levelThreeItem.title,
           needToScore: true,
+          needUpdateAttribute: levelTwoItem.children.length > 1,
           level: 3,
+          parentId: levelThreeItem.parentId,
+          maximumScore: levelThreeItem.maximumScore,
+          scoreType: levelThreeItem.scoreType,
           ...(levelTreeIndex === 0 && {
             mergeParams: {
               rowspan: levelTwoItem.children?.length || 1,
@@ -88,18 +97,32 @@ const handleShowEvaluation = (row: any) => {
   const index = expandedRowKeys.value.indexOf(row.id)
   if (index > -1) {
     expandedRowKeys.value.splice(index, 1);
+
+    row.needUpdateAttribute && nextTick(() => {
+      // 将二级标题的rowspan进行减一
+      const levelTwoTitleDom = document.querySelector(`#level-two-${row.parentId}`);
+      const levelTwoTitleTDDom = levelTwoTitleDom.closest('td');
+      const levelTwoTitleTDRowspan = parseInt(levelTwoTitleTDDom.getAttribute('rowspan'));
+      levelTwoTitleTDDom.setAttribute('rowspan', String(levelTwoTitleTDRowspan - 1));
+    })
   } else {
     expandedRowKeys.value.push(row.id);
-  }
 
-  nextTick(() => {})
+    row.needUpdateAttribute && nextTick(() => {
+      // 将展开DOM所在td的colspan设置成3
+      const evaluateDetailDom = document.querySelector(`#evaluate-detail-${row.id}`);
+      // evaluateDetailDom.scrollIntoView({ block: 'nearest' });
+      evaluateDetailDom.closest('td').setAttribute('colspan', '3');
+      // 将二级标题的rowspan进行加一
+      const levelTwoTitleDom = document.querySelector(`#level-two-${row.parentId}`);
+      const levelTwoTitleTDDom = levelTwoTitleDom.closest('td');
+      const levelTwoTitleTDRowspan = parseInt(levelTwoTitleTDDom.getAttribute('rowspan'));
+      levelTwoTitleTDDom.setAttribute('rowspan', String(levelTwoTitleTDRowspan + 1));
+    })
+  }
 };
 
 const expandedRowKeys = ref([]);
-const handleExpandChange = (value, params) => {
-  expandedRowKeys.value = value;
-  console.log('handleExpandChange', value, params);
-};
 </script>
 
 <template>
@@ -145,15 +168,51 @@ const handleExpandChange = (value, params) => {
       :expanded-row-keys="expandedRowKeys"
       :expand-icon="false"
     >
+      <template #title="{ row }">
+        <div :id="`level-two-${row.parentId}`" v-if="row.level === 3">{{ row.title }}</div>
+        <template v-else>{{ row.title }}</template>
+      </template>
       <template #expandedRow="{ row }">
-        <div class="more-detail">
-          <p class="title"><b>集群名称:</b></p>
+        <div class="evaluate-detail" :id="`evaluate-detail-${row.id}`" :data-level-two="row.parentId">
+          <t-row :gutter="16">
+            <t-col :flex="3">
+              <t-input-number
+                class="m-b-8px"
+                size="small"
+                placeholder=""
+                :label="$t(`pages.assessmentTaskContentTable.table.scoreType.${row.scoreType === AssessmentScoreType.Add ? 'add' : 'subtract'}`)"
+                :max="row.maximumScore"
+                :min="0"
+                :inputProps="{
+                  autofocus: true,
+                }"
+              />
+              <t-textarea
+                :placeholder="$t('pages.form.placeholder', { field: $t('pages.assessmentTaskContentTable.table.message') })"
+                :autosize="{ minRows: 3, maxRows: 5 }"
+              />
+            </t-col>
+            <t-col :flex="3">
+<!--              <t-upload-->
+<!--                multiple-->
+<!--                placeholder="支持批量上传图片文件"-->
+<!--                theme="image-flow"-->
+<!--                :request-method="requestMethod1"-->
+<!--                :auto-upload="autoUpload"-->
+<!--                :show-image-file-name="showImageFileName"-->
+<!--                :max="8"-->
+<!--                :abridge-name="[6, 6]"-->
+<!--                :upload-button="showUploadButton ? undefined : null"-->
+<!--                :cancel-upload-button="showUploadButton ? { theme: 'default', content: '取消上传' } : null"-->
+<!--              ></t-upload>-->
+            </t-col>
+          </t-row>
         </div>
       </template>
       <template #operation="{ row }" v-if="props.mode === 'evaluation'">
         <t-space align="center" :size="0">
           <t-link hover="color" theme="primary" @click="handleShowEvaluation(row)">
-            {{ $t('pages.assessment_task.contentTable.operation.evaluation') }}
+            {{ $t('pages.assessmentTaskContentTable.table.operation.evaluation') }}
           </t-link>
           <template #separator>
             <t-divider layout="vertical" />
@@ -165,6 +224,20 @@ const handleExpandChange = (value, params) => {
 </template>
 
 <style scoped lang="less">
+.t-table {
+  :deep {
+    .t-table__expanded-row {
+      td[colspan="4"] {
+        border-left: none;
+      }
+
+      .t-table__row-full-element {
+        padding: 0;
+      }
+    }
+  }
+}
+
 :deep(.t-affix .t-table__affixed-footer-elm) {
   &:after {
     position: absolute;

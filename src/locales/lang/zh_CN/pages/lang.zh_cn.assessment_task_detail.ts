@@ -4,6 +4,9 @@ export default {
     status: '状态',
     score: '分数',
     submitDate: '提交时间',
+    operation: {
+      evaluation: '评分',
+    },
   },
   statusMap: {
     pending: '未提交',

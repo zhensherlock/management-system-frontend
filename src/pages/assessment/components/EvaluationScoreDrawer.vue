@@ -77,6 +77,7 @@ const handleSaveAndSubmit = () => {};
     />
     <AssessmentTaskContentTable
       :assessment="props.mdl.assessmentTask"
+      :assessment-task-detail="props.mdl"
       mode="evaluation"
     />
     <template #footer>

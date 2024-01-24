@@ -42,14 +42,6 @@ export default {
   process: {
     title: '考核进度',
   },
-  contentTable: {
-    title: '考核项目',
-    desc: '考核内容',
-    score: '分数',
-    operation: {
-      evaluation: '评分',
-    },
-  },
   statistic: {
     header: {
       total: '参与考核学校总数',
