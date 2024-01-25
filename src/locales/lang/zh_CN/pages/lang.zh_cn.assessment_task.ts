@@ -50,7 +50,7 @@ export default {
       returned: '已退回数量',
       donePercentage: '完成率',
       schoolUnit: '所',
-      detailButton: '考核任务明细',
+      detailButton: '考核任务明细列表',
     },
   },
   done: {

@@ -35,15 +35,14 @@
       </template>
       <div v-else class="data-card-table" ref="tableParentElement">
         <t-table
-          ref="tableElement"
           bordered
           hover
+          ref="tableElement"
           cell-empty-content="-"
           size="small"
+          row-key="id"
           :data="dataSource"
           :columns="columns"
-          :row-key="rowKey"
-          :vertical-align="verticalAlign"
           :pagination="pagination"
           :loading="loading"
           :loadingProps="loadingProps"
@@ -148,12 +147,10 @@ const fetchData = async () => {
 const columns = ref<PrimaryTableCol[]>([
   { colKey: 'title', title: t('pages.assessment_task.title'), minWidth: 200 },
   { colKey: 'date', title: t('pages.assessment_task.date'), minWidth: 220, align: 'center' },
-  { colKey: 'status', title: t('pages.assessment_task.status'), minWidth: 90, align: 'center' },
-  { colKey: 'basicScore', title: t('pages.assessment_task.basicScore'), minWidth: 100, align: 'center' },
+  { colKey: 'status', title: t('pages.assessment_task.status'), width: 100, align: 'center' },
+  { colKey: 'basicScore', title: t('pages.assessment_task.basicScore'), width: 100, align: 'center' },
   { colKey: 'operation', title: t('pages.record.operation.label'), width: 100, align: 'center' },
 ]);
-const rowKey = 'index';
-const verticalAlign = 'top' as const;
 const total = ref(0);
 const loading = ref(true);
 

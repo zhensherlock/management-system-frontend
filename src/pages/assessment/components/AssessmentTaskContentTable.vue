@@ -11,10 +11,6 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
-  assessmentTaskDetail: {
-    type: Object,
-    default: () => ({}),
-  },
   scoreContent: {
     type: Object,
     default: () => ({
@@ -245,7 +241,7 @@ defineExpose({
         <template v-else>{{ row.title }}</template>
       </template>
       <template #score="{ row }">
-        <template v-if="props.mode === 'evaluation'">
+        <template v-if="['evaluation', 'review'].includes(props.mode)">
           <template v-if="editScoreContent.detail[row.id].score > 0">
             <span class="t-link--theme-danger" v-if="row.scoreType === AssessmentScoreType.Add">
               {{ $t('pages.assessmentTaskContentTable.score.add', { score: editScoreContent.detail[row.id].score }) }}
@@ -270,20 +266,24 @@ defineExpose({
           </template>
         </t-space>
       </template>
-      <template #footerSummary v-if="['evaluation', 'check'].includes(props.mode)">
+      <template #footerSummary v-if="['evaluation', 'review'].includes(props.mode)">
         <div class="text-center">
           <i18n-t keypath="pages.assessmentTaskContentTable.summary">
             <template #totalScore>
-              <span class="t-link--theme-primary" v-if="props.mode === 'check'">{{ editScoreContent.totalScore }}</span>
+              <span class="t-link--theme-primary" v-if="props.mode === 'review'">{{ editScoreContent.totalScore }}</span>
               <span class="t-link--theme-primary" v-else-if="props.mode === 'evaluation'">{{ totalScore }}</span>
             </template>
             <template #totalSubtractScore>
-              <span class="t-link--theme-success" v-if="props.mode === 'check'">{{ editScoreContent.totalSubtractScore }}</span>
+              <span class="t-link--theme-success" v-if="props.mode === 'review'">{{ editScoreContent.totalSubtractScore }}</span>
               <span class="t-link--theme-success" v-else-if="props.mode === 'evaluation'">{{ totalSubtractScore }}</span>
             </template>
             <template #totalAddScore>
-              <span class="t-link--theme-danger" v-if="props.mode === 'check'">{{ editScoreContent.totalAddScore }}</span>
+              <span class="t-link--theme-danger" v-if="props.mode === 'review'">{{ editScoreContent.totalAddScore }}</span>
               <span class="t-link--theme-danger" v-else-if="props.mode === 'evaluation'">{{ totalAddScore }}</span>
+            </template>
+            <template #grade>
+              <span class="t-link--theme-danger" v-if="props.mode === 'review'">{{ editScoreContent.grade }}</span>
+              <span class="t-link--theme-danger" v-else-if="props.mode === 'evaluation'">{{ '-' }}</span>
             </template>
           </i18n-t>
         </div>

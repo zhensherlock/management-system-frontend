@@ -8,6 +8,12 @@ export default {
     basicScore: '考核基础分',
     description: '考核任务简介',
   },
+  submit: {
+    title: '评分信息',
+    user: '评分用户',
+    time: '评分时间',
+    result: '评分结果',
+  },
   content: {
     title: '考核内容',
   },

@@ -9,7 +9,7 @@ import {
 } from '@/utils';
 import { AssessmentTaskContentTable } from './index';
 import { getAssessmentTaskStatistic } from '@/api/assessment_task.api';
-import { AssessmentTaskDetailDrawer } from './index';
+import { AssessmentTaskDetailListDrawer } from './index';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -69,12 +69,12 @@ const gradeSetting = reactive({
   ] as PrimaryTableCol[],
 });
 
-const assessmentTaskDetailDrawer = reactive({
+const assessmentTaskDetailListDrawer = reactive({
   visible: false,
 });
 
 const handleShowAssessmentTaskDetail = () => {
-  assessmentTaskDetailDrawer.visible = true;
+  assessmentTaskDetailListDrawer.visible = true;
 };
 </script>
 <template>
@@ -195,10 +195,7 @@ const handleShowAssessmentTaskDetail = () => {
       :title="$t('pages.assessment_task.content')"
     />
     <AssessmentTaskContentTable :assessment="props.mdl" />
-    <AssessmentTaskDetailDrawer
-      v-model="assessmentTaskDetailDrawer.visible"
-      :mdl="props.mdl"
-    />
+    <AssessmentTaskDetailListDrawer v-model="assessmentTaskDetailListDrawer.visible" :mdl="props.mdl" />
     <template #footer>
       <t-button>
         {{ $t('pages.assessment_task.done.button') }}

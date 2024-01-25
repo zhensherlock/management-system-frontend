@@ -1,4 +1,5 @@
 export default {
+  submit: '提交成功！',
   save: '保存成功！',
   create: '新建成功！',
   update: '修改成功！',

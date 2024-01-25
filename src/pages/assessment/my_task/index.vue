@@ -42,7 +42,6 @@
           ref="tableElement"
           cell-empty-content="-"
           size="small"
-          vertical-align="top"
           :key="tableKey"
           :data="dataSource"
           :columns="columns"
@@ -68,8 +67,21 @@
           </template>
           <template #operation="{ row }">
             <t-space align="center" :size="0">
-              <t-link hover="color" theme="primary" @click="handleShowEvaluationScore(row)">
+              <t-link
+                hover="color"
+                theme="primary"
+                @click="handleShowEvaluationScore(row)"
+                v-if="[AssessmentTaskDetailStatus.Pending, AssessmentTaskDetailStatus.Returned].includes(row.status)"
+              >
                 {{ $t('pages.assessmentTaskDetail.table.operation.evaluation') }}
+              </t-link>
+              <t-link
+                hover="color"
+                theme="primary"
+                @click="handleShowEvaluationScore(row)"
+                v-else-if="[AssessmentTaskDetailStatus.Submitted, AssessmentTaskDetailStatus.Done].includes(row.status)"
+              >
+                {{ $t('pages.record.operation.detail') }}
               </t-link>
               <template #separator>
                 <t-divider layout="vertical" />
@@ -82,6 +94,7 @@
     <EvaluationScoreDrawer
       v-model="evaluationScoreDrawer.visible"
       :mdl="evaluationScoreDrawer.mdl"
+      @refresh-list="handleRefreshList"
     />
   </div>
 </template>
@@ -98,7 +111,8 @@ import { getMyAssessmentTaskDetailList } from '@/api/assessment_task_detail.api'
 import { useTable } from '@/composeable/useTable';
 import { t } from '@/locales';
 import { getAssessmentTaskDetailStatus, getAssessmentTaskDetailStatusTheme, getDateString } from '@/utils';
-import { EvaluationScoreDrawer } from '../components';
+import {EvaluationScoreDrawer} from '../components';
+import { AssessmentTaskDetailStatus } from '@/constants';
 
 const { pageTitle } = usePage();
 const tableParentElement = ref(null);

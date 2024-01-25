@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue';
+import {computed, reactive, ref, watch} from 'vue';
 import { getDateString } from '@/utils';
 import { AssessmentTaskContentTable } from './index';
 import { evaluationScore } from '@/api/assessment_task_detail.api';
 import {MessagePlugin} from 'tdesign-vue-next';
 import {t} from '@/locales';
+import {AssessmentTaskDetailStatus} from '@/constants';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -14,7 +15,7 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(['update:modelValue']);
+const emits = defineEmits(['update:modelValue', 'refresh-list']);
 
 watch(
   () => props.modelValue,
@@ -41,16 +42,36 @@ const saveAndSubmit = reactive({
 
 const handleSaveDraft = () => {
   saveDraft.loading = true;
+  const scoreContent = assessmentTaskContentTableRef.value.getNewScoreContent();
   evaluationScore(props.mdl.id, {
     isDraft: true,
-    scoreContent: assessmentTaskContentTableRef.value.getNewScoreContent(),
-  }).finally(() => {
+    scoreContent,
+  }).then(() => {
+    props.mdl.scoreContent = scoreContent;
     MessagePlugin.success(t('pages.message.save'));
+  }).finally(() => {
     saveDraft.loading = false;
   });
 };
 
-const handleSaveAndSubmit = () => {};
+const handleSaveAndSubmit = () => {
+  saveAndSubmit.loading = true;
+  const scoreContent = assessmentTaskContentTableRef.value.getNewScoreContent();
+  evaluationScore(props.mdl.id, {
+    isDraft: false,
+    scoreContent,
+  }).then(() => {
+    emits('refresh-list');
+    handleClose();
+    MessagePlugin.success(t('pages.message.submit'));
+  }).finally(() => {
+    saveAndSubmit.loading = false;
+  });
+};
+
+const editable = computed(() => {
+  return [AssessmentTaskDetailStatus.Pending, AssessmentTaskDetailStatus.Returned].includes(props.mdl.status);
+})
 </script>
 <template>
   <t-drawer
@@ -64,6 +85,7 @@ const handleSaveAndSubmit = () => {};
     size="1000px"
     @close="handleClose"
     class="task-detail-drawer"
+    :footer="editable"
   >
     <template #header v-if="props.mdl.assessmentTask">
       {{ props.mdl.assessmentTask.title }} - {{ $t('pages.evaluationScoreDrawer.header.suffix') }}
@@ -86,6 +108,36 @@ const handleSaveAndSubmit = () => {};
       </t-descriptions-item>
     </t-descriptions>
     <t-descriptions
+      bordered
+      size="small"
+      :column="2"
+      :title="$t('pages.evaluationScoreDrawer.submit.title')"
+      v-if="!editable && props.mdl.submitUser"
+    >
+      <t-descriptions-item :label="$t('pages.evaluationScoreDrawer.submit.user')">
+        {{ props.mdl.submitUser.realName }}({{ props.mdl.submitUser.name }})
+      </t-descriptions-item>
+      <t-descriptions-item :label="$t('pages.evaluationScoreDrawer.submit.time')">
+        {{ props.mdl.submitDate }}
+      </t-descriptions-item>
+      <t-descriptions-item :label="$t('pages.evaluationScoreDrawer.submit.result')" :span="2">
+        <i18n-t keypath="pages.assessmentTaskContentTable.summary">
+          <template #totalScore>
+            <span class="t-link--theme-primary">{{ props.mdl.totalScore }}</span>
+          </template>
+          <template #totalSubtractScore>
+            <span class="t-link--theme-success">{{ props.mdl.totalSubtractScore }}</span>
+          </template>
+          <template #totalAddScore>
+            <span class="t-link--theme-danger">{{ props.mdl.totalAddScore }}</span>
+          </template>
+          <template #grade>
+            <span class="t-link--theme-warning">{{ props.mdl.grade }}</span>
+          </template>
+        </i18n-t>
+      </t-descriptions-item>
+    </t-descriptions>
+    <t-descriptions
       size="small"
       :title="$t('pages.evaluationScoreDrawer.content.title')"
     />
@@ -93,11 +145,11 @@ const handleSaveAndSubmit = () => {};
       ref="assessmentTaskContentTableRef"
       v-if="props.mdl.assessmentTask"
       :assessment="props.mdl.assessmentTask"
-      :assessment-task-detail="props.mdl"
       :score-content="props.mdl.scoreContent"
-      mode="evaluation"
+      :editable="editable"
+      :mode="editable ? 'evaluation' : 'review'"
     />
-    <template #footer>
+    <template #footer v-if="editable">
       <t-button variant="outline" @click="handleSaveDraft" :loading="saveDraft.loading">
         {{ $t('pages.evaluationScoreDrawer.evaluation.save.draft') }}
       </t-button>
@@ -126,6 +178,11 @@ const handleSaveAndSubmit = () => {};
 
   :deep(.t-descriptions__label) {
     background-color: #F2F9FC;
+    width: 20%;
+  }
+
+  :deep(.t-descriptions__content) {
+    width: 30%;
   }
 }
 

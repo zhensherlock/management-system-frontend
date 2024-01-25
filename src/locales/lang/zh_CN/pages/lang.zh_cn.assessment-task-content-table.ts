@@ -12,7 +12,7 @@ export default {
     subtract: '扣',
   },
   message: '说明',
-  summary: '总分：{totalScore}，扣分：{totalSubtractScore}，加分：{totalAddScore}',
+  summary: '总分：{totalScore}，扣分：{totalSubtractScore}，加分：{totalAddScore}，等级：{grade}',
   score: {
     add: '加 {score} 分',
     subtract: '扣 {score} 分',
