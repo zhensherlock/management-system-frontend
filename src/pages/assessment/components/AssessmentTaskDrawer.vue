@@ -99,21 +99,18 @@ const handleShowAssessmentTaskDetail = () => {
       :column="2"
       :title="$t('pages.assessment_task.form.basic.title')"
     >
-      <t-descriptions-item :label="$t('pages.assessment_task.title')">
-        {{ props.mdl.title || '-' }}
-      </t-descriptions-item>
-      <t-descriptions-item :label="$t('pages.assessment_task.date')">
-        {{ getDateString(props.mdl.startDate) }} 至 {{ getDateString(props.mdl.endDate) }}
-      </t-descriptions-item>
       <t-descriptions-item :label="$t('pages.assessment_task.status')">
         <t-tag :theme="getAssessmentTaskStatusTheme(props.mdl.status)" variant="light-outline">
           {{ getAssessmentTaskStatus(props.mdl.status) }}
         </t-tag>
       </t-descriptions-item>
+      <t-descriptions-item :label="$t('pages.assessment_task.date')">
+        {{ getDateString(props.mdl.startDate) }} 至 {{ getDateString(props.mdl.endDate) }}
+      </t-descriptions-item>
       <t-descriptions-item :label="$t('pages.assessment_task.basicScore')">
         {{ props.mdl.basicScore }}
       </t-descriptions-item>
-      <t-descriptions-item :label="$t('pages.assessment_task.description')" :span="2">
+      <t-descriptions-item :label="$t('pages.assessment_task.description')">
         {{ props.mdl.description || '-' }}
       </t-descriptions-item>
     </t-descriptions>

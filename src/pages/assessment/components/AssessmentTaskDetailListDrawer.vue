@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import {reactive, ref, watch} from 'vue';
+import { reactive, ref, watch } from 'vue';
 import { getAssessmentTaskDetails } from '@/api/assessment_task.api';
 import type { PrimaryTableCol } from 'tdesign-vue-next';
 import { t } from '@/locales';
 import { getAssessmentTaskDetailStatus, getAssessmentTaskDetailStatusTheme } from '@/utils';
-import { EvaluationScoreDrawer } from './index';
+import { AssessmentTaskDetailInfoDrawer } from './index';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -50,14 +50,14 @@ const fetchData = async () => {
   }
 }
 
-const evaluationScoreDrawer = reactive({
+const assessmentTaskDetailInfoDrawer = reactive({
   visible: false,
   mdl: undefined,
 });
 
 const handleShowInfo = (mdl: any) => {
-  evaluationScoreDrawer.visible = true;
-  evaluationScoreDrawer.mdl = mdl;
+  assessmentTaskDetailInfoDrawer.visible = true;
+  assessmentTaskDetailInfoDrawer.mdl = mdl;
 }
 
 const handleClose = () => {
@@ -89,8 +89,6 @@ const handleClose = () => {
       :columns="columns"
       :data="dataSource"
       :loading="loading"
-      :filter-value="filterValue"
-      @filter-change="onFilterChange"
     >
       <template #school="{ row }">
         {{ row.receiveSchoolOrganization.name }}
@@ -128,9 +126,9 @@ const handleClose = () => {
         </t-space>
       </template>
     </t-table>
-    <EvaluationScoreDrawer
-      v-model="evaluationScoreDrawer.visible"
-      :mdl="evaluationScoreDrawer.mdl"
+    <AssessmentTaskDetailInfoDrawer
+      v-model="assessmentTaskDetailInfoDrawer.visible"
+      :mdl="assessmentTaskDetailInfoDrawer.mdl"
     />
   </t-drawer>
 </template>

@@ -5,7 +5,6 @@ import { AssessmentTaskContentTable } from './index';
 import { evaluationScore } from '@/api/assessment_task_detail.api';
 import {MessagePlugin} from 'tdesign-vue-next';
 import {t} from '@/locales';
-import {AssessmentTaskDetailStatus} from '@/constants';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -32,46 +31,22 @@ const handleClose = () => {
   emits('update:modelValue', false);
 };
 
-const saveDraft = reactive({
+const fallbackButton = reactive({
   loading: false,
 });
 
-const saveAndSubmit = reactive({
-  loading: false,
-});
-
-const handleSaveDraft = () => {
-  saveDraft.loading = true;
-  const scoreContent = assessmentTaskContentTableRef.value.getNewScoreContent();
-  evaluationScore(props.mdl.id, {
-    isDraft: true,
-    scoreContent,
-  }).then(() => {
-    props.mdl.scoreContent = scoreContent;
-    MessagePlugin.success(t('pages.message.save'));
-  }).finally(() => {
-    saveDraft.loading = false;
-  });
-};
-
-const handleSaveAndSubmit = () => {
-  saveAndSubmit.loading = true;
-  const scoreContent = assessmentTaskContentTableRef.value.getNewScoreContent();
+const handleFallback = () => {
+  fallbackButton.loading = true;
   evaluationScore(props.mdl.id, {
     isDraft: false,
-    scoreContent,
   }).then(() => {
     emits('refresh-list');
     handleClose();
     MessagePlugin.success(t('pages.message.submit'));
   }).finally(() => {
-    saveAndSubmit.loading = false;
+    fallbackButton.loading = false;
   });
 };
-
-const editable = computed(() => {
-  return [AssessmentTaskDetailStatus.Pending, AssessmentTaskDetailStatus.Returned].includes(props.mdl.status);
-})
 </script>
 <template>
   <t-drawer
@@ -85,30 +60,29 @@ const editable = computed(() => {
     size="1000px"
     @close="handleClose"
     class="task-detail-drawer"
-    :footer="editable"
   >
     <template #header v-if="props.mdl.assessmentTask">
-      {{ props.mdl.assessmentTask.title }} - {{ $t('pages.evaluationScoreDrawer.header.suffix') }}
+      {{ props.mdl.assessmentTask.title }} - {{ $t('pages.assessmentTaskDetailInfoDrawer.header.suffix') }}
     </template>
     <t-descriptions
       bordered
       size="small"
       :column="2"
-      :title="$t('pages.evaluationScoreDrawer.basic.title')"
+      :title="$t('pages.assessmentTaskDetailInfoDrawer.basic.title')"
       v-if="props.mdl.assessmentTask"
     >
-      <t-descriptions-item :label="$t('pages.evaluationScoreDrawer.basic.status')">
+      <t-descriptions-item :label="$t('pages.assessmentTaskDetailInfoDrawer.basic.status')">
         <t-tag :theme="getAssessmentTaskStatusTheme(props.mdl.assessmentTask.status)" variant="light-outline">
           {{ getAssessmentTaskStatus(props.mdl.assessmentTask.status) }}
         </t-tag>
       </t-descriptions-item>
-      <t-descriptions-item :label="$t('pages.evaluationScoreDrawer.basic.date')">
+      <t-descriptions-item :label="$t('pages.assessmentTaskDetailInfoDrawer.basic.date')">
         {{ getDateString(props.mdl.assessmentTask.startDate) }} 至 {{ getDateString(props.mdl.assessmentTask.endDate) }}
       </t-descriptions-item>
-      <t-descriptions-item :label="$t('pages.evaluationScoreDrawer.basic.basicScore')">
+      <t-descriptions-item :label="$t('pages.assessmentTaskDetailInfoDrawer.basic.basicScore')">
         {{ props.mdl.assessmentTask.basicScore }}
       </t-descriptions-item>
-      <t-descriptions-item :label="$t('pages.evaluationScoreDrawer.basic.description')">
+      <t-descriptions-item :label="$t('pages.assessmentTaskDetailInfoDrawer.basic.description')">
         {{ props.mdl.assessmentTask.description || '-' }}
       </t-descriptions-item>
     </t-descriptions>
@@ -116,16 +90,16 @@ const editable = computed(() => {
       bordered
       size="small"
       :column="2"
-      :title="$t('pages.evaluationScoreDrawer.submit.title')"
-      v-if="!editable && props.mdl.submitUser"
+      :title="$t('pages.assessmentTaskDetailInfoDrawer.submit.title')"
+      v-if="props.mdl.submitUser"
     >
-      <t-descriptions-item :label="$t('pages.evaluationScoreDrawer.submit.user')">
+      <t-descriptions-item :label="$t('pages.assessmentTaskDetailInfoDrawer.submit.user')">
         {{ props.mdl.submitUser.realName }}({{ props.mdl.submitUser.name }})
       </t-descriptions-item>
-      <t-descriptions-item :label="$t('pages.evaluationScoreDrawer.submit.time')">
+      <t-descriptions-item :label="$t('pages.assessmentTaskDetailInfoDrawer.submit.time')">
         {{ props.mdl.submitDate }}
       </t-descriptions-item>
-      <t-descriptions-item :label="$t('pages.evaluationScoreDrawer.submit.result')" :span="2">
+      <t-descriptions-item :label="$t('pages.assessmentTaskDetailInfoDrawer.submit.result')" :span="2">
         <i18n-t keypath="pages.assessmentTaskContentTable.summary">
           <template #totalScore>
             <span class="t-link--theme-primary">{{ props.mdl.totalScore }}</span>
@@ -144,25 +118,22 @@ const editable = computed(() => {
     </t-descriptions>
     <t-descriptions
       size="small"
-      :title="$t('pages.evaluationScoreDrawer.content.title')"
+      :title="$t('pages.assessmentTaskDetailInfoDrawer.content.title')"
     />
     <AssessmentTaskContentTable
       ref="assessmentTaskContentTableRef"
       v-if="props.mdl.assessmentTask"
       :assessment="props.mdl.assessmentTask"
       :score-content="props.mdl.scoreContent"
-      :mode="editable ? 'evaluation' : 'review'"
+      mode="review"
     />
-    <template #footer v-if="editable">
-      <t-button variant="outline" @click="handleSaveDraft" :loading="saveDraft.loading">
-        {{ $t('pages.evaluationScoreDrawer.evaluation.save.draft') }}
-      </t-button>
+    <template #footer>
       <t-popconfirm
         theme="danger"
-        :content="$t('pages.evaluationScoreDrawer.evaluation.save.submitConfirm')"
-        @confirm="handleSaveAndSubmit"
+        :content="$t('pages.assessmentTaskDetailInfoDrawer.fallback.submitConfirm')"
+        @confirm="handleFallback"
       >
-        <t-button :loading="saveAndSubmit.loading">{{ $t('pages.evaluationScoreDrawer.evaluation.save.submit') }}</t-button>
+        <t-button :loading="fallbackButton.loading" theme="danger">{{ $t('pages.assessmentTaskDetailInfoDrawer.fallback.button') }}</t-button>
       </t-popconfirm>
     </template>
   </t-drawer>
