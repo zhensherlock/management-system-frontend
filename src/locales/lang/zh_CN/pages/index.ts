@@ -13,6 +13,7 @@ import listTree from './list-tree';
 import login from './login';
 import result from './result';
 // import user from './user';
+import dashboard from './lang.zh_cn.dashboard';
 import profile from './lang.zh_cn.profile';
 import common from './lang.zh_cn.common';
 import record from './lang.zh_cn.record';
@@ -32,6 +33,7 @@ import system from './lang.zh_cn.system';
 import workOrder from './lang.zh_cn.work_order';
 import evaluationScoreDrawer from './lang.zh_cn.evaluation-score-drawer';
 import assessmentTaskContentTable from './lang.zh_cn.assessment-task-content-table';
+import assessmentTaskDetailInfoDrawer from './lang.zh_cn.assessment-task-detail-info-drawer';
 
 export default {
   dashboardBase,
@@ -47,6 +49,7 @@ export default {
   formBase,
   formStep,
   user,
+  dashboard,
   profile,
   common,
   record,
@@ -67,4 +70,5 @@ export default {
   workOrder,
   evaluationScoreDrawer,
   assessmentTaskContentTable,
+  assessmentTaskDetailInfoDrawer,
 };

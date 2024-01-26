@@ -8,6 +8,22 @@ import {
 import { t } from '@/locales';
 import _ from 'lodash';
 
+export const getGreeting = () => {
+  const time = new Date();
+  const hour = time.getHours();
+  if (hour < 9) {
+    return t('pages.dashboard.workplace.greeting.early.morning');
+  } else if (hour <= 11) {
+    return t('pages.dashboard.workplace.greeting.morning');
+  } else if (hour <= 13) {
+    return t('pages.dashboard.workplace.greeting.nooning');
+  } else if (hour < 20) {
+    return t('pages.dashboard.workplace.greeting.afternoon');
+  } else {
+    return t('pages.dashboard.workplace.greeting.evening');
+  }
+}
+
 export const getSex = (sex: string) => {
   if (sex === EmployeeSex.Male) {
     return '男';

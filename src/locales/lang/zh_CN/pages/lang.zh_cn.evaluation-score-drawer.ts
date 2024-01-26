@@ -3,7 +3,8 @@ export default {
     suffix: '评分'
   },
   basic: {
-    title: '基本信息',
+    title: '任务基本信息',
+    status: '状态',
     date: '考核时间段',
     basicScore: '考核基础分',
     description: '考核任务简介',
