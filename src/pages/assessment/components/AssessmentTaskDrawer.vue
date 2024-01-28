@@ -28,15 +28,7 @@ watch(
       return;
     }
     gradeSetting.dataSource = props.mdl.gradeSetting?.list || [];
-
-    getAssessmentTaskStatistic(props.mdl.id).then((res: any) => {
-      statistic.total = res.total;
-      statistic.submitted = res.submitted;
-      statistic.pending = res.pending;
-      statistic.returned = res.returned;
-      statistic.done = res.done;
-      statistic.donePercentage = res.donePercentage;
-    });
+    getAssessmentTaskStatisticData();
   },
 );
 
@@ -47,7 +39,31 @@ const statistic = reactive({
   returned: 0,
   done: 0,
   donePercentage: 0,
+  animation: {
+    start: true,
+    params: {
+      valueFrom: 0,
+      duration: 200,
+    },
+  },
 });
+
+const getAssessmentTaskStatisticData = () => {
+  statistic.total = 0;
+  statistic.submitted = 0;
+  statistic.pending = 0;
+  statistic.returned = 0;
+  statistic.done = 0;
+  statistic.donePercentage = 0;
+  getAssessmentTaskStatistic(props.mdl.id).then((res: any) => {
+    statistic.total = res.total;
+    statistic.submitted = res.submitted;
+    statistic.pending = res.pending;
+    statistic.returned = res.returned;
+    statistic.done = res.done;
+    statistic.donePercentage = res.donePercentage;
+  });
+}
 
 const handleClose = () => {
   emits('update:modelValue', false);
@@ -153,24 +169,32 @@ const handleShowAssessmentTaskDetail = () => {
           :unit="$t('pages.assessment_task.statistic.header.schoolUnit')"
           :value="statistic.total"
           color="black"
+          :animation="statistic.animation.params"
+          :animation-start="statistic.animation.start"
         />
         <t-statistic
           :title="$t('pages.assessment_task.statistic.header.submitted')"
           :unit="$t('pages.assessment_task.statistic.header.schoolUnit')"
           :value="statistic.submitted"
           color="blue"
+          :animation="statistic.animation.params"
+          :animation-start="statistic.animation.start"
         />
         <t-statistic
           :title="$t('pages.assessment_task.statistic.header.pending')"
           :unit="$t('pages.assessment_task.statistic.header.schoolUnit')"
           :value="statistic.pending"
           color="orange"
+          :animation="statistic.animation.params"
+          :animation-start="statistic.animation.start"
         />
         <t-statistic
           :title="$t('pages.assessment_task.statistic.header.returned')"
           :unit="$t('pages.assessment_task.statistic.header.schoolUnit')"
           :value="statistic.returned"
           color="red"
+          :animation="statistic.animation.params"
+          :animation-start="statistic.animation.start"
         />
         <t-statistic
           :title="$t('pages.assessment_task.statistic.header.donePercentage')"
@@ -178,6 +202,8 @@ const handleShowAssessmentTaskDetail = () => {
           :value="statistic.donePercentage"
           unit="%"
           color="green"
+          :animation="statistic.animation.params"
+          :animation-start="statistic.animation.start"
         />
         <template #separator>
           <t-divider class="h-66px" layout="vertical" />

@@ -14,6 +14,7 @@ import login from './login';
 import result from './result';
 // import user from './user';
 import dashboard from './lang.zh_cn.dashboard';
+import statistic from './lang.zh_cn.statistic';
 import profile from './lang.zh_cn.profile';
 import common from './lang.zh_cn.common';
 import record from './lang.zh_cn.record';
@@ -50,6 +51,7 @@ export default {
   formStep,
   user,
   dashboard,
+  statistic,
   profile,
   common,
   record,
