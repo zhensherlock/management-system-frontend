@@ -5,6 +5,7 @@ import AssessmentTaskDetailListDrawer from './AssessmentTaskDetailListDrawer.vue
 import AssessmentTaskDetailInfoDrawer from './AssessmentTaskDetailInfoDrawer.vue';
 import EvaluationScoreDrawer from './EvaluationScoreDrawer.vue';
 import OneAssessmentTaskStatisticCard from './OneAssessmentTaskStatisticCard.vue'
+import SchoolStatisticCard from './SchoolStatisticCard.vue'
 
 export {
   OperationTask,
@@ -14,4 +15,5 @@ export {
   AssessmentTaskDetailInfoDrawer,
   EvaluationScoreDrawer,
   OneAssessmentTaskStatisticCard,
+  SchoolStatisticCard,
 };

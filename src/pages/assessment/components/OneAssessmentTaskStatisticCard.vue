@@ -7,13 +7,13 @@
       v-if="props.currentAssessmentTask"
     >
       <template #title>
-        <t-popup placement="right-top" overlayClassName="t-select__dropdown" :visible="card.togglePopupVisible">
+        <t-popup placement="right-top" overlayClassName="t-select__dropdown" :visible="card.triggerPopupVisible">
           <div class="flex items-center">
             <span class="inline-block mr-5px">{{ props.currentAssessmentTask.title }} - 统计分析</span>
-            <SwapIcon class="cursor-pointer" @click="card.togglePopupVisible = !card.togglePopupVisible" />
+            <SwapIcon ref="triggerIcon" class="cursor-pointer" @click="card.triggerPopupVisible = !card.triggerPopupVisible" />
           </div>
           <template #content>
-            <div class="t-select__dropdown-inner t-select__dropdown-inner--size-m max-w-300px">
+            <div ref="triggerPopup" class="t-select__dropdown-inner t-select__dropdown-inner--size-m max-w-300px">
               <ul>
                 <li
                   v-for="item in props.assessmentTaskList"
@@ -107,7 +107,8 @@
 
 <script setup lang="ts">
 import { SwapIcon } from 'tdesign-icons-vue-next';
-import { reactive, watch } from 'vue';
+import { reactive, ref, watch } from 'vue';
+import { onClickOutside } from '@vueuse/core'
 import { getAssessmentTaskStatistic } from '@/api/statistic.api';
 import { AssessmentTaskDetailListDrawer } from '@/pages/assessment/components/index';
 
@@ -128,10 +129,18 @@ watch(() => props.currentAssessmentTask, () => {
   if (props.currentAssessmentTask) {
     handleGetCurrentAssessmentTaskStatistic();
   }
-})
+});
+
+const triggerIcon = ref(null);
+const triggerPopup = ref(null);
+onClickOutside(triggerPopup, () => {
+  card.triggerPopupVisible = false;
+}, {
+  ignore: [triggerIcon],
+});
 
 const card = reactive({
-  togglePopupVisible: false,
+  triggerPopupVisible: false,
   loading: false,
   statistics: {
     total: 0,
@@ -160,7 +169,7 @@ const handleShowAssessmentTaskDetail = () => {
 
 const handleChangeCurrentAssessment = (item: any) => {
   emits('update:currentAssessmentTask', item);
-  card.togglePopupVisible = false;
+  card.triggerPopupVisible = false;
 };
 
 const handleGetCurrentAssessmentTaskStatistic = () => {
@@ -187,7 +196,6 @@ const handleGetCurrentAssessmentTaskStatistic = () => {
 .one-assessment-task-statistic-card {
   :deep(.t-card) {
     --td-component-border: #E4EEF6;
-    border-radius: 0 0 var(--td-radius-medium) var(--td-radius-medium);
 
     .t-card__footer {
       padding: 0;

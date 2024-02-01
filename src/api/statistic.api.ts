@@ -5,6 +5,8 @@ const Api = {
   SummaryUrl: '/user/statistic/assessment/summary',
   PublishedGroupListUrl: '/user/statistic/assessment/publishedTaskGroupList',
   AssessmentTaskStatisticUrl: '/user/statistic/assessment',
+  SchoolTreeListUrl: '/user/statistic/school/list',
+  SchoolStatisticUrl: '/user/statistic/schools',
 };
 
 export function getAssessmentTaskSummaryStatistic() {
@@ -22,5 +24,18 @@ export function getPublishedGroupList() {
 export function getAssessmentTaskStatistic(id: string) {
   return request.get<CommonResponse<any>>({
     url: `${Api.AssessmentTaskStatisticUrl}/${id}/`,
+  });
+}
+
+export function getSchoolTreeList() {
+  return request.get<CommonResponse<any>>({
+    url: Api.SchoolTreeListUrl,
+  });
+}
+
+export function getSchoolStatistic(data: any) {
+  return request.get<CommonResponse<any>>({
+    url: Api.SchoolStatisticUrl,
+    params: data,
   });
 }
