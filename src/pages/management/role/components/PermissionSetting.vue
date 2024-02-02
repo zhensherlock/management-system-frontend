@@ -5,7 +5,7 @@ import { t } from '@/locales';
 import { getModuleTree } from '@/api/module';
 import { recursiveMap } from '@/utils/array';
 import { useTable } from '@/composeable/useTable';
-import { MessagePlugin } from 'tdesign-vue-next';
+import { MessagePlugin, PrimaryTableCol } from 'tdesign-vue-next';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -92,7 +92,7 @@ const operation = reactive({
       colKey: 'code',
       title: t('pages.operation.code'),
     },
-  ],
+  ] as PrimaryTableCol[],
 });
 const { isEmpty, loadingProps, tableHeight } = useTable({
   total: operation.total,

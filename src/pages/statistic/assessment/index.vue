@@ -52,12 +52,12 @@
         :assessment-task-list="oneAssessmentTaskStatisticCard.assessmentTaskList"
       />
     </div>
-    <div class="card">
-      <SchoolStatisticCard
-        v-model:selectedSchoolIds="schoolStatisticCard.selectedSchoolIds"
-        :school-list="schoolStatisticCard.schoolList"
-      />
-    </div>
+<!--    <div class="card flex-1">-->
+<!--      <SchoolStatisticCard-->
+<!--        v-model:selectedSchoolIds="schoolStatisticCard.selectedSchoolIds"-->
+<!--        :school-list="schoolStatisticCard.schoolList"-->
+<!--      />-->
+<!--    </div>-->
   </div>
 </template>
 

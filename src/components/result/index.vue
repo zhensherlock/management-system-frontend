@@ -79,12 +79,12 @@ const dynamicComponent = computed(() => {
   }
 
   &-container {
-    min-height: 400px;
-    height: 75vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin: var(--td-comp-margin-s) 0;
+    height: calc(100% - (var(--td-comp-margin-s) * 2));
   }
 
   &-bg-img {
@@ -101,7 +101,7 @@ const dynamicComponent = computed(() => {
   }
 
   &-tip {
-    margin: var(--td-comp-margin-s) 0 var(--td-comp-margin-xxxl);
+    margin: var(--td-comp-margin-s) 0 0;
     font: var(--td-font-body-medium);
     color: var(--td-text-color-secondary);
   }
