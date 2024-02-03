@@ -1,7 +1,7 @@
 <template>
   <div class="record-page">
     <FilterCard
-      :title="$t('pages.assessment.page.title')"
+      :title="pageTitle"
       v-model="searchData"
       :options="[
         {
@@ -35,15 +35,14 @@
       </template>
       <div v-else class="data-card-table" ref="tableParentElement">
         <t-enhanced-table
-          ref="tableElement"
           bordered
           hover
+          ref="tableElement"
+          row-key="id"
           cell-empty-content="-"
           size="small"
           :data="dataSource"
           :columns="columns"
-          :row-key="rowKey"
-          :vertical-align="verticalAlign"
           :pagination="pagination"
           :loading="loading"
           :loadingProps="loadingProps"
@@ -111,7 +110,9 @@ import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
 import { AssessmentScoreType } from '@/constants';
+import { usePage } from '@/composeable';
 
+const { pageTitle } = usePage();
 const tableParentElement = ref(null);
 const tableElement = ref(null);
 const dataSource = ref([]);
@@ -140,10 +141,8 @@ const columns = ref<PrimaryTableCol[]>([
   { colKey: 'score', title: t('pages.assessment.score'), width: 100 },
   { colKey: 'createdDate', title: t('pages.employee.createdDate'), width: 160 },
   { colKey: 'updatedDate', title: t('pages.employee.updatedDate'), width: 160 },
-  { colKey: 'operation', title: t('pages.record.operation.label'), width: 260, fixed: 'right' },
+  { colKey: 'operation', title: t('pages.record.operation.label'), width: 210, fixed: 'right' },
 ]);
-const rowKey = 'id';
-const verticalAlign = 'top' as const;
 const total = ref(0);
 const loading = ref(true);
 
@@ -156,6 +155,7 @@ const { pagination, isEmpty, loadingProps, tableHeight, tableKey } = useTable({
   table: tableElement,
   parent: tableParentElement,
   loading,
+  hiddenPage: true,
 });
 
 const operationModel = reactive({
