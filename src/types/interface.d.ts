@@ -54,7 +54,7 @@ export interface UserInfo {
   email: string;
   tel: string;
   type: string;
-  roles: string[];
+  roles: any[];
   organizations: any[];
 }
 

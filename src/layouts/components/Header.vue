@@ -173,10 +173,11 @@ const handleRedirect = (name: string) => {
 };
 
 const handleLogout = () => {
-  router.push({
-    path: '/login',
-    query: { redirect: encodeURIComponent(router.currentRoute.value.fullPath) },
-  });
+  // router.push({
+  //   path: '/login',
+  //   query: { redirect: encodeURIComponent(router.currentRoute.value.fullPath) },
+  // });
+  location.href = '/login';
 };
 </script>
 <style lang="less" scoped>
