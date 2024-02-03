@@ -80,7 +80,7 @@ export function useTable(options: UseTableOptions) {
     { maxWait: 300 },
   );
 
-  // useResizeObserver(parent, calculateTableHeightDebounceFn);
+  useResizeObserver(parent, calculateTableHeightDebounceFn);
 
   watch(currentTotal, calculateTableHeightDebounceFn);
 
