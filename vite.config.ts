@@ -6,13 +6,13 @@ import { ConfigEnv, loadEnv, UserConfig } from 'vite';
 import { viteMockServe } from 'vite-plugin-mock';
 import svgLoader from 'vite-svg-loader';
 import UnoCSS from 'unocss/vite';
-require('dotenv').config({ path: '.env.development' });
+// require('dotenv').config({ path: '.env.development' });
 const CWD = process.cwd();
 // https://vitejs.dev/config/
 export default ({ mode }: ConfigEnv): UserConfig => {
-  const { VITE_BASE_URL, VITE_API_URL_PREFIX, VITE_TITLE } = loadEnv(mode, CWD);
+  const env = loadEnv(mode, CWD);
   return {
-    base: VITE_BASE_URL,
+    base: env.VITE_BASE_URL,
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
@@ -46,11 +46,11 @@ export default ({ mode }: ConfigEnv): UserConfig => {
       port: 3002,
       host: '0.0.0.0',
       proxy: {
-        [VITE_API_URL_PREFIX]: 'http://127.0.0.1:7001/v1/',
+        [env.VITE_API_URL_PREFIX]: 'http://127.0.0.1:7001/v1/',
       },
     },
     define: {
-      __TITLE__: JSON.stringify(VITE_TITLE),
+      __TITLE__: JSON.stringify(env.VITE_TITLE),
     }
   };
 };

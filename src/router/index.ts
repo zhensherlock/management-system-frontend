@@ -1,8 +1,6 @@
 import uniq from 'lodash/uniq';
 import { createRouter, createWebHistory, RouteRecordRaw, useRoute } from 'vue-router';
 
-const env = import.meta.env.MODE || 'development';
-
 // 导入homepage相关固定路由
 const homepageModules = import.meta.glob('./modules/**/homepage.ts', { eager: true });
 
@@ -78,7 +76,7 @@ export const getActive = (maxLevel = 3): string => {
 };
 
 const router = createRouter({
-  history: createWebHistory(env === 'site' ? '/starter/vue-next/' : import.meta.env.VITE_BASE_URL),
+  history: createWebHistory(import.meta.env.VITE_BASE_URL),
   routes: allRoutes,
   scrollBehavior() {
     return {
