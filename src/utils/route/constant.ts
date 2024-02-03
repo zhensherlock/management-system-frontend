@@ -10,5 +10,5 @@ export const PARENT_LAYOUT = () =>
 export const PAGE_NOT_FOUND_ROUTE = {
   path: '/:w+',
   name: '404Page',
-  redirect: '/result/404',
+  redirect: '/',
 };
