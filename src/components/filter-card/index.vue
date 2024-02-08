@@ -78,9 +78,9 @@
         </t-form>
       </div>
       <div class="filter-body-reset" v-if="resetFilterVisible">
-        <t-link theme="primary" hover="color" @click="handleResetFilter">
+        <t-link theme="primary" hover="color" @click="handleResetFilter" class="reset-button">
           <t-space :size="4">
-            <swap-icon slot="prefix-icon"></swap-icon>
+            <span slot="prefix-icon" class="t-icon i-material-symbols-autorenew text-16px" rotate="60"></span>
             重置筛选
           </t-space>
         </t-link>
@@ -95,7 +95,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { SearchIcon, SwapIcon } from 'tdesign-icons-vue-next';
+import { SearchIcon } from 'tdesign-icons-vue-next';
 import { PropType, reactive, watch, computed, nextTick } from 'vue';
 import { isEmpty } from 'lodash';
 
@@ -177,6 +177,14 @@ const handleSubmit = () => {
   .t-form__item {
     margin-right: 0;
     min-width: auto;
+  }
+}
+
+.reset-button {
+  :deep(.t-space-item) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>

@@ -1,63 +1,65 @@
 <template>
   <div class="record-page">
-    <div class="card">
-      <t-card header-bordered :bordered="false" :title="pageTitle">
-        <t-space class="w-100% text-center" align="center">
-          <t-statistic
-            :title="$t('pages.statistic.assessment.summary.total')"
-            :value="summaryCard.statistics.published"
-            color="black"
-            :animation="summaryCard.statistics.animation.params"
-            :animation-start="summaryCard.statistics.animation.start"
-          />
-          <t-statistic
-            :title="$t('pages.statistic.assessment.summary.unpublished')"
-            :value="summaryCard.statistics.draft"
-            color="blue"
-            :animation="summaryCard.statistics.animation.params"
-            :animation-start="summaryCard.statistics.animation.start"
-          />
-          <t-statistic
-            :title="$t('pages.statistic.assessment.summary.inProgress')"
-            :value="summaryCard.statistics.official"
-            color="orange"
-            :animation="summaryCard.statistics.animation.params"
-            :animation-start="summaryCard.statistics.animation.start"
-          />
-          <t-statistic
-            :title="$t('pages.statistic.assessment.summary.done')"
-            :value="summaryCard.statistics.done"
-            color="red"
-            :animation="summaryCard.statistics.animation.params"
-            :animation-start="summaryCard.statistics.animation.start"
-          />
-          <t-statistic
-            :title="$t('pages.statistic.assessment.summary.donePercentage')"
-            :decimal-places="2"
-            :value="summaryCard.statistics.donePercentage"
-            unit="%"
-            color="green"
-            :animation="summaryCard.statistics.animation.params"
-            :animation-start="summaryCard.statistics.animation.start"
-          />
-          <template #separator>
-            <t-divider class="h-66px" layout="vertical" />
-          </template>
-        </t-space>
-      </t-card>
-    </div>
-    <div class="card">
-      <OneAssessmentTaskStatisticCard
-        v-model:currentAssessmentTask="oneAssessmentTaskStatisticCard.currentAssessmentTask"
-        :assessment-task-list="oneAssessmentTaskStatisticCard.assessmentTaskList"
-      />
-    </div>
-<!--    <div class="card flex-1">-->
-<!--      <SchoolStatisticCard-->
-<!--        v-model:selectedSchoolIds="schoolStatisticCard.selectedSchoolIds"-->
-<!--        :school-list="schoolStatisticCard.schoolList"-->
-<!--      />-->
-<!--    </div>-->
+    <perfect-scrollbar class="h-100% flex flex-col">
+      <div class="card">
+        <t-card header-bordered :bordered="false" :title="pageTitle">
+          <t-space class="w-100% text-center" align="center">
+            <t-statistic
+              :title="$t('pages.statistic.assessment.summary.total')"
+              :value="summaryCard.statistics.published"
+              color="black"
+              :animation="summaryCard.statistics.animation.params"
+              :animation-start="summaryCard.statistics.animation.start"
+            />
+            <t-statistic
+              :title="$t('pages.statistic.assessment.summary.unpublished')"
+              :value="summaryCard.statistics.draft"
+              color="blue"
+              :animation="summaryCard.statistics.animation.params"
+              :animation-start="summaryCard.statistics.animation.start"
+            />
+            <t-statistic
+              :title="$t('pages.statistic.assessment.summary.inProgress')"
+              :value="summaryCard.statistics.official"
+              color="orange"
+              :animation="summaryCard.statistics.animation.params"
+              :animation-start="summaryCard.statistics.animation.start"
+            />
+            <t-statistic
+              :title="$t('pages.statistic.assessment.summary.done')"
+              :value="summaryCard.statistics.done"
+              color="red"
+              :animation="summaryCard.statistics.animation.params"
+              :animation-start="summaryCard.statistics.animation.start"
+            />
+            <t-statistic
+              :title="$t('pages.statistic.assessment.summary.donePercentage')"
+              :decimal-places="2"
+              :value="summaryCard.statistics.donePercentage"
+              unit="%"
+              color="green"
+              :animation="summaryCard.statistics.animation.params"
+              :animation-start="summaryCard.statistics.animation.start"
+            />
+            <template #separator>
+              <t-divider class="h-66px" layout="vertical" />
+            </template>
+          </t-space>
+        </t-card>
+      </div>
+      <div class="card">
+        <OneAssessmentTaskStatisticCard
+          v-model:currentAssessmentTask="oneAssessmentTaskStatisticCard.currentAssessmentTask"
+          :assessment-task-list="oneAssessmentTaskStatisticCard.assessmentTaskList"
+        />
+      </div>
+      <div class="card flex-1 min-h-400px">
+        <SchoolStatisticCard
+          :school-list="schoolStatisticCard.schoolList"
+          :assessment-task-list="oneAssessmentTaskStatisticCard.assessmentTaskList"
+        />
+      </div>
+    </perfect-scrollbar>
   </div>
 </template>
 
@@ -147,7 +149,6 @@ const handleGetPublishedGroupList = () => {
 
 const schoolStatisticCard = reactive({
   schoolList: [],
-  selectedSchoolIds: [],
 });
 
 const handleGetSchoolTreeList = () => {

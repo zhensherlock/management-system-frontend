@@ -102,6 +102,7 @@ const handleShowAssessmentTaskDetail = () => {
     :preventScrollThrough="true"
     :size-draggable="true"
     :destroyOnClose="true"
+    :footer="false"
     size="1000px"
     @close="handleClose"
     class="task-detail-drawer"

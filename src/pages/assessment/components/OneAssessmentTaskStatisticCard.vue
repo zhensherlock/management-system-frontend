@@ -107,7 +107,7 @@
 
 <script setup lang="ts">
 import { SwapIcon } from 'tdesign-icons-vue-next';
-import { reactive, ref, watch } from 'vue';
+import { PropType, reactive, ref, watch } from 'vue';
 import { onClickOutside } from '@vueuse/core'
 import { getAssessmentTaskStatistic } from '@/api/statistic.api';
 import { AssessmentTaskDetailListDrawer } from '@/pages/assessment/components/index';
@@ -118,7 +118,7 @@ const props = defineProps({
     default: null,
   },
   assessmentTaskList: {
-    type: Array,
+    type: Array as PropType<any[]>,
     default: () => ([]),
   },
 });
