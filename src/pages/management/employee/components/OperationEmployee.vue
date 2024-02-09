@@ -8,7 +8,7 @@ import { createEmployee, updateEmployee } from '@/api/employee';
 import { createWorkOrder } from '@/api/work_order';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
-import { EmployeeSexList, EmployeeStatus, EmployeeStatusList, WorkOrderType } from '@/constants';
+import { EmployeeSexList, EmployeeEducationList, EmployeeStatus, EmployeeStatusList, WorkOrderType } from '@/constants';
 import { getDateString, getEmployeeStatus, getSchoolById, getSex, recursiveFlat } from '@/utils';
 
 const props = defineProps({
@@ -40,6 +40,7 @@ const props = defineProps({
         birthday: dayjs().subtract(60, 'year'),
         idCard: '',
         status: EmployeeStatus.Normal,
+        education: '',
         companyOrganizationId: '',
         schoolOrganizationId: '',
       };
@@ -141,6 +142,7 @@ const handleEditSubmit = () => {
     birthday: formData.value.birthday,
     idCard: formData.value.idCard,
     status: formData.value.status,
+    education: formData.value.education,
     companyOrganizationId: formData.value.companyOrganizationId,
     schoolOrganizationId: formData.value.schoolOrganizationId,
   };
@@ -162,6 +164,7 @@ const handleCreateSubmit = () => {
     birthday: formData.value.birthday,
     idCard: formData.value.idCard,
     status: formData.value.status,
+    education: formData.value.education,
     companyOrganizationId: formData.value.companyOrganizationId,
     schoolOrganizationId: formData.value.schoolOrganizationId,
   };
@@ -282,12 +285,28 @@ const handleClose = () => {
           :placeholder="$t('pages.form.selectPlaceholder', { field: $t('pages.employee.school') })"
         />
       </t-form-item>
-      <t-form-item :label="$t('pages.employee.sex')" name="sex" :rules="$rules.selectRules('pages.employee.sex')">
+      <t-form-item
+        :label="$t('pages.employee.sex')"
+        name="sex"
+        :rules="$rules.selectRules('pages.employee.sex')"
+      >
         <t-select
           v-model="formData.sex"
           :placeholder="$t('pages.form.selectPlaceholder', { field: $t('pages.employee.sex') })"
         >
           <t-option v-for="item in EmployeeSexList" :key="item.value" :label="$t(item.label)" :value="item.value" />
+        </t-select>
+      </t-form-item>
+      <t-form-item
+        :label="$t('pages.employee.education')"
+        name="education"
+        :rules="$rules.selectRules('pages.employee.education')"
+      >
+        <t-select
+          v-model="formData.education"
+          :placeholder="$t('pages.form.selectPlaceholder', { field: $t('pages.employee.education') })"
+        >
+          <t-option v-for="item in EmployeeEducationList" :key="item.value" :label="$t(item.label)" :value="item.value" />
         </t-select>
       </t-form-item>
       <t-form-item

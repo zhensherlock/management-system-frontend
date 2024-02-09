@@ -1,3 +1,5 @@
+import { EmployeeEducationList } from '@/constants';
+
 export default {
   create: '新增保安',
   update: '编辑保安',
@@ -15,10 +17,20 @@ export default {
   description: '介绍',
   organization: '所属组织',
   status: '状态',
+  education: '学历',
   schoolOrganizationId: '所属学校',
   statusMap: {
     normal: '正常',
     leave: '离职',
+    other: '其他',
+  },
+  educationMap: {
+    primarySchool: '小学',
+    middleSchool: '初中',
+    highSchool: '高中',
+    collegeDegree: '大专',
+    bachelorDegree: '大学本科',
+    graduate: '研究生',
     other: '其他',
   },
   apply: {

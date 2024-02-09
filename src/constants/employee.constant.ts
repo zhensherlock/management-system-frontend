@@ -37,5 +37,46 @@ export const EmployeeStatusList = [
   {
     label: 'pages.employee.statusMap.other',
     value: EmployeeStatus.Other,
-  }
+  },
+]
+
+export const EmployeeEducation = {
+  PrimarySchool: '1', // 小学
+  MiddleSchool: '2', // 初中
+  HighSchool: '3', // 高中
+  CollegeDegree: '4', // 大专
+  BachelorDegree: '5', // 大学本科
+  Graduate: '6', // 研究生
+  Other: '7' // 其他
+}
+
+export const EmployeeEducationList = [
+  {
+    label: 'pages.employee.educationMap.primarySchool',
+    value: EmployeeEducation.PrimarySchool,
+  },
+  {
+    label: 'pages.employee.educationMap.middleSchool',
+    value: EmployeeEducation.MiddleSchool,
+  },
+  {
+    label: 'pages.employee.educationMap.highSchool',
+    value: EmployeeEducation.HighSchool,
+  },
+  {
+    label: 'pages.employee.educationMap.collegeDegree',
+    value: EmployeeEducation.CollegeDegree,
+  },
+  {
+    label: 'pages.employee.educationMap.bachelorDegree',
+    value: EmployeeEducation.BachelorDegree,
+  },
+  {
+    label: 'pages.employee.educationMap.graduate',
+    value: EmployeeEducation.Graduate,
+  },
+  {
+    label: 'pages.employee.educationMap.other',
+    value: EmployeeEducation.Other,
+  },
 ]
