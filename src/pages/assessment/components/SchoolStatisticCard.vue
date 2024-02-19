@@ -28,7 +28,7 @@
       <Result
         v-show="!card.loading && assessmentTaskDetails.length === 0"
         type="empty"
-        tip="请先选择学校"
+        tip="请先选择学校和考核任务"
       />
       <div
         v-show="!card.loading && assessmentTaskDetails.length !== 0"

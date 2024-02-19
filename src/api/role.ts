@@ -2,12 +2,20 @@ import type { CommonResponse } from '@/types/api';
 import { request } from '@/utils/request';
 
 const Api = {
-  ListUrl: '/admin/role/list',
+  ListUrl: '/user/role/list',
+  ManageListUrl: '/admin/role/list',
   CreateUrl: '/admin/role/create',
   UpdateUrl: '/admin/role',
   DeleteUrl: '/admin/role',
   UpdatePermissionUrl: '/admin/role/permission',
 };
+
+export function getManageRoleList(data: any = {}) {
+  return request.get<CommonResponse<any>>({
+    url: Api.ManageListUrl,
+    params: data,
+  });
+}
 
 export function getRoleList(data: any = {}) {
   return request.get<CommonResponse<any>>({

@@ -107,7 +107,7 @@ import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useTable } from '@/composeable/useTable';
 import { OperationRole, PermissionSetting } from './components';
-import { getRoleList, deleteRole } from '@/api/role';
+import { getRoleList, deleteRole, getManageRoleList } from '@/api/role';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
@@ -125,7 +125,7 @@ const fetchData = async () => {
   loading.value = true;
   try {
     // @ts-ignore
-    const { list, count } = await getRoleList({
+    const { list, count } = await getManageRoleList({
       currentPage: pagination.value?.current || 1,
       pageSize: pagination.value?.pageSize || 20,
       keyword: searchData.keyword,

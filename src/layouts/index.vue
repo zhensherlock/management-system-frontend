@@ -49,24 +49,24 @@ const mainLayoutCls = computed(() => [
   },
 ]);
 
-const appendNewRoute = () => {
-  const {
-    path,
-    query,
-    meta: { title },
-    name,
-  } = route;
-  tabsRouterStore.appendTabRouterList({ path, query, title: title as string, name, isAlive: true, meta: route.meta });
-};
+// const appendNewRoute = () => {
+//   const {
+//     path,
+//     query,
+//     meta: { title },
+//     name,
+//   } = route;
+//   tabsRouterStore.appendTabRouterList({ path, query, title: title as string, name, isAlive: true, meta: route.meta });
+// };
 
 onMounted(() => {
-  appendNewRoute();
+  // appendNewRoute();
 });
 
 watch(
   () => route.path,
   () => {
-    appendNewRoute();
+    // appendNewRoute();
     document.querySelector(`.${prefix}-layout`).scrollTo({ top: 0, behavior: 'smooth' });
   },
 );

@@ -33,7 +33,7 @@ const handleRedirectCommonFunction = (item: any) => {
 </script>
 
 <template>
-  <div class="container">
+  <div>
     <t-row :gutter="12">
       <t-col :span="12" style="margin-bottom: var(--td-comp-paddingTB);">
         <t-card header-bordered :bordered="false">
