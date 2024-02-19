@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { getAssessmentTaskDetails } from '@/api/assessment_task.api';
-import type { PrimaryTableCol } from 'tdesign-vue-next';
+import { DateRangePickerPanel, PrimaryTableCol } from 'tdesign-vue-next';
 import { t } from '@/locales';
 import { getAssessmentTaskDetailStatus, getAssessmentTaskDetailStatusTheme } from '@/utils';
 import { AssessmentTaskDetailInfoDrawer } from './index';
+// import { AssessmentTaskDetailStatusList } from '@/constants';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -28,21 +29,57 @@ watch(
 
 const columns = ref<PrimaryTableCol[]>([
   { colKey: 'school', title: t('pages.assessmentTaskDetail.table.school'), minWidth: 200 },
-  { colKey: 'score', title: t('pages.assessmentTaskDetail.table.score'), width: 320, align: 'center' },
-  { colKey: 'status', title: t('pages.assessmentTaskDetail.table.status'), width: 100, align: 'center' },
-  { colKey: 'submitDate', title: t('pages.assessmentTaskDetail.table.submitDate'), width: 170, align: 'center' },
+  {
+    colKey: 'score',
+    title: t('pages.assessmentTaskDetail.table.score'),
+    width: 320,
+    // sorter: true,
+  },
+  {
+    colKey: 'status',
+    title: t('pages.assessmentTaskDetail.table.status'),
+    width: 100,
+    // filter: {
+    //   type: 'multiple',
+    //   resetValue: [],
+    //   list: AssessmentTaskDetailStatusList,
+    //   popupProps: {
+    //   },
+    //   showConfirmAndReset: true,
+    // },
+  },
+  {
+    colKey: 'submitDate',
+    title: t('pages.assessmentTaskDetail.table.submitDate'),
+    width: 170,
+    // sorter: true,
+    // filter: {
+    //   component: DateRangePickerPanel,
+    //   props: {
+    //     firstDayOfWeek: 7,
+    //   },
+    //   style: { fontSize: '14px' },
+    //   classNames: 'custom-class-name',
+    //   attrs: { 'data-type': 'date-range-picker' },
+    //   // 是否显示重置取消按钮，一般情况不需要显示
+    //   showConfirmAndReset: true,
+    //   resetValue: [],
+    // },
+  },
   { colKey: 'operation', title: t('pages.record.operation.label'), width: 100, align: 'center' },
 ]);
 const dataSource = ref([]);
 const total = ref(0);
 const loading = ref(true);
+const filterValue = ref([]);
 
 const fetchData = async () => {
   loading.value = true;
   try {
     // @ts-ignore
     const { list, count } = await getAssessmentTaskDetails(props.mdl.id);
-    dataSource.value = list;
+    dataSource.value = [...list];
+    // dataSource.value = [...list, ...list, ...list, ...list, ...list, ...list, ...list, ...list, ...list, ...list, ...list, ...list, ...list, ...list, ...list, ...list, ...list, ...list, ...list, ...list];
     total.value = count;
   } catch {
   } finally {
@@ -58,7 +95,32 @@ const assessmentTaskDetailInfoDrawer = reactive({
 const handleShowInfo = (mdl: any) => {
   assessmentTaskDetailInfoDrawer.visible = true;
   assessmentTaskDetailInfoDrawer.mdl = mdl;
-}
+};
+
+const onFilterChange = (filters, ctx) => {
+  console.log('filter-change', filters, ctx);
+  filterValue.value = {
+    ...filters,
+    createTime: filters.createTime || [],
+    channel: filters.channel || [],
+  };
+  console.log(filters);
+  // request(filters);
+};
+
+const headerAffixedTopProps = computed(() => {
+  return {
+    offsetTop: 16,
+    container: '.task-detail-drawer .t-drawer__body',
+  };
+});
+
+const footerAffixedBottomProps = computed(() => {
+  return {
+    offsetBottom: 16,
+    container: '.task-detail-drawer .t-drawer__body',
+  };
+});
 
 const handleClose = () => {
   emits('update:modelValue', false);
@@ -88,7 +150,11 @@ const handleClose = () => {
       cell-empty-content="-"
       :columns="columns"
       :data="dataSource"
+      :filter-value="filterValue"
       :loading="loading"
+      :header-affixed-top="headerAffixedTopProps"
+      :footer-affixed-bottom="footerAffixedBottomProps"
+      @filter-change="onFilterChange"
     >
       <template #school="{ row }">
         {{ row.receiveSchoolOrganization.name }}
