@@ -4,7 +4,7 @@ export default {
   create: '新增保安',
   update: '编辑保安',
   import: '导入保安',
-  jobNumber: '工号',
+  jobNumber: '派遣单号',
   name: '姓名',
   sex: '性别',
   age: '年龄',
