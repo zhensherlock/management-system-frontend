@@ -51,6 +51,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
     },
     define: {
       __TITLE__: JSON.stringify(env.VITE_TITLE),
+      __DEV__: mode === 'development',
     }
   };
 };
