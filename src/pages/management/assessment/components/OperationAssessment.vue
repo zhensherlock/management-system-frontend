@@ -22,6 +22,7 @@ const props = defineProps({
         description: '',
         scoreType: AssessmentScoreType.Add,
         maximumScore: 100,
+        scoreStep: 1,
       };
     },
   },
@@ -81,6 +82,7 @@ const handleEditSubmit = () => {
     sequence: formData.value.sequence,
     scoreType: formData.value.scoreType,
     maximumScore: formData.value.maximumScore,
+    scoreStep: formData.value.scoreStep,
     parentId: formData.value.parentId,
   };
   updateAssessment(formData.value.id, params).then(() => {
@@ -96,6 +98,7 @@ const handleCreateSubmit = () => {
     sequence: formData.value.sequence,
     scoreType: formData.value.scoreType,
     maximumScore: formData.value.maximumScore,
+    scoreStep: formData.value.scoreStep,
     parentId: formData.value.parentId,
   };
   createAssessment(params).then(() => {
@@ -159,7 +162,7 @@ const handleParentChange = () => {
       <t-form-item
         :label="$t('pages.assessment.sequence')"
         name="sequence"
-        :rules="$rules.inputRules('pages.assessment.sequence', false)"
+        :rules="$rules.inputNumberRules('pages.assessment.sequence', false)"
       >
         <t-input-number
           v-model="formData.sequence"
@@ -172,9 +175,25 @@ const handleParentChange = () => {
         </t-input-number>
       </t-form-item>
       <t-form-item
+        :label="$t('pages.assessment.scoreStep')"
+        name="scoreStep"
+        :rules="$rules.inputNumberRules('pages.assessment.scoreStep', true)"
+      >
+        <t-input-number
+          v-model="formData.scoreStep"
+          clearable
+          auto-width
+          theme="column"
+          :min="0"
+          :placeholder="$t('pages.form.placeholder', { field: $t('pages.assessment.scoreStep') })"
+          @enter="handleConfirm"
+        >
+        </t-input-number>
+      </t-form-item>
+      <t-form-item
         :label="$t('pages.assessment.score')"
-        name="score"
-        :rules="$rules.inputRules('pages.assessment.score', false)"
+        name="maximumScore"
+        :rules="$rules.inputNumberRules('pages.assessment.score', true)"
       >
         <t-input-adornment>
           <template #prepend>

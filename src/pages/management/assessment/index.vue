@@ -128,7 +128,7 @@ const fetchData = async () => {
     const { list, count } = await getAssessmentTree({
       keyword: searchData.keyword,
     });
-    dataSource.value = list;
+    dataSource.value = list
     total.value = count;
   } catch {
   } finally {
@@ -139,6 +139,7 @@ const columns = ref<PrimaryTableCol[]>([
   { colKey: 'title', title: t('pages.assessment.title'), minWidth: 300, fixed: 'left' },
   { colKey: 'sequence', title: t('pages.assessment.sequence'), width: 80 },
   { colKey: 'score', title: t('pages.assessment.score'), width: 100 },
+  { colKey: 'scoreStep', title: t('pages.assessment.scoreStep'), width: 50 },
   { colKey: 'createdDate', title: t('pages.employee.createdDate'), width: 160 },
   { colKey: 'updatedDate', title: t('pages.employee.updatedDate'), width: 160 },
   { colKey: 'operation', title: t('pages.record.operation.label'), width: 210, fixed: 'right' },
@@ -175,6 +176,7 @@ const handleShowCreateChildrenDialog = (row: any) => {
     parentId: row.id,
     scoreType: row.scoreType,
     maximumScore: row.maximumScore,
+    scoreStep: row.scoreStep,
     sequence: (row?.children?.length || 0) + 1,
   };
   operationModel.isEdit = false;

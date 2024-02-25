@@ -60,6 +60,7 @@ const dataSource = computed(() => {
           level: 3,
           parentId: levelThreeItem.parentId,
           maximumScore: levelThreeItem.maximumScore,
+          scoreStep: levelThreeItem.scoreStep,
           scoreType: levelThreeItem.scoreType,
           ...(levelTreeIndex === 0 && {
             mergeParams: {
@@ -208,6 +209,7 @@ defineExpose({
                 v-model="editScoreContent.detail[row.id].score"
                 :label="$t(`pages.assessmentTaskContentTable.scoreType.${row.scoreType === AssessmentScoreType.Add ? 'add' : 'subtract'}`)"
                 :max="row.maximumScore"
+                :step="row.scoreStep || 1"
                 :min="0"
                 :inputProps="{
                   autofocus: true,
