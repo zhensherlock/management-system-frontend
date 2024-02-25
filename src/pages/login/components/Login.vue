@@ -79,7 +79,6 @@ import { useUserStore } from '@/store';
 import type { LoginData } from "@/types/api/passport";
 
 const userStore = useUserStore();
-
 const form = ref<FormInstanceFunctions>();
 const formData = ref({
 	account: 'jyj-user',
@@ -104,6 +103,7 @@ watchEffect(() => {
     fetchCaptcha();
   }
 })
+
 onMounted(() => {
 })
 
@@ -133,6 +133,28 @@ const handleSubmit = async ({ validateResult }: SubmitContext) => {
 	}
 	loading.value = false
 };
+
+const handleSimulateLogin = (type: string) => {
+  switch (type) {
+    case 'education':
+      formData.value.account = 'jyj-user';
+      formData.value.password = '1qaz!QAZ';
+      break;
+    case 'school':
+      formData.value.account = 'blxx-1';
+      formData.value.password = '1qaz!QAZ';
+      break;
+    case 'security':
+      formData.value.account = 'baoan-user-1';
+      formData.value.password = '1qaz!QAZ';
+      break;
+  }
+  form.value.submit();
+};
+
+defineExpose({
+  handleSimulateLogin
+})
 </script>
 
 <style lang="less" scoped>
