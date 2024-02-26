@@ -128,16 +128,16 @@ const editable = computed(() => {
       <t-descriptions-item :label="$t('pages.evaluationScoreDrawer.submit.result')" :span="2">
         <i18n-t keypath="pages.assessmentTaskContentTable.summary">
           <template #totalScore>
-            <span class="t-link--theme-primary">{{ props.mdl.totalScore }}</span>
+            <span class="t-link--theme-primary">{{ props.mdl.totalScore || 0 }}</span>
           </template>
           <template #totalSubtractScore>
-            <span class="t-link--theme-success">{{ props.mdl.totalSubtractScore }}</span>
+            <span class="t-link--theme-success">{{ props.mdl.totalSubtractScore || 0 }}</span>
           </template>
           <template #totalAddScore>
-            <span class="t-link--theme-danger">{{ props.mdl.totalAddScore }}</span>
+            <span class="t-link--theme-danger">{{ props.mdl.totalAddScore || 0 }}</span>
           </template>
           <template #grade>
-            <span class="t-link--theme-warning">{{ props.mdl.grade }}</span>
+            <span class="t-link--theme-warning">{{ props.mdl.grade || '-' }}</span>
           </template>
         </i18n-t>
       </t-descriptions-item>
