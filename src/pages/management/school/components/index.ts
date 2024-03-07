@@ -1,4 +1,4 @@
-import ImportCompany from './ImportCompany.vue';
+import ImportSchool from './ImportSchool.vue';
 import OperationSchool from './OperationSchool.vue';
 
-export { ImportCompany, OperationSchool };
+export { ImportSchool, OperationSchool };

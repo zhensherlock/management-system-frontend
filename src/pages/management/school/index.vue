@@ -89,7 +89,7 @@
       @refresh-list="handleRefreshList"
     >
     </OperationSchool>
-    <ImportCompany v-model="importVisible" @refresh-list="handleRefreshList"></ImportCompany>
+    <ImportSchool v-model="importVisible" @refresh-list="handleRefreshList"></ImportSchool>
   </div>
 </template>
 <script lang="ts">
@@ -101,7 +101,7 @@ export default {
 import { ref, reactive, onMounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { useTable } from '@/composeable/useTable';
-import { OperationSchool, ImportCompany } from './components';
+import { OperationSchool, ImportSchool } from './components';
 import { getSchoolTree, deleteSchool } from '@/api/school';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
@@ -149,9 +149,9 @@ const fetchData = async () => {
   }
 };
 const columns = ref<PrimaryTableCol[]>([
-  { colKey: 'name', title: t('pages.school.name'), minWidth: 300, fixed: 'left' },
-  { colKey: 'person', title: t('pages.school.person'), minWidth: 70 },
-  { colKey: 'contact', title: t('pages.school.contact'), minWidth: 110 },
+  { colKey: 'name', title: t('pages.school.name'), minWidth: 350, fixed: 'left' },
+  { colKey: 'person', title: t('pages.school.person'), width: 100 },
+  { colKey: 'contact', title: t('pages.school.contact'), width: 150 },
   ...(user.userInfo.type === AccountType.SuperAdmin
     ? [
         { colKey: 'createdDate', title: t('pages.employee.createdDate'), width: 160 },

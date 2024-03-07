@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { DownloadIcon } from 'tdesign-icons-vue-next';
-import { importCompanies } from '@/api/company';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { t } from '@/locales';
+import { importSchools } from '@/api/school';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -28,11 +28,11 @@ const formatResponse = (res: any) => {
 const handleFileChange = (files: File[]) => {
   loading.value = true;
   const [file] = files;
-  importCompanies(<File>file).then(() => {
+  importSchools(<File>file).then(() => {
     loading.value = false;
     emits('refresh-list');
     handleClose();
-    MessagePlugin.success(t('pages.message.import'));
+    MessagePlugin.success(t('pages.message.import.success'));
   });
 };
 
