@@ -152,6 +152,7 @@ const columns = ref<PrimaryTableCol[]>([
   { colKey: 'name', title: t('pages.school.name'), minWidth: 350, fixed: 'left' },
   { colKey: 'person', title: t('pages.school.person'), width: 100 },
   { colKey: 'contact', title: t('pages.school.contact'), width: 150 },
+  { colKey: 'assignedCompanyId', title: '保安公司', width: 150 },
   ...(user.userInfo.type === AccountType.SuperAdmin
     ? [
         { colKey: 'createdDate', title: t('pages.employee.createdDate'), width: 160 },

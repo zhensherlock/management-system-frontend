@@ -1,6 +1,6 @@
 export default {
   header: {
-    suffix: '评分'
+    suffix: '考评'
   },
   basic: {
     title: '任务基本信息',

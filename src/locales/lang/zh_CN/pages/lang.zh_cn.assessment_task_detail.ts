@@ -5,7 +5,7 @@ export default {
     score: '分数',
     submitDate: '提交时间',
     operation: {
-      evaluation: '评分',
+      evaluation: '考评',
     },
   },
   statusMap: {

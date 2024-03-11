@@ -44,23 +44,29 @@
       height: 100%;
     }
 
-    .t-table__pagination {
-      padding: var(--td-comp-paddingTB) 0 0;
+    .table-pagination;
+  }
+}
+
+.table-pagination() {
+  .t-table__pagination {
+    padding: var(--td-comp-paddingTB) 0 0 !important;
+  }
+
+  .t-pagination__btn {
+    border: 1px solid var(--td-component-border);
+
+    &.t-is-disabled {
+      display: none;
     }
 
-    .t-pagination__btn {
-      border: 1px solid var(--td-component-border);
-
-      &.t-is-disabled {
-        display: none;
-      }
-
-      &:hover {
-        color: var(--td-brand-color-hover);
-        border-color: var(--td-brand-color-hover);
-        background-color: initial;
-        transition: all 0.2s cubic-bezier(0.82, 0, 1, 0.9);
-      }
+    &:hover {
+      color: var(--td-brand-color-hover);
+      border-color: var(--td-brand-color-hover);
+      background-color: initial;
+      transition: all 0.2s cubic-bezier(0.82, 0, 1, 0.9);
     }
   }
 }
+
+.table-pagination;

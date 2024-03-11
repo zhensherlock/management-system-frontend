@@ -10,7 +10,7 @@ export default {
   score: '分数上限',
   addMaximumScore: '加分上限',
   subtractMaximumScore: '扣分上限',
-  scoreStep: '步数',
+  scoreStep: '权重',
   scoreType: {
     add: '加分',
     subtract: '扣分',

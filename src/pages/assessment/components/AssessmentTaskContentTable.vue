@@ -213,6 +213,7 @@ defineExpose({
                 :min="0"
                 :inputProps="{
                   autofocus: true,
+                  readonly: true,
                 }"
               />
               <t-textarea

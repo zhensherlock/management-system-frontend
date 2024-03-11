@@ -19,7 +19,7 @@ export function useTable(options: UseTableOptions) {
   const {
     loading = false,
     total = 0,
-    pageSize = 10,
+    pageSize = 20,
     parent,
     excludeHeightElements = [],
     hiddenPage = false,

@@ -43,8 +43,9 @@ export function getAssessmentTaskStatistic(id: string) {
   });
 }
 
-export function getAssessmentTaskDetails(id: string) {
+export function getAssessmentTaskDetails(id: string, data: any) {
   return request.get<CommonResponse<any>>({
     url: `${Api.DetailsUrl}${id}/`,
+    params: data,
   });
 }

@@ -4,7 +4,7 @@ export default {
     desc: '考核内容',
     score: '分数',
     operation: {
-      evaluation: '评分',
+      evaluation: '考评',
     },
   },
   scoreType: {
