@@ -19,7 +19,7 @@
         </template>
       </t-sticky-item>
     </t-sticky-tool>
-    <footer class="copyright">Copyright @ 2023 MichaelSun. All Rights Reserved</footer>
+    <footer class="copyright">Copyright @ 2024 MichaelSun. All Rights Reserved</footer>
   </div>
 </template>
 <script lang="ts">

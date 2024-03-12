@@ -40,6 +40,10 @@
       @submit="handleSearchSubmit"
     >
       <template #actions>
+        <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowImport">
+          <template #icon><span class="t-icon i-ic-sharp-cloud-upload"></span></template>
+          {{ $t('pages.user.import') }}
+        </t-button>
         <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowCreate">
           <template #icon><span class="t-icon i-material-symbols-add-circle"></span></template>
           {{ $t('pages.user.create') }}
@@ -112,6 +116,7 @@
       @refresh-list="handleRefreshList"
     >
     </OperationUser>
+    <ImportUser v-model="importVisible" @refresh-list="handleRefreshList"></ImportUser>
   </div>
 </template>
 <script lang="ts">
@@ -123,7 +128,7 @@ export default {
 import { ref, reactive, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useTable } from '@/composeable/useTable';
-import { OperationUser } from './components';
+import { OperationUser, ImportUser } from './components';
 import { getUserList, deleteUser } from '@/api/user';
 import type { PageInfo, PrimaryTableCol } from 'tdesign-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
@@ -152,6 +157,8 @@ const fetchData = async () => {
   try {
     // @ts-ignore
     const { list, count } = await getUserList({
+      currentPage: pagination.value?.current || 1,
+      pageSize: pagination.value?.pageSize || 20,
       keyword: searchData.keyword,
       roleIds: searchData.roleIds,
       organizationIds: searchData.organizationIds,
@@ -237,6 +244,11 @@ const handleShowUpdate = (company: any) => {
   operationModel.visible = true;
 };
 
+const importVisible = ref(false);
+const handleShowImport = () => {
+  importVisible.value = true;
+};
+
 const handleSearchSubmit = (params: any) => {
   pagination.value && (pagination.value.current = 1);
   Object.assign(searchData, params);
@@ -249,6 +261,7 @@ const handleChangePage = (pageInfo: PageInfo) => {
   }
   pagination.value.current = pageInfo.current;
   pagination.value.pageSize = pageInfo.pageSize;
+  fetchData();
 };
 
 const handleDeleteConfirm = (row: any) => {
