@@ -15,6 +15,7 @@ export default {
   company: '所属保安公司',
   school: '所属学校',
   description: '介绍',
+  address: '住址',
   organization: '所属组织',
   status: '状态',
   education: '学历',

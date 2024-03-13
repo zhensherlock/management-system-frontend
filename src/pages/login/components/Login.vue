@@ -141,8 +141,8 @@ const handleSimulateLogin = (type: string) => {
       formData.value.password = '1qaz!QAZ';
       break;
     case 'school':
-      formData.value.account = 'amsdyey';
-      formData.value.password = '1qaz!QAZ';
+      formData.value.account = 'jybaoan001';
+      formData.value.password = 'Zjg@123';
       break;
     case 'security':
       formData.value.account = 'baoan-user-1';

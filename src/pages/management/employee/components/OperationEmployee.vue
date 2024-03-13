@@ -37,6 +37,7 @@ const props = defineProps({
         certificateNumber: '',
         contact: '',
         description: '',
+        address: '',
         birthday: dayjs().subtract(60, 'year'),
         idCard: '',
         status: EmployeeStatus.Normal,
@@ -137,6 +138,7 @@ const handleEditSubmit = () => {
     name: formData.value.name,
     sex: formData.value.sex,
     description: formData.value.description,
+    address: formData.value.address,
     certificateNumber: formData.value.certificateNumber,
     contact: formData.value.contact,
     birthday: formData.value.birthday,
@@ -159,6 +161,7 @@ const handleCreateSubmit = () => {
     name: formData.value.name,
     sex: formData.value.sex,
     description: formData.value.description,
+    address: formData.value.address,
     certificateNumber: formData.value.certificateNumber,
     contact: formData.value.contact,
     birthday: formData.value.birthday,
@@ -363,12 +366,21 @@ const handleClose = () => {
           <t-option v-for="item in EmployeeStatusList" :key="item.value" :label="$t(item.label)" :value="item.value" />
         </t-select>
       </t-form-item>
+      <t-form-item :label="$t('pages.employee.address')" name="address">
+        <t-textarea
+          v-model="formData.address"
+          clearable
+          :maxlength="150"
+          :autosize="{ minRows: 3, maxRows: 5 }"
+          :placeholder="$t('pages.form.placeholder', { field: $t('pages.employee.address') })"
+        />
+      </t-form-item>
       <t-form-item :label="$t('pages.employee.description')" name="description">
         <t-textarea
           v-model="formData.description"
           clearable
           :maxlength="150"
-          :autosize="{ minRows: 2, maxRows: 4 }"
+          :autosize="{ minRows: 3, maxRows: 5 }"
           :placeholder="$t('pages.form.placeholder', { field: $t('pages.employee.description') })"
         />
       </t-form-item>
