@@ -10,7 +10,7 @@ export const AssessmentTaskStatus = {
 export const AssessmentTaskDetailStatus = {
   Pending: 'pending',
   Submitted: 'submitted',
-  Returned: 'returned',
+  Returned: 'pending-returned',
   Done: 'done',
 }
 

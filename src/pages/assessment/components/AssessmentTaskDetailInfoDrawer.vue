@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import {computed, reactive, ref, watch} from 'vue';
+import {reactive, ref, watch} from 'vue';
 import {getAssessmentTaskStatus, getAssessmentTaskStatusTheme, getDateString} from '@/utils';
 import { AssessmentTaskContentTable } from './index';
-import { evaluationScore } from '@/api/assessment_task_detail.api';
+import { fallbackEvaluation } from '@/api/assessment_task_detail.api';
 import {MessagePlugin} from 'tdesign-vue-next';
 import {t} from '@/locales';
+import { InfoCircleFilledIcon } from 'tdesign-icons-vue-next';
+import { AssessmentTaskDetailStatus } from '@/constants';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -37,12 +39,10 @@ const fallbackButton = reactive({
 
 const handleFallback = () => {
   fallbackButton.loading = true;
-  evaluationScore(props.mdl.id, {
-    isDraft: false,
-  }).then(() => {
+  fallbackEvaluation(props.mdl.id).then(() => {
     emits('refresh-list');
     handleClose();
-    MessagePlugin.success(t('pages.message.submit'));
+    MessagePlugin.success(t('pages.message.fallback.success'));
   }).finally(() => {
     fallbackButton.loading = false;
   });
@@ -57,9 +57,10 @@ const handleFallback = () => {
     :preventScrollThrough="true"
     :size-draggable="true"
     :destroyOnClose="true"
+    :footer="props.mdl.status === AssessmentTaskDetailStatus.Submitted"
     size="1000px"
     @close="handleClose"
-    class="task-detail-drawer"
+    class="assessment-task-detail-info-drawer"
   >
     <template #header v-if="props.mdl.assessmentTask">
       {{ props.mdl.assessmentTask.title }} - {{ $t('pages.assessmentTaskDetailInfoDrawer.header.suffix') }}
@@ -94,7 +95,12 @@ const handleFallback = () => {
       v-if="props.mdl.submitUser"
     >
       <t-descriptions-item :label="$t('pages.assessmentTaskDetailInfoDrawer.submit.user')">
-        {{ props.mdl.submitUser.realName }}({{ props.mdl.submitUser.name }})
+        <t-space :size="4">
+          {{ props.mdl.submitUser.name }}
+          <t-popup placement="right" trigger="hover" :showArrow="true" :content="props.mdl.submitUser.realName">
+            <info-circle-filled-icon size="16px" class="text-#d8d8d8 cursor-pointer" />
+          </t-popup>
+        </t-space>
       </t-descriptions-item>
       <t-descriptions-item :label="$t('pages.assessmentTaskDetailInfoDrawer.submit.time')">
         {{ props.mdl.submitDate }}
@@ -121,11 +127,19 @@ const handleFallback = () => {
       :title="$t('pages.assessmentTaskDetailInfoDrawer.content.title')"
     />
     <AssessmentTaskContentTable
+      mode="review"
       ref="assessmentTaskContentTableRef"
       v-if="props.mdl.assessmentTask"
       :assessment="props.mdl.assessmentTask"
       :score-content="props.mdl.scoreContent"
-      mode="review"
+      :headerAffixedTopProps="{
+        offsetTop: 16,
+        container: '.assessment-task-detail-info-drawer .t-drawer__body',
+      }"
+      :footerAffixedBottomProps="{
+        offsetBottom: 16,
+        container: '.assessment-task-detail-info-drawer .t-drawer__body',
+      }"
     />
     <template #footer>
       <t-popconfirm
@@ -163,11 +177,11 @@ const handleFallback = () => {
   }
 }
 
-:global(.task-detail-drawer .t-drawer__header) {
+:global(.assessment-task-detail-info-drawer .t-drawer__header) {
   position: relative;
 }
 
-:global(.task-detail-drawer .t-drawer__header:before) {
+:global(.assessment-task-detail-info-drawer .t-drawer__header:before) {
   content: '';
   position: absolute;
   top: calc(100% + 1px);

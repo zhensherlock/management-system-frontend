@@ -23,6 +23,20 @@ const props = defineProps({
     type: String,
     default: 'preview',
   },
+  headerAffixedTopProps: {
+    type: Object,
+    default: () => ({
+      offsetTop: 16,
+      container: '.task-detail-drawer .t-drawer__body',
+    }),
+  },
+  footerAffixedBottomProps: {
+    type: Object,
+    default: () => ({
+      offsetBottom: 16,
+      container: '.task-detail-drawer .t-drawer__body',
+    }),
+  },
 });
 
 const { cloned: editScoreContent } = useCloned(props.scoreContent);
@@ -87,20 +101,6 @@ const rowspanAndColspan = ({ row, colIndex }: any) => {
   }
 };
 
-const headerAffixedTopProps = computed(() => {
-  return {
-    offsetTop: 16,
-    container: '.task-detail-drawer .t-drawer__body',
-  };
-});
-
-const footerAffixedBottomProps = computed(() => {
-  return {
-    offsetBottom: 16,
-    container: '.task-detail-drawer .t-drawer__body',
-  };
-});
-
 const handleShowEvaluation = (row: any) => {
   const index = expandedRowKeys.value.indexOf(row.id)
   if (index > -1) {
@@ -157,31 +157,6 @@ defineExpose({
 
 <template>
   <div class="assessment-table" v-if="props.assessment.content">
-<!--    <table class="t-descriptions__body t-size-s t-descriptions__body&#45;&#45;border w-100%">-->
-<!--      <tr>-->
-<!--        <td class="text-center w-24%">考核项目</td>-->
-<!--        <td class="text-center">考核内容</td>-->
-<!--        <td class="text-center w-8%">分数</td>-->
-<!--        <td class="text-center w-8%">操作</td>-->
-<!--      </tr>-->
-<!--      <template v-for="levelOneItem in props.assessment.content.list" :key="levelOneItem.id">-->
-<!--        <tr>-->
-<!--          <td colspan="4">{{ levelOneItem.title }}</td>-->
-<!--        </tr>-->
-<!--        <template v-for="levelTwoItem in levelOneItem.children" :key="levelTwoItem.id">-->
-<!--          <tr>-->
-<!--            <td :rowspan="(levelTwoItem.children?.length || 1) + 1">{{ levelTwoItem.title }}</td>-->
-<!--          </tr>-->
-<!--          <tr v-for="levelThreeItem in levelTwoItem.children" :key="levelThreeItem.id">-->
-<!--            <td>-->
-<!--              {{ levelThreeItem.title }}-->
-<!--            </td>-->
-<!--            <td class="text-center">0</td>-->
-<!--            <td class="text-center">操作</td>-->
-<!--          </tr>-->
-<!--        </template>-->
-<!--      </template>-->
-<!--    </table>-->
     <t-table
       bordered
       ref="tableElement"

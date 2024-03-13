@@ -6,6 +6,7 @@ import { evaluationScore } from '@/api/assessment_task_detail.api';
 import {MessagePlugin} from 'tdesign-vue-next';
 import {t} from '@/locales';
 import {AssessmentTaskDetailStatus} from '@/constants';
+import { InfoCircleFilledIcon } from 'tdesign-icons-vue-next';
 
 const props = defineProps({
   modelValue: Boolean,
@@ -120,7 +121,12 @@ const editable = computed(() => {
       v-if="!editable && props.mdl.submitUser"
     >
       <t-descriptions-item :label="$t('pages.evaluationScoreDrawer.submit.user')">
-        {{ props.mdl.submitUser.realName }}({{ props.mdl.submitUser.name }})
+        <t-space :size="4">
+          {{ props.mdl.submitUser.name }}
+          <t-popup placement="right" trigger="hover" :showArrow="true" :content="props.mdl.submitUser.realName">
+            <info-circle-filled-icon size="16px" class="text-#d8d8d8 cursor-pointer" />
+          </t-popup>
+        </t-space>
       </t-descriptions-item>
       <t-descriptions-item :label="$t('pages.evaluationScoreDrawer.submit.time')">
         {{ props.mdl.submitDate }}
