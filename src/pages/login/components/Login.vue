@@ -81,8 +81,8 @@ import type { LoginData } from "@/types/api/passport";
 const userStore = useUserStore();
 const form = ref<FormInstanceFunctions>();
 const formData = ref({
-	account: 'jyj-user',
-	password: '1qaz!QAZ',
+	account: '',
+	password: '',
   captcha: '',
   captchaId: '',
 	checked: false,

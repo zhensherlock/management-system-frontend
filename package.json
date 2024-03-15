@@ -8,6 +8,7 @@
     "build:test": "vite build --mode test",
     "build": "vue-tsc --noEmit && vite build --mode release",
     "build:site": "vue-tsc --noEmit && vite build --mode site",
+    "build:prod": "vue-tsc --noEmit && vite build --mode prod",
     "preview": "vite preview",
     "lint": "eslint --ext .vue,.js,.jsx,.ts,.tsx ./ --max-warnings 0",
     "lint:fix": "eslint --ext .vue,.js,jsx,.ts,.tsx ./ --max-warnings 0 --fix",
