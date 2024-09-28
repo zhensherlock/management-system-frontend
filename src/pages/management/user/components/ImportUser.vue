@@ -79,7 +79,7 @@ const loading = ref(false);
                   size="small"
                   class="upload-template-link"
                   download
-                  href="/template/用户导入模板.xlsx"
+                  href="/files/用户导入模板.xlsx"
                   @click.stop
                 >
                   <download-icon slot="prefix-icon"></download-icon>
