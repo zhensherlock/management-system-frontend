@@ -8,6 +8,7 @@ const Api = {
   DeleteUrl: '/user/assessment_task/',
   StatisticUrl: '/user/assessment_task/statistic/',
   DetailsUrl: '/user/assessment_task/details/',
+  MarkUnscoredFullUrl: '/user/assessment_task/mark-unscored-full/',
 };
 
 export function getAssessmentTaskList(data: any) {
@@ -47,5 +48,11 @@ export function getAssessmentTaskDetails(id: string, data: any) {
   return request.get<CommonResponse<any>>({
     url: `${Api.DetailsUrl}${id}/`,
     params: data,
+  });
+}
+
+export function markUnscoredFull(id: string) {
+  return request.put<CommonResponse<any>>({
+    url: `${Api.MarkUnscoredFullUrl}${id}/`,
   });
 }

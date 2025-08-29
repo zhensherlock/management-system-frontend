@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { reactive, watch } from 'vue';
+import dayjs from 'dayjs';
+import { reactive, watch, computed } from 'vue';
 import { t } from '@/locales';
-import { PrimaryTableCol } from 'tdesign-vue-next';
+import { MessagePlugin, PrimaryTableCol } from 'tdesign-vue-next';
 import {
   getAssessmentTaskStatus,
   getAssessmentTaskStatusTheme,
   getDateString
 } from '@/utils';
 import { AssessmentTaskContentTable } from './index';
-import { getAssessmentTaskStatistic } from '@/api/assessment_task.api';
+import { getAssessmentTaskStatistic, markUnscoredFull } from '@/api/assessment_task.api';
 import { AssessmentTaskDetailListDrawer } from './index';
 
 const props = defineProps({
@@ -31,6 +32,13 @@ watch(
     getAssessmentTaskStatisticData();
   },
 );
+
+const showSetDefaultScore = computed(() => {
+  if (!props.mdl.endDate) {
+    return false
+  }
+  return dayjs().isAfter(dayjs(props.mdl.endDate)) && statistic.pending > 0
+})
 
 const statistic = reactive({
   total: 0,
@@ -92,6 +100,28 @@ const assessmentTaskDetailListDrawer = reactive({
 const handleShowAssessmentTaskDetail = () => {
   assessmentTaskDetailListDrawer.visible = true;
 };
+
+const handleSetDefaultScore = () => {
+  setDefaultScore.submitLoading = true
+  markUnscoredFull(props.mdl.id).then(() => {
+    MessagePlugin.success(t('pages.message.operation'));
+    getAssessmentTaskStatisticData();
+  }).finally(() => {
+    setDefaultScore.submitLoading = false
+    setDefaultScore.visible = false
+  });
+}
+
+const setDefaultScore = reactive({
+  submitLoading: false,
+  visible: false,
+})
+
+const exportButton = reactive({
+  loading: false,
+})
+
+const handleExport = () => {}
 </script>
 <template>
   <t-drawer
@@ -155,9 +185,31 @@ const handleShowAssessmentTaskDetail = () => {
             {{ $t('pages.assessment_task.process.title') }}
           </t-col>
           <t-col flex="auto" class="text-right">
+            <t-popconfirm
+              v-if="showSetDefaultScore"
+              theme="danger"
+              content="确认要将所有未评分的学校设置为满分吗？"
+              @confirm="handleSetDefaultScore"
+              :visible="setDefaultScore.visible"
+              @cancel="() => {
+                setDefaultScore.visible = false
+              }"
+              :confirmBtn="{
+                loading: setDefaultScore.submitLoading,
+              }"
+            >
+              <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="setDefaultScore.visible = true">
+                <template #icon><span class="t-icon i-material-symbols-checklist"></span></template>
+                未评分学校设为满分
+              </t-button>
+            </t-popconfirm>
             <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleShowAssessmentTaskDetail">
               <template #icon><span class="t-icon i-material-symbols-list-alt"></span></template>
               {{ $t('pages.assessment_task.statistic.header.detailButton') }}
+            </t-button>
+            <t-button size="small" variant="text" theme="primary" class="icon-operation" @click="handleExport" :loading="exportButton.loading">
+              <template #icon><span class="t-icon i-material-symbols-export-notes"></span></template>
+              导出考核情况
             </t-button>
           </t-col>
         </t-row>

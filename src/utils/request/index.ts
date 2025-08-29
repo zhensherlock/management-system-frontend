@@ -162,7 +162,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
         // 例如: authenticationScheme: 'Bearer'
         authenticationScheme: 'Bearer',
         // 超时
-        timeout: 10 * 1000,
+        timeout: 120 * 1000,
         // 携带Cookie
         withCredentials: true,
         // 头信息
