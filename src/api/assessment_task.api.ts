@@ -9,6 +9,7 @@ const Api = {
   StatisticUrl: '/user/assessment_task/statistic/',
   DetailsUrl: '/user/assessment_task/details/',
   MarkUnscoredFullUrl: '/user/assessment_task/mark-unscored-full/',
+  ExportList: '/user/assessment_task/export/',
 };
 
 export function getAssessmentTaskList(data: any) {
@@ -54,5 +55,12 @@ export function getAssessmentTaskDetails(id: string, data: any) {
 export function markUnscoredFull(id: string) {
   return request.put<CommonResponse<any>>({
     url: `${Api.MarkUnscoredFullUrl}${id}/`,
+  });
+}
+
+export function exportList(id: string) {
+  return request.post<CommonResponse<any>>({
+    url: `${Api.ExportList}${id}`,
+    responseType: 'blob',
   });
 }

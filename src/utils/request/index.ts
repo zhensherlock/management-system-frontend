@@ -28,6 +28,10 @@ const transform: AxiosTransform = {
       return res;
     }
 
+    if (res.config.responseType === 'blob') {
+      return res;
+    }
+
     // 是否返回原生响应头 比如：需要获取响应头时使用该属性
     if (isReturnNativeResponse) {
       return res;

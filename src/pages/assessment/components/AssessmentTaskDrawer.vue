@@ -4,12 +4,13 @@ import { reactive, watch, computed } from 'vue';
 import { t } from '@/locales';
 import { MessagePlugin, PrimaryTableCol } from 'tdesign-vue-next';
 import {
+  downloadFile,
   getAssessmentTaskStatus,
   getAssessmentTaskStatusTheme,
   getDateString
 } from '@/utils';
 import { AssessmentTaskContentTable } from './index';
-import { getAssessmentTaskStatistic, markUnscoredFull } from '@/api/assessment_task.api';
+import { exportList, getAssessmentTaskStatistic, markUnscoredFull } from '@/api/assessment_task.api';
 import { AssessmentTaskDetailListDrawer } from './index';
 
 const props = defineProps({
@@ -121,7 +122,15 @@ const exportButton = reactive({
   loading: false,
 })
 
-const handleExport = () => {}
+const handleExport = () => {
+  exportButton.loading = true
+  exportList(props.mdl.id).then((res) => {
+    // MessagePlugin.success(t('pages.message.operation'));
+    downloadFile(res)
+  }).finally(() => {
+    exportButton.loading = false
+  });
+}
 </script>
 <template>
   <t-drawer
